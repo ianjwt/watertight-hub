@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Hub — Watertight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wt-green:    #116E53;
+      --wt-green-2:  #8BCCA9;
+      --wt-green-3:  #CEE8D8;
+      --wt-green-4:  #EEF5ED;
+      --wt-pink-1:   #FFA596;
+      --wt-pink-2:   #F6C1B6;
+      --wt-pink-3:   #F9E4DC;
+      --bg:          #F8FBF9;
+      --white:       #FFFFFF;
+      --text:        #116E53;
+      --text-mid:    #3a6657;
+      --text-light:  #7aaa96;
+      --border:      rgba(17,110,83,0.12);
+      --shadow-sm:   0 2px 8px rgba(17,110,83,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+      --shadow-md:   0 4px 20px rgba(17,110,83,0.10);
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   20px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-img {
+      height: 28px;
+      width: auto;
+      display: none;
+    }
+
+    .logo-wordmark {
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--wt-green);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+    }
+
+    .hub-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wt-green);
+      letter-spacing: 0.04em;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-item {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      background: none;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-item.active {
+      background: var(--wt-green-4);
+      color: var(--wt-green);
+      font-weight: 600;
+    }
+
+    .nav-item:hover:not(.active) {
+      background: var(--wt-green-4);
+      color: var(--text-mid);
+    }
+
+    .nav-item .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--wt-green-2);
+    }
+
+    .nav-item.active .dot { background: var(--wt-green); }
+
+    /* ─── PAGE ─── */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ─── SECTION TITLE ─── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 16px;
+      padding-left: 2px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px 16px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--wt-green-4) 0%, white 60%);
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-icon {
+      width: 36px; height: 36px;
+      background: var(--wt-green);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-icon svg { width: 17px; height: 17px; stroke: white; }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--wt-green);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 1px;
+    }
+
+    /* ─── FORM BODY ─── */
+    .form-body {
+      padding: 28px;
+    }
+
+    /* ─── ROWS ─── */
+    .row { margin-bottom: 20px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+    /* Section dividers */
+    .form-section {
+      margin-bottom: 8px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-section:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .form-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 14px;
+    }
+
+    /* ─── FIELD ─── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      letter-spacing: 0.04em;
+    }
+
+    label .tag {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-light);
+      margin-left: 4px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    select {
+      height: 40px;
+      padding: 0 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder { color: var(--text-light); font-weight: 300; }
+
+    input:focus, select:focus {
+      border-color: var(--wt-green);
+      box-shadow: 0 0 0 3px rgba(17,110,83,0.10);
+      background: white;
+    }
+
+    input.warn { border-color: var(--wt-pink-1); background: #fff8f7; }
+
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--text-light);
+      pointer-events: none;
+    }
+    .select-wrap select { width: 100%; padding-right: 32px; cursor: pointer; }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 300;
+    }
+
+    .field-warn {
+      font-size: 11px;
+      color: var(--wt-pink-1);
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .field-warn.visible { display: flex; }
+
+    /* ─── GENERATE BUTTON ─── */
+    .generate-btn {
+      width: 100%;
+      height: 48px;
+      background: var(--wt-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.15s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .generate-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .generate-btn:active { transform: translateY(0); opacity: 1; }
+    .generate-btn svg { width: 16px; height: 16px; stroke: white; flex-shrink: 0; }
+
+    /* ─── RESULT ─── */
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: none;
+      animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .result-card.visible { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-top {
+      padding: 16px 24px;
+      background: var(--wt-green);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-top-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .char-count {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.12);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .char-count.warn { color: #FFE1DD; background: rgba(255,165,150,0.25); }
+    .char-count.over { color: #FFA596; background: rgba(255,165,150,0.35); font-weight: 700; }
+
+    .result-body { padding: 20px 24px; }
+
+    .url-output {
+      width: 100%;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--text);
+      background: var(--wt-green-4);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      line-height: 1.6;
+      word-break: break-all;
+      resize: none;
+      outline: none;
+      min-height: 72px;
+      cursor: text;
+    }
+
+    .url-output:focus { border-color: var(--wt-green); box-shadow: 0 0 0 3px rgba(17,110,83,0.1); }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      height: 38px;
+      padding: 0 18px;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .btn-primary {
+      background: var(--wt-green);
+      color: white;
+      border: none;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary.copied { background: #22C55E; }
+    .btn-primary svg { stroke: white; }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text-mid);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--wt-green); color: var(--wt-green); }
+    .btn-secondary svg { stroke: currentColor; }
+
+    /* ─── PARAM CHIPS ─── */
+    .param-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chip {
+      display: flex;
+      flex-direction: column;
+      background: var(--wt-green-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+    }
+
+    .chip-name {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--wt-green);
+      margin-bottom: 2px;
+    }
+
+    .chip-val {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+    }
+
+    .chip-val.empty { color: var(--text-light); font-style: italic; }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--wt-green);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast svg { width: 16px; height: 16px; stroke: var(--wt-green-2); }
+
+    /* ─── COMING SOON TOOLS ─── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .tool-stub {
+      background: white;
+      border: 1.5px dashed var(--wt-green-3);
+      border-radius: var(--radius-md);
+      padding: 20px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.55;
+    }
+
+    .stub-icon {
+      width: 32px; height: 32px;
+      background: var(--wt-green-4);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stub-icon svg { width: 15px; height: 15px; stroke: var(--text-mid); }
+    .stub-name { font-size: 13px; font-weight: 500; color: var(--text-mid); }
+    .stub-status { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      header { padding: 0 16px; }
+      .page { padding: 24px 16px 60px; }
+      .form-body { padding: 20px 16px; }
+      .card-top { padding: 16px 20px; }
+      .row-2, .row-3 { grid-template-columns: 1fr; }
+      .result-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">
+      <span class="logo-wordmark">watertight</span>
+      <div class="logo-divider"></div>
+      <span class="hub-label">Hub</span>
+    </div>
+  </header>
+
+  <!-- PAGE -->
+  <main class="page">
+
+    <!-- UTM BUILDER -->
+    <div class="section-title">UTM Link Builder</div>
+
+    <div class="card" id="utm">
+      <div class="card-top">
+        <div class="card-title-group">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">UTM Link Builder</div>
+            <div class="card-subtitle">Generate tracking links for influencer campaigns</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-body">
+
+        <!-- SECTION: Destination -->
+        <div class="form-section">
+          <div class="form-section-label">Destination</div>
+          <div class="row">
+            <div class="field">
+              <label>Destination URL <span class="tag">required</span></label>
+              <input id="dest-url" type="url" placeholder="https://example.com/page" autocomplete="off" spellcheck="false" />
+              <span class="field-warn" id="warn-url">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Please enter a destination URL
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Campaign Attribution -->
+        <div class="form-section">
+          <div class="form-section-label">Campaign Attribution</div>
+
+          <div class="row-2">
+            <div class="field">
+              <label>Source <span class="tag">required</span></label>
+              <div class="select-wrap">
+                <select id="utm-source">
+                  <option value="">— select source —</option>
+                  <option value="google">google</option>
+                  <option value="meta">meta</option>
+                  <option value="tiktok">tiktok</option>
+                  <option value="instagram">instagram</option>
+                  <option value="youtube">youtube</option>
+                  <option value="pinterest">pinterest</option>
+                  <option value="reddit">reddit</option>
+                  <option value="linkedin">linkedin</option>
+                  <option value="twitter">twitter</option>
+                  <option value="email">email</option>
+                  <option value="influencer">influencer</option>
+                  <option value="partnerships">partnerships</option>
+                  <option value="podcast">podcast</option>
+                  <option value="social">social</option>
+                </select>
+              </div>
+              <span class="field-warn" id="warn-source">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Source is recommended
+              </span>
+            </div>
+            <div class="field">
+              <label>Medium <span class="tag">required</span></label>
+              <div class="select-wrap">
+                <select id="utm-medium">
+                  <option value="">— select medium —</option>
+                  <option value="cpc">cpc</option>
+                  <option value="social">social</option>
+                  <option value="influencer">influencer</option>
+                  <option value="affiliates">affiliates</option>
+                  <option value="partnership">partnership</option>
+                  <option value="email">email</option>
+                  <option value="display">display</option>
+                  <option value="video">video</option>
+                  <option value="paid-social">paid-social</option>
+                  <option value="organic">organic</option>
+                </select>
+              </div>
+              <span class="field-warn" id="warn-medium">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Medium is recommended
+              </span>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label>Campaign <span class="tag">recommended</span></label>
+              <input id="utm-campaign" type="text" placeholder="e.g. spring-launch" autocomplete="off" spellcheck="false" />
+              <span class="field-warn" id="warn-campaign">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Campaign is recommended
+              </span>
+            </div>
+            <div class="field">
+              <label>Term <span class="tag">optional</span></label>
+              <input id="utm-term" type="text" placeholder="e.g. paid-keywords" autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Content / Influencer -->
+        <div class="form-section">
+          <div class="form-section-label">Influencer / Content</div>
+          <div class="row-2">
+            <div class="field">
+              <label>First Name <span class="tag">auto-fills Content if empty</span></label>
+              <input id="first-name" type="text" placeholder="Jessica" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <input id="last-name" type="text" placeholder="Manning" autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+          <div class="field-hint" style="margin-top:-8px; margin-bottom:4px;">Influencer name will be used as <code style="font-size:11px; color:var(--wt-green)">utm_content</code> — formatted as <code style="font-size:11px; color:var(--wt-green)">firstname-lastname</code>.</div>
+        </div>
+
+        <!-- Generate -->
+        <button class="generate-btn" onclick="buildUTM()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="13 2 13 9 20 9"/><path d="M20 14v5a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h7"/>
+          </svg>
+          Generate Tracking Link
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-card" id="result-card">
+      <div class="result-top">
+        <span class="result-top-label">Generated Link</span>
+        <span class="char-count" id="char-count">0 chars</span>
+      </div>
+      <div class="result-body">
+        <textarea class="url-output" id="url-output" readonly rows="3"></textarea>
+        <div class="result-actions">
+          <button class="btn btn-primary" id="copy-btn" onclick="copyURL()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            Copy Link
+          </button>
+          <button class="btn btn-secondary" onclick="resetAll()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+            </svg>
+            Reset
+          </button>
+        </div>
+        <div class="param-chips" id="param-chips"></div>
+      </div>
+    </div>
+
+    <!-- COMING SOON -->
+    <div style="margin-top: 40px;">
+      <div class="section-title">More Tools</div>
+      <div class="tools-grid">
+        <div class="tool-stub">
+          <div class="stub-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div><div class="stub-name">Campaign Tracker</div><div class="stub-status">Coming soon</div></div>
+        </div>
+        <div class="tool-stub">
+          <div class="stub-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <div><div class="stub-name">Influencer Directory</div><div class="stub-status">Coming soon</div></div>
+        </div>
+        <div class="tool-stub">
+          <div class="stub-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div><div class="stub-name">Performance Reports</div><div class="stub-status">Coming soon</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    Copied to clipboard!
+  </div>
+
+  <script>
+    // ─── SANITIZER ───
+    function sanitize(val) {
+      return val
+        .toLowerCase()
+        .replace(/\s+/g, '-')                 // spaces → hyphens
+        .replace(/[^a-z0-9\-_]/g, '');        // strip everything else
+    }
+
+    // Apply sanitize on blur (silent strip)
+    ['utm-campaign', 'utm-term', 'first-name', 'last-name'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('blur', () => { el.value = sanitize(el.value); });
+    });
+
+    // ─── BUILD UTM ───
+    function buildUTM() {
+      const destURL    = document.getElementById('dest-url').value.trim();
+      const source     = document.getElementById('utm-source').value;
+      const medium     = document.getElementById('utm-medium').value;
+      let   campaign   = sanitize(document.getElementById('utm-campaign').value.trim());
+      let   content    = '';
+      let   term       = sanitize(document.getElementById('utm-term').value.trim());
+      const firstName  = sanitize(document.getElementById('first-name').value.trim());
+      const lastName   = sanitize(document.getElementById('last-name').value.trim());
+
+      // Reflect sanitized values back
+      document.getElementById('utm-campaign').value = campaign;
+
+      document.getElementById('utm-term').value      = term;
+
+      // Build content from name fields
+      if (firstName || lastName) {
+        content = [firstName, lastName].filter(Boolean).join('-');
+      }
+
+      // Validation warnings (warn, don't block)
+      let hasWarn = false;
+      if (!destURL) { show('warn-url'); hasWarn = true; } else { hide('warn-url'); }
+      if (!source)  { show('warn-source'); hasWarn = true; } else { hide('warn-source'); }
+      if (!medium)  { show('warn-medium'); hasWarn = true; } else { hide('warn-medium'); }
+      if (!campaign){ show('warn-campaign'); } else { hide('warn-campaign'); }
+
+      // Build params
+      const params = [];
+      if (source)   params.push('utm_source='   + source);
+      if (medium)   params.push('utm_medium='   + medium);
+      if (campaign) params.push('utm_campaign=' + campaign);
+      if (content)  params.push('utm_content='  + content);
+      if (term)     params.push('utm_term='     + term);
+
+      if (!destURL && params.length === 0) return;
+
+      const base  = destURL || '';
+      const sep   = base.includes('?') ? '&' : '?';
+      const full  = params.length ? base + sep + params.join('&') : base;
+
+      // Char count
+      const len = full.length;
+      const ccEl = document.getElementById('char-count');
+      ccEl.textContent = len + ' / 420 chars';
+      ccEl.className = 'char-count' + (len > 420 ? ' over' : len > 360 ? ' warn' : '');
+
+      // Output
+      document.getElementById('url-output').value = full;
+
+      // Chips
+      const chips = [
+        { name: 'utm_source',   val: source   },
+        { name: 'utm_medium',   val: medium   },
+        { name: 'utm_campaign', val: campaign },
+        { name: 'utm_content',  val: content  },
+        { name: 'utm_term',     val: term     },
+      ];
+      document.getElementById('param-chips').innerHTML = chips.map(c =>
+        `<div class="chip">
+          <span class="chip-name">${c.name}</span>
+          <span class="chip-val ${c.val ? '' : 'empty'}">${c.val || '—'}</span>
+        </div>`
+      ).join('');
+
+      const rc = document.getElementById('result-card');
+      rc.classList.add('visible');
+      setTimeout(() => rc.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+    }
+
+    function copyURL() {
+      const url = document.getElementById('url-output').value;
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link`;
+        }, 2000);
+        showToast();
+      });
+    }
+
+    function resetAll() {
+      ['dest-url', 'utm-campaign', 'utm-term', 'first-name', 'last-name'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('utm-source').value = '';
+      document.getElementById('utm-medium').value = '';
+      ['warn-url','warn-source','warn-medium','warn-campaign'].forEach(id => hide(id));
+      document.getElementById('result-card').classList.remove('visible');
+      document.getElementById('dest-url').focus();
+    }
+
+    function show(id) { document.getElementById(id).classList.add('visible'); }
+    function hide(id) { document.getElementById(id).classList.remove('visible'); }
+
+    function showToast() {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    // Enter key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.tagName === 'INPUT') buildUTM();
+    });
+  </script>
+</body>
+</html>
