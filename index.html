@@ -640,7 +640,54 @@
     <div class="logo-area">
       <span class="logo-wordmark">Watertight</span>
       <div class="logo-divider"></div>
-      <span class="hub-label">Vortex</span>
+      <span style="display:inline-flex; align-items:center; gap:5px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="22" height="26" style="display:block;">
+          <defs>
+            <radialGradient id="aura" cx="50%" cy="60%" r="55%">
+              <stop offset="0%" stop-color="#8BCCA9" stop-opacity="0.4"/>
+              <stop offset="60%" stop-color="#116E53" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#116E53" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="dropFill" cx="45%" cy="40%" r="65%">
+              <stop offset="0%" stop-color="#5BA992"/>
+              <stop offset="50%" stop-color="#116E53"/>
+              <stop offset="100%" stop-color="#0a4a38"/>
+            </radialGradient>
+            <radialGradient id="innerGlow" cx="50%" cy="65%" r="50%">
+              <stop offset="0%" stop-color="#CEE8D8" stop-opacity="0.9"/>
+              <stop offset="40%" stop-color="#8BCCA9" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#116E53" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="7" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="dropClip">
+              <path d="M60 10 C60 10, 18 62, 18 86 C18 110 37 132 60 132 C83 132 102 110 102 86 C102 62 60 10 60 10 Z"/>
+            </clipPath>
+          </defs>
+          <ellipse cx="60" cy="90" rx="52" ry="48" fill="url(#aura)"/>
+          <path d="M60 10 C60 10, 18 62, 18 86 C18 110 37 132 60 132 C83 132 102 110 102 86 C102 62 60 10 60 10 Z" fill="url(#dropFill)" filter="url(#glow)"/>
+          <g clip-path="url(#dropClip)" fill="none" stroke-linecap="round">
+            <path d="M60 55 C85 56, 95 72, 90 88 C85 104, 70 115, 52 112 C34 109, 24 95, 28 80 C32 66, 46 58, 60 60" stroke="#CEE8D8" stroke-width="2" opacity="0.5" filter="url(#softglow)"/>
+            <path d="M60 65 C77 66, 83 77, 80 89 C77 101, 66 108, 54 106 C42 104, 35 94, 38 83 C41 72, 51 66, 60 67" stroke="#8BCCA9" stroke-width="2.5" opacity="0.7" filter="url(#softglow)"/>
+            <path d="M60 74 C70 75, 74 82, 72 90 C70 98, 63 103, 56 101 C49 99, 45 93, 47 86 C49 79, 55 75, 60 75" stroke="#CEE8D8" stroke-width="2" opacity="0.85" filter="url(#softglow)"/>
+            <path d="M60 82 C64 82, 66 85, 65 89 C64 93, 61 95, 58 94 C55 93, 53 90, 54 87 C55 84, 58 82, 60 83" stroke="#ffffff" stroke-width="2" opacity="0.9" filter="url(#softglow)"/>
+          </g>
+          <circle cx="60" cy="88" r="22" fill="url(#innerGlow)" opacity="0.6"/>
+          <circle cx="60" cy="88" r="5" fill="#ffffff" opacity="0.95" filter="url(#softglow)"/>
+          <circle cx="60" cy="88" r="2.5" fill="#CEE8D8" opacity="1"/>
+          <circle cx="38" cy="68" r="1.5" fill="#CEE8D8" opacity="0.7" filter="url(#softglow)"/>
+          <circle cx="84" cy="72" r="1" fill="#CEE8D8" opacity="0.6" filter="url(#softglow)"/>
+          <circle cx="78" cy="112" r="1.2" fill="#8BCCA9" opacity="0.5" filter="url(#softglow)"/>
+          <circle cx="42" cy="108" r="1" fill="#CEE8D8" opacity="0.5" filter="url(#softglow)"/>
+        </svg>
+        <span class="hub-label">Vortex</span>
+      </span>
     </div>
   </header>
 
@@ -653,9 +700,7 @@
     <div id="view-home">
 
       <div class="home-hero">
-        <div class="home-hero-eyebrow">Watertight Vortex</div>
-        <div class="home-hero-title">Your influencer toolkit</div>
-        <div class="home-hero-sub">Campaign tools built for the Watertight team.</div>
+        <div class="home-hero-title">Enter the Vortex</div>
       </div>
 
       <div class="tool-cards-grid">
