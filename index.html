@@ -87,51 +87,177 @@
       letter-spacing: 0.04em;
     }
 
-    .header-nav {
-      display: flex;
-      gap: 4px;
-    }
-
-    .nav-item {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-light);
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s;
-      border: none;
-      background: none;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-item.active {
-      background: var(--wt-green-4);
-      color: var(--wt-green);
-      font-weight: 600;
-    }
-
-    .nav-item:hover:not(.active) {
-      background: var(--wt-green-4);
-      color: var(--text-mid);
-    }
-
-    .nav-item .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--wt-green-2);
-    }
-
-    .nav-item.active .dot { background: var(--wt-green); }
-
     /* ─── PAGE ─── */
     .page {
       max-width: 760px;
       margin: 0 auto;
       padding: 40px 24px 80px;
+    }
+
+    /* ─── HOME VIEW ─── */
+    .home-hero {
+      margin-bottom: 36px;
+    }
+
+    .home-hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .home-hero-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--wt-green);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .home-hero-sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .tool-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .tool-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+    }
+
+    .tool-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--wt-green-2);
+    }
+
+    .tool-card--disabled {
+      cursor: default;
+    }
+
+    .tool-card--disabled:hover {
+      box-shadow: var(--shadow-sm);
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .tool-card-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--wt-green);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .tool-card--disabled .tool-card-icon {
+      background: var(--wt-green-3);
+    }
+
+    .tool-card-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: white;
+    }
+
+    .tool-card--disabled .tool-card-icon svg {
+      stroke: var(--text-light);
+    }
+
+    .tool-card-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--wt-green);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .tool-card--disabled .tool-card-name {
+      color: var(--text-light);
+    }
+
+    .tool-card-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .tool-card-arrow {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 20px;
+      height: 20px;
+      color: var(--wt-green-2);
+      transition: transform 0.15s, color 0.15s;
+    }
+
+    .tool-card:hover .tool-card-arrow {
+      transform: translateX(2px);
+      color: var(--wt-green);
+    }
+
+    .coming-soon-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      background: var(--wt-green-4);
+      border: 1px solid var(--wt-green-3);
+      border-radius: 20px;
+      padding: 3px 9px;
+    }
+
+    /* ─── BACK LINK ─── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      margin-bottom: 28px;
+      padding: 4px 0;
+      border: none;
+      background: none;
+      font-family: 'Poppins', sans-serif;
+      transition: color 0.15s;
+      text-decoration: none;
+    }
+
+    .back-link:hover { color: var(--wt-green); }
+
+    .back-link svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      flex-shrink: 0;
     }
 
     /* ─── SECTION TITLE ─── */
@@ -495,38 +621,6 @@
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast svg { width: 16px; height: 16px; stroke: var(--wt-green-2); }
 
-    /* ─── COMING SOON TOOLS ─── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-    }
-
-    .tool-stub {
-      background: white;
-      border: 1.5px dashed var(--wt-green-3);
-      border-radius: var(--radius-md);
-      padding: 20px 18px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      opacity: 0.55;
-    }
-
-    .stub-icon {
-      width: 32px; height: 32px;
-      background: var(--wt-green-4);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .stub-icon svg { width: 15px; height: 15px; stroke: var(--text-mid); }
-    .stub-name { font-size: 13px; font-weight: 500; color: var(--text-mid); }
-    .stub-status { font-size: 11px; color: var(--text-light); margin-top: 2px; }
-
     /* ─── RESPONSIVE ─── */
     @media (max-width: 600px) {
       header { padding: 0 16px; }
@@ -535,6 +629,7 @@
       .card-top { padding: 16px 20px; }
       .row-2, .row-3 { grid-template-columns: 1fr; }
       .result-actions { flex-direction: column; }
+      .tool-cards-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -552,165 +647,224 @@
   <!-- PAGE -->
   <main class="page">
 
-    <!-- UTM BUILDER -->
-    <div class="section-title">UTM Link Builder</div>
+    <!-- ══════════════════════════════════════════ -->
+    <!-- HOME VIEW                                  -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="view-home">
 
-    <div class="card" id="utm">
-      <div class="card-top">
-        <div class="card-title-group">
-          <div class="card-icon">
+      <div class="home-hero">
+        <div class="home-hero-eyebrow">Watertight Vortex</div>
+        <div class="home-hero-title">Your influencer toolkit</div>
+        <div class="home-hero-sub">Campaign tools built for the Watertight team.</div>
+      </div>
+
+      <div class="tool-cards-grid">
+
+        <!-- Card 1: UTM Link Builder -->
+        <div class="tool-card" onclick="navigateTo('utm')">
+          <div class="tool-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
               <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
             </svg>
           </div>
-          <div>
-            <div class="card-title">UTM Link Builder</div>
-            <div class="card-subtitle">Generate tracking links for influencer campaigns</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-body">
-
-        <!-- SECTION: Destination -->
-        <div class="form-section">
-          <div class="form-section-label">Destination</div>
-          <div class="row">
-            <div class="field">
-              <label>Destination URL <span class="tag">required</span></label>
-              <input id="dest-url" type="url" placeholder="https://example.com/page" autocomplete="off" spellcheck="false" />
-              <span class="field-warn" id="warn-url">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Please enter a destination URL
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION: Campaign Attribution -->
-        <div class="form-section">
-          <div class="form-section-label">Campaign Attribution</div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>Source <span class="tag">required</span></label>
-              <div class="select-wrap">
-                <select id="utm-source">
-                  <option value="">— select source —</option>
-                  <option value="google">google</option>
-                  <option value="meta">meta</option>
-                  <option value="tiktok">tiktok</option>
-                  <option value="instagram">instagram</option>
-                  <option value="youtube">youtube</option>
-                  <option value="pinterest">pinterest</option>
-                  <option value="reddit">reddit</option>
-                  <option value="linkedin">linkedin</option>
-                  <option value="twitter">twitter</option>
-                  <option value="email">email</option>
-                  <option value="influencer">influencer</option>
-                  <option value="partnerships">partnerships</option>
-                  <option value="podcast">podcast</option>
-                  <option value="social">social</option>
-                </select>
-              </div>
-              <span class="field-warn" id="warn-source">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Source is recommended
-              </span>
-            </div>
-            <div class="field">
-              <label>Medium <span class="tag">required</span></label>
-              <div class="select-wrap">
-                <select id="utm-medium">
-                  <option value="">— select medium —</option>
-                  <option value="cpc">cpc</option>
-                  <option value="social">social</option>
-                  <option value="influencer">influencer</option>
-                  <option value="affiliates">affiliates</option>
-                  <option value="partnership">partnership</option>
-                  <option value="email">email</option>
-                  <option value="display">display</option>
-                  <option value="video">video</option>
-                  <option value="paid-social">paid-social</option>
-                  <option value="organic">organic</option>
-                </select>
-              </div>
-              <span class="field-warn" id="warn-medium">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Medium is recommended
-              </span>
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>Campaign <span class="tag">recommended</span></label>
-              <input id="utm-campaign" type="text" placeholder="e.g. spring-launch" autocomplete="off" spellcheck="false" />
-              <span class="field-warn" id="warn-campaign">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Campaign is recommended
-              </span>
-            </div>
-            <div class="field">
-              <label>Term <span class="tag">optional</span></label>
-              <input id="utm-term" type="text" placeholder="e.g. paid-keywords" autocomplete="off" spellcheck="false" />
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION: Content / Influencer -->
-        <div class="form-section">
-          <div class="form-section-label">Influencer / Content</div>
-          <div class="row-2">
-            <div class="field">
-              <label>First Name <span class="tag">auto-fills Content if empty</span></label>
-              <input id="first-name" type="text" placeholder="Jessica" autocomplete="off" spellcheck="false" />
-            </div>
-            <div class="field">
-              <label>Last Name</label>
-              <input id="last-name" type="text" placeholder="Manning" autocomplete="off" spellcheck="false" />
-            </div>
-          </div>
-          <div class="field-hint" style="margin-top:-8px; margin-bottom:4px;">Influencer name will be used as <code style="font-size:11px; color:var(--wt-green)">utm_content</code> — formatted as <code style="font-size:11px; color:var(--wt-green)">firstname-lastname</code>.</div>
-        </div>
-
-        <!-- Generate -->
-        <button class="generate-btn" onclick="buildUTM()">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="13 2 13 9 20 9"/><path d="M20 14v5a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h7"/>
+          <div class="tool-card-name">UTM Link Builder</div>
+          <div class="tool-card-desc">Generate tracking links for influencer campaigns</div>
+          <svg class="tool-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
           </svg>
-          Generate Tracking Link
-        </button>
+        </div>
+
+        <!-- Card 2: Contract Assistant (Coming Soon) -->
+        <div class="tool-card tool-card--disabled">
+          <div class="tool-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div class="tool-card-name">Contract Assistant</div>
+          <div class="tool-card-desc">Auto-generate and track influencer contracts</div>
+          <span class="coming-soon-badge">Coming Soon</span>
+        </div>
+
       </div>
     </div>
 
-    <!-- RESULT -->
-    <div class="result-card" id="result-card">
-      <div class="result-top">
-        <span class="result-top-label">Generated Link</span>
-        <span class="char-count" id="char-count">0 chars</span>
-      </div>
-      <div class="result-body">
-        <textarea class="url-output" id="url-output" readonly rows="3"></textarea>
-        <div class="result-actions">
-          <button class="btn btn-primary" id="copy-btn" onclick="copyURL()">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+    <!-- ══════════════════════════════════════════ -->
+    <!-- UTM VIEW                                   -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="view-utm" style="display:none">
+
+      <button class="back-link" onclick="navigateTo('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back to Vortex
+      </button>
+
+      <div class="section-title">UTM Link Builder</div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title-group">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">UTM Link Builder</div>
+              <div class="card-subtitle">Generate tracking links for influencer campaigns</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-body">
+
+          <!-- SECTION: Destination -->
+          <div class="form-section">
+            <div class="form-section-label">Destination</div>
+            <div class="row">
+              <div class="field">
+                <label>Destination URL <span class="tag">required</span></label>
+                <input id="dest-url" type="url" placeholder="https://example.com/page" autocomplete="off" spellcheck="false" />
+                <span class="field-warn" id="warn-url">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Please enter a destination URL
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION: Campaign Attribution -->
+          <div class="form-section">
+            <div class="form-section-label">Campaign Attribution</div>
+
+            <div class="row-2">
+              <div class="field">
+                <label>Source <span class="tag">required</span></label>
+                <div class="select-wrap">
+                  <select id="utm-source">
+                    <option value="">— select source —</option>
+                    <option value="google">google</option>
+                    <option value="meta">meta</option>
+                    <option value="tiktok">tiktok</option>
+                    <option value="instagram">instagram</option>
+                    <option value="youtube">youtube</option>
+                    <option value="pinterest">pinterest</option>
+                    <option value="reddit">reddit</option>
+                    <option value="linkedin">linkedin</option>
+                    <option value="twitter">twitter</option>
+                    <option value="email">email</option>
+                    <option value="influencer">influencer</option>
+                    <option value="partnerships">partnerships</option>
+                    <option value="podcast">podcast</option>
+                    <option value="social">social</option>
+                  </select>
+                </div>
+                <span class="field-warn" id="warn-source">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Source is recommended
+                </span>
+              </div>
+              <div class="field">
+                <label>Medium <span class="tag">required</span></label>
+                <div class="select-wrap">
+                  <select id="utm-medium">
+                    <option value="">— select medium —</option>
+                    <option value="cpc">cpc</option>
+                    <option value="social">social</option>
+                    <option value="influencer">influencer</option>
+                    <option value="affiliates">affiliates</option>
+                    <option value="partnership">partnership</option>
+                    <option value="email">email</option>
+                    <option value="display">display</option>
+                    <option value="video">video</option>
+                    <option value="paid-social">paid-social</option>
+                    <option value="organic">organic</option>
+                  </select>
+                </div>
+                <span class="field-warn" id="warn-medium">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Medium is recommended
+                </span>
+              </div>
+            </div>
+
+            <div class="row-2">
+              <div class="field">
+                <label>Campaign <span class="tag">recommended</span></label>
+                <input id="utm-campaign" type="text" placeholder="e.g. spring-launch" autocomplete="off" spellcheck="false" />
+                <span class="field-warn" id="warn-campaign">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Campaign is recommended
+                </span>
+              </div>
+              <div class="field">
+                <label>Term <span class="tag">optional</span></label>
+                <input id="utm-term" type="text" placeholder="e.g. paid-keywords" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION: Content / Influencer -->
+          <div class="form-section">
+            <div class="form-section-label">Influencer / Content</div>
+            <div class="row-2">
+              <div class="field">
+                <label>First Name <span class="tag">auto-fills Content if empty</span></label>
+                <input id="first-name" type="text" placeholder="Jessica" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="field">
+                <label>Last Name</label>
+                <input id="last-name" type="text" placeholder="Manning" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
+            <div class="field-hint" style="margin-top:-8px; margin-bottom:4px;">Influencer name will be used as <code style="font-size:11px; color:var(--wt-green)">utm_content</code> — formatted as <code style="font-size:11px; color:var(--wt-green)">firstname-lastname</code>.</div>
+          </div>
+
+          <!-- Generate -->
+          <button class="generate-btn" onclick="buildUTM()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="13 2 13 9 20 9"/><path d="M20 14v5a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h7"/>
             </svg>
-            Copy Link
-          </button>
-          <button class="btn btn-secondary" onclick="resetAll()">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
-            </svg>
-            Reset
+            Generate Tracking Link
           </button>
         </div>
-        <div class="param-chips" id="param-chips"></div>
       </div>
-    </div>
 
+      <!-- RESULT -->
+      <div class="result-card" id="result-card">
+        <div class="result-top">
+          <span class="result-top-label">Generated Link</span>
+          <span class="char-count" id="char-count">0 chars</span>
+        </div>
+        <div class="result-body">
+          <textarea class="url-output" id="url-output" readonly rows="3"></textarea>
+          <div class="result-actions">
+            <button class="btn btn-primary" id="copy-btn" onclick="copyURL()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+              Copy Link
+            </button>
+            <button class="btn btn-secondary" onclick="resetAll()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+              </svg>
+              Reset
+            </button>
+          </div>
+          <div class="param-chips" id="param-chips"></div>
+        </div>
+      </div>
+
+    </div><!-- /view-utm -->
 
   </main>
 
@@ -723,6 +877,20 @@
   </div>
 
   <script>
+    // ─── ROUTING ───
+    function navigateTo(view) {
+      window.location.hash = view;
+    }
+
+    function handleRoute() {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      document.getElementById('view-home').style.display = (hash === 'utm') ? 'none' : 'block';
+      document.getElementById('view-utm').style.display  = (hash === 'utm') ? 'block' : 'none';
+    }
+
+    window.addEventListener('hashchange', handleRoute);
+    handleRoute();
+
     // ─── SANITIZER ───
     function sanitize(val) {
       return val
@@ -750,7 +918,6 @@
 
       // Reflect sanitized values back
       document.getElementById('utm-campaign').value = campaign;
-
       document.getElementById('utm-term').value      = term;
 
       // Build content from name fields
