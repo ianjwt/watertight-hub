@@ -1577,6 +1577,39 @@
     .cg .layout { grid-template-columns: 1fr; }
     .cg .preview-panel { position: static; }
   }
+
+  .cg .cg-primary-cta {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(45,106,79,0.25);
+    letter-spacing: 0.01em;
+  }
+  .cg .cg-primary-cta:hover:not(:disabled) {
+    background: var(--green-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(45,106,79,0.35);
+  }
+  .cg .cg-primary-cta:disabled {
+    background: var(--green-mid);
+    color: var(--green);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
   </style>
 </head>
 <body>
@@ -2166,6 +2199,11 @@
 
     </div>
 
+    <button class="cg-primary-cta" id="gdocs-btn" disabled onclick="copyToGDoc()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      Copy to Google Doc
+    </button>
+
     <!-- RIGHT: PREVIEW -->
     <div class="preview-panel">
       <div class="card">
@@ -2387,12 +2425,6 @@
             <div class="legend-row" style="margin-top:4px;padding-top:6px;border-top:1px solid var(--border);color:#aaa;font-size:10.5px;">✏️ Hover any row to edit inline</div>
           </div>
 
-          <div class="action-bar">
-<button class="btn btn-secondary" id="gdocs-btn" disabled onclick="copyToGDoc()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Copy to Google Doc
-            </button>
-          </div>
 
         </div>
       </div>
