@@ -1324,6 +1324,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 14px;
     margin-bottom: 22px;
+    align-items: flex-start;
   }
   .cg .field-block label {
     display: block;
@@ -1912,11 +1913,11 @@
         <div class="card-body">
           <div class="fields-row">
             <div class="field-block">
-              <label>Influencer Name *</label>
+              <label>Influencer Name <span style="color:var(--orange);">*</span></label>
               <input type="text" id="inf-name" placeholder="e.g. Jenna Rennert" oninput="updatePreview()">
             </div>
             <div class="field-block">
-              <label>Handle *</label>
+              <label>Handle <span style="color:var(--orange);">*</span></label>
               <input type="text" id="inf-handle" placeholder="@handle" oninput="updatePreview()">
             </div>
             <div class="field-block full">
