@@ -720,21 +720,15 @@
           </svg>
         </div>
 
-        <!-- Card 2: Contract Assistant (Coming Soon) -->
-        <div class="tool-card tool-card--disabled">
+        <!-- Card 2: Contract Generator -->
+        <a class="tool-card" onclick="navigateTo('contract')">
+          <svg class="tool-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           <div class="tool-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           </div>
-          <div class="tool-card-name">Contract Assistant</div>
-          <div class="tool-card-desc">Auto-generate and track influencer contracts</div>
-          <span class="coming-soon-badge">Coming Soon</span>
-        </div>
+          <div class="tool-card-name">Contract Generator</div>
+          <div class="tool-card-desc">Generate influencer agreements from templates. Auto-populate by client and base contract.</div>
+        </a>
 
       </div>
     </div>
@@ -911,6 +905,1470 @@
 
     </div><!-- /view-utm -->
 
+    <div id="view-contract" style="display:none;">
+      <a class="back-link" onclick="navigateTo('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Vortex
+      </a>
+
+<!-- NAV -->  <div class="page-header">
+    <h1>Contract Generator</h1>
+    <p>Build influencer agreements from existing contract templates. Select a client to load their contract setup, then auto-populate from a base contract.</p>
+  </div>
+
+  <!-- CLIENT SELECTOR -->
+  <div class="client-selector-bar">
+    <div class="client-selector-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+      Client
+    </div>
+    <div class="client-tabs">
+      <button class="client-tab active" onclick="selectClient('de')" id="ctab-de">
+        <span class="client-dot" style="background:#7EC8A4;"></span>
+        Deliciously Ella
+      </button>
+      <button class="client-tab" onclick="selectClient('evolv')" id="ctab-evolv">
+        <span class="client-dot" style="background:#A0B4C8;"></span>
+        Evolv
+        <span class="coming-soon-pill">Soon</span>
+      </button>
+      <button class="client-tab add-client-tab" onclick="alert('Contact Ian to add a new client config.')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M12 5v14M5 12h14"/></svg>
+        Add Client
+      </button>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step done" id="step1">
+      <div class="step-num">✓</div> Influencer Details
+    </div>
+    <div class="step active" id="step2">
+      <div class="step-num">2</div> Contract Modules
+    </div>
+    <div class="step" id="step3">
+      <div class="step-num">3</div> Review & Generate
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT: FORM -->
+    <div>
+
+      <!-- INFLUENCER DETAILS CARD -->
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <h2>Influencer Details</h2>
+        </div>
+        <div class="card-body">
+          <div class="fields-row">
+            <div class="field-block">
+              <label>Influencer Name *</label>
+              <input type="text" id="inf-name" placeholder="e.g. Jenna Rennert" oninput="updatePreview()">
+            </div>
+            <div class="field-block">
+              <label>Handle *</label>
+              <input type="text" id="inf-handle" placeholder="@handle" oninput="updatePreview()">
+            </div>
+            <div class="field-block full">
+              <label>Legal Name / Entity</label>
+              <input type="text" id="inf-legal" placeholder="e.g. Girl and The Bay, LLC f/s/o Mandana Ansari" oninput="updatePreview()">
+            </div>
+            <div class="field-block full">
+              <label>Address</label>
+              <input type="text" id="inf-address" placeholder="Street, City, State ZIP" oninput="updatePreview()">
+            </div>
+            <div class="field-block">
+              <label>Agency</label>
+              <input type="text" id="inf-agency" placeholder="e.g. Shine Talent Group" oninput="updatePreview()">
+            </div>
+            <div class="field-block">
+              <label>Effective Date</label>
+              <input type="date" id="inf-date" oninput="updatePreview()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BASE CONTRACT CARD -->
+      <div class="card">
+        <div class="card-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <h2>Base Contract</h2>
+          <span class="badge" id="client-badge">Deliciously Ella — Q1 2026</span>
+        </div>
+        <div class="card-body">
+
+          <!-- CLIENT CONFIG STRIP -->
+          <div class="client-config-strip" id="client-config-strip">
+            <div class="client-config-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+              Brand: <strong id="cfg-brand">Deliciously Ella</strong>
+            </div>
+            <div class="client-config-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Address: <strong id="cfg-address">1 Nutritious Place, Amsterdam, NY 12010</strong>
+            </div>
+            <div class="client-config-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+              Disclosure: <strong id="cfg-disclosure">#DeliciouslyEllaPartner</strong>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div>Select a base contract to auto-populate all modules below. You can then override any individual module with language from a different contract.</div>
+          </div>
+
+          <div class="field-block" style="margin-bottom: 18px;">
+            <label>Base Template</label>
+            <div class="base-select-wrap">
+              <select id="base-contract" onchange="onBaseChange()">
+                <option value="">— Select a contract —</option>
+                <option value="template">📄 TEMPLATE (Default — Watertight Standard)</option>
+                <option value="alondra">👤 Alondra Priscilla — Shine Talent Group</option>
+                <option value="mandy">👤 Mandy Ansari — Direct (Agent-style)</option>
+                <option value="katie">👤 Katie Sands — Night Agency</option>
+                <option value="jenna">👤 Jenna Rennert — Digital Brand Architects</option>
+                <option value="georgia">👤 Georgia Perkins — Illuminate Social</option>
+                <option value="eliz">👤 Elizabeth Endres — Ponte Firm</option>
+              </select>
+            </div>
+            <div class="helper-text">The TEMPLATE is recommended as the default starting point for all new contracts.</div>
+          </div>
+
+          <div id="modules-section" style="display:none;">
+            <div class="divider"></div>
+            <div class="modules-label">Contract Modules — Override Individual Sections</div>
+
+            <!-- MODULE: DELIVERABLES -->
+            <div class="module" id="mod-deliverables">
+              <div class="module-header" onclick="toggleModule('deliverables')">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <div class="module-title">
+                  Deliverables
+                  <span class="customized-tag">Custom</span>
+                </div>
+                <span class="module-source" id="source-deliverables">From: TEMPLATE</span>
+                <svg class="module-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              </div>
+              <div class="module-body">
+                <div class="field-group">
+                  <label>Use language from</label>
+                  <select onchange="onModuleOverride('deliverables', this)">
+                    <option value="template">TEMPLATE (1x Reel, syndicated to TikTok)</option>
+                    <option value="alondra">Alondra Priscilla (1x Reel + ManyChat)</option>
+                    <option value="katie">Katie Sands (1x IG Story set, 3 frames, 2 UTM links)</option>
+                    <option value="jenna">Jenna Rennert (1x IG Story set, 3 frames, 2 UTM links)</option>
+                    <option value="georgia">Georgia Perkins (1x Reel + ManyChat)</option>
+                    <option value="eliz">Elizabeth Endres (1x IG Story set, 1 UTM link)</option>
+                    <option value="mandy">Mandy Ansari (IG Story set + single-frame reminder)</option>
+                    <option value="custom">✏️ Custom text...</option>
+                  </select>
+                </div>
+                <div class="field-group" id="custom-deliverables" style="display:none;">
+                  <label>Custom deliverables text</label>
+                  <textarea placeholder="Describe the deliverables..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- MODULE: WHITELISTING -->
+            <div class="module" id="mod-whitelisting">
+              <div class="module-header" onclick="toggleModule('whitelisting')">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <div class="module-title">
+                  Whitelisting & Ad Usage
+                  <span class="customized-tag">Custom</span>
+                </div>
+                <span class="module-source" id="source-whitelisting">From: TEMPLATE</span>
+                <svg class="module-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              </div>
+              <div class="module-body">
+                <div class="field-group">
+                  <label>Ad usage terms</label>
+                  <select onchange="onModuleOverride('whitelisting', this)">
+                    <option value="template">TEMPLATE — 60 days ad usage, 90 days brand handle (Meta + TikTok)</option>
+                    <option value="alondra">Alondra Priscilla — 60 days ad usage, 60 days brand handle</option>
+                    <option value="katie">Katie Sands — 60 days ad usage, 60 days brand handle</option>
+                    <option value="jenna">Jenna Rennert — 45 days ad usage, 45 days brand handle</option>
+                    <option value="georgia">Georgia Perkins — 60 days ad usage, 60 days brand handle</option>
+                    <option value="eliz">Elizabeth Endres — No ad usage</option>
+                    <option value="custom">✏️ Custom...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- MODULE: FEE/PAYMENT -->
+            <div class="module" id="mod-payment">
+              <div class="module-header" onclick="toggleModule('payment')">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+                </div>
+                <div class="module-title">
+                  Fee & Payment Terms
+                  <span class="customized-tag">Custom</span>
+                </div>
+                <span class="module-source" id="source-payment">From: TEMPLATE</span>
+                <svg class="module-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              </div>
+              <div class="module-body">
+                <div class="field-group">
+                  <label>Payment terms structure</label>
+                  <select onchange="onModuleOverride('payment', this)">
+                    <option value="template">TEMPLATE — Net 60 days (Watertight standard)</option>
+                    <option value="mandy">Mandy Ansari — Net 30 days (agent exception)</option>
+                    <option value="custom">✏️ Custom...</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label>Fee amount (USD)</label>
+                  <input type="text" id="fee-amount" placeholder="$2,000" oninput="updatePreview()">
+                </div>
+                <div class="field-group">
+                  <label>Pay to</label>
+                  <input type="text" id="pay-to" placeholder="Influencer name or agency" oninput="updatePreview()">
+                </div>
+              </div>
+            </div>
+
+            <!-- MODULE: INITIAL TERM -->
+            <div class="module" id="mod-term">
+              <div class="module-header" onclick="toggleModule('term')">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </div>
+                <div class="module-title">
+                  Initial Term / Live Date
+                  <span class="customized-tag">Custom</span>
+                </div>
+                <span class="module-source" id="source-term">From: TEMPLATE</span>
+                <svg class="module-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              </div>
+              <div class="module-body">
+                <div class="field-group">
+                  <label>Term language style</label>
+                  <select onchange="onModuleOverride('term', this)">
+                    <option value="template">Standard — "Live on [date] or mutually agreed upon date"</option>
+                    <option value="mandy">Agent-style — Full term definition with delivery period</option>
+                    <option value="custom">✏️ Custom...</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label>Target live date</label>
+                  <input type="date" id="live-date" oninput="updatePreview()">
+                </div>
+              </div>
+            </div>
+
+            <!-- MODULE: SYNDICATION RIGHTS -->
+            <div class="module" id="mod-syndication">
+              <div class="module-header" onclick="toggleModule('syndication')">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+                </div>
+                <div class="module-title">
+                  Syndication & Promotion Rights
+                  <span class="customized-tag">Custom</span>
+                </div>
+                <span class="module-source" id="source-syndication">From: TEMPLATE</span>
+                <svg class="module-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              </div>
+              <div class="module-body">
+                <div class="field-group">
+                  <label>Usage rights period</label>
+                  <select onchange="onModuleOverride('syndication', this)">
+                    <option value="template">TEMPLATE — 90 days organic + 60 days paid whitelist</option>
+                    <option value="jenna">Jenna Rennert — 45 days organic + 45 days paid whitelist</option>
+                    <option value="eliz">Elizabeth Endres — Organic only, no paid usage</option>
+                    <option value="custom">✏️ Custom...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- MODULE: LEGAL TERMS — replaced by full T&C section below -->
+
+          </div>
+        </div>
+      </div>
+
+      <!-- TERMS & CONDITIONS SECTION -->
+      <div class="card tc-section" id="tc-section" style="display:none;">
+        <div class="tc-section-header" onclick="toggleTCSection()">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Terms & Conditions
+            <span style="font-size:10px;font-weight:400;opacity:0.7;margin-left:4px;">18 sections + Exhibit B · Deliciously Ella Standard</span>
+          </h3>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span id="tc-edited-count" style="display:none;background:var(--orange);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;"></span>
+            <svg id="tc-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="transition:transform 0.2s;transform:rotate(180deg)"><path d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+        <div class="tc-section-body" id="tc-body"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: PREVIEW -->
+    <div class="preview-panel">
+      <div class="card">
+        <div class="card-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <h2>Live Preview</h2>
+        </div>
+        <div class="preview-scroll">
+          <div class="preview-title">Contract Summary</div>
+
+          <div class="contract-preview" id="contract-preview">
+            <div class="cp-header">Influencer Services & Content Agreement — Deliciously Ella</div>
+            <div class="cp-row">
+              <div class="cp-label">Effective Date</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-date">—</div>
+                <button class="edit-btn" onclick="openInlineEdit('date')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-date">
+                  <textarea id="edit-date-input" placeholder="e.g. January 22, 2026"></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('date')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('date')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('date')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Influencer</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-influencer">—</div>
+                <button class="edit-btn" onclick="openInlineEdit('influencer')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-influencer">
+                  <textarea id="edit-influencer-input" placeholder="Name, @handle, address..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('influencer')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('influencer')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('influencer')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Agency</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-agency">N/A</div>
+                <button class="edit-btn" onclick="openInlineEdit('agency')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-agency">
+                  <textarea id="edit-agency-input" placeholder="Agency name or N/A"></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('agency')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('agency')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('agency')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Brand</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value"><strong>Deliciously Ella</strong><br>1 Nutritious Place<br>Amsterdam, New York 12010</div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Campaign</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-campaign"><strong>Deliciously Ella – Q1 2026 Granola Bars</strong></div>
+                <button class="edit-btn" onclick="openInlineEdit('campaign')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-campaign">
+                  <textarea id="edit-campaign-input" placeholder="Campaign / project name"></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('campaign')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('campaign')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('campaign')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Deliverables</div>
+              <div class="cp-value-wrap" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex;align-items:flex-start;gap:0;">
+                  <div class="cp-value" id="prev-deliverables">—</div>
+                  <button class="edit-btn" onclick="openInlineEdit('deliverables')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                </div>
+                <button class="view-clause-btn" id="clause-btn-deliverables" onclick="toggleClause('deliverables')" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View full clause
+                </button>
+                <div class="full-clause" id="clause-deliverables">
+                  <div class="full-clause-source" id="clause-source-deliverables"></div>
+                  <div id="clause-text-deliverables"></div>
+                </div>
+                <div class="inline-editor" id="edit-deliverables">
+                  <textarea id="edit-deliverables-input" placeholder="Paste or type deliverables text..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('deliverables')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('deliverables')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('deliverables')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Initial Term</div>
+              <div class="cp-value-wrap" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex;align-items:flex-start;gap:0;">
+                  <div class="cp-value" id="prev-term">—</div>
+                  <button class="edit-btn" onclick="openInlineEdit('term')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                </div>
+                <button class="view-clause-btn" id="clause-btn-term" onclick="toggleClause('term')" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View full clause
+                </button>
+                <div class="full-clause" id="clause-term">
+                  <div class="full-clause-source" id="clause-source-term"></div>
+                  <div id="clause-text-term"></div>
+                </div>
+                <div class="inline-editor" id="edit-term">
+                  <textarea id="edit-term-input" placeholder="Paste or type term language..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('term')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('term')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('term')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Whitelisting</div>
+              <div class="cp-value-wrap" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex;align-items:flex-start;gap:0;">
+                  <div class="cp-value" id="prev-whitelisting">—</div>
+                  <button class="edit-btn" onclick="openInlineEdit('whitelisting')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                </div>
+                <button class="view-clause-btn" id="clause-btn-whitelisting" onclick="toggleClause('whitelisting')" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View full clause
+                </button>
+                <div class="full-clause" id="clause-whitelisting">
+                  <div class="full-clause-source" id="clause-source-whitelisting"></div>
+                  <div id="clause-text-whitelisting"></div>
+                </div>
+                <div class="inline-editor" id="edit-whitelisting">
+                  <textarea id="edit-whitelisting-input" placeholder="e.g. 60 days ad usage + 90 days brand handle..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('whitelisting')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('whitelisting')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('whitelisting')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Fee / Payment</div>
+              <div class="cp-value-wrap" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex;align-items:flex-start;gap:0;">
+                  <div class="cp-value" id="prev-payment">—</div>
+                  <button class="edit-btn" onclick="openInlineEdit('payment')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                </div>
+                <button class="view-clause-btn" id="clause-btn-payment" onclick="toggleClause('payment')" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View full clause
+                </button>
+                <div class="full-clause" id="clause-payment">
+                  <div class="full-clause-source" id="clause-source-payment"></div>
+                  <div id="clause-text-payment"></div>
+                </div>
+                <div class="inline-editor" id="edit-payment">
+                  <textarea id="edit-payment-input" placeholder="e.g. $3,500 — Net 60 days, pay to Agency Name..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('payment')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('payment')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('payment')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Disclosure</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-disclosure">#DeliciouslyEllaPartner</div>
+                <button class="edit-btn" onclick="openInlineEdit('disclosure')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-disclosure">
+                  <textarea id="edit-disclosure-input" placeholder="#DeliciouslyEllaPartner"></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('disclosure')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('disclosure')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('disclosure')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-row">
+              <div class="cp-label">Territory</div>
+              <div class="cp-value-wrap">
+                <div class="cp-value" id="prev-territory">48 Contiguous United States</div>
+                <button class="edit-btn" onclick="openInlineEdit('territory')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <div class="inline-editor" id="edit-territory">
+                  <textarea id="edit-territory-input" placeholder="Territory description..."></textarea>
+                  <div class="inline-editor-actions">
+                    <button class="inline-save" onclick="saveInlineEdit('territory')">Save</button>
+                    <button class="inline-cancel" onclick="closeInlineEdit('territory')">Cancel</button>
+                    <button class="inline-reset" onclick="resetInlineEdit('territory')">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-row" id="status-row" style="display:none;">
+            <span>Customized modules</span>
+            <strong id="custom-count">0</strong>
+          </div>
+
+          <div class="legend">
+            <div class="legend-row"><div class="dot dot-default"></div> From base template</div>
+            <div class="legend-row"><div class="dot dot-custom"></div> <span style="color:var(--orange)">Custom / overridden</span></div>
+            <div class="legend-row" style="margin-top:4px;padding-top:6px;border-top:1px solid var(--border);color:#aaa;font-size:10.5px;">✏️ Hover any row to edit inline</div>
+          </div>
+
+          <div class="action-bar">
+            <button class="btn btn-primary" id="generate-btn" disabled onclick="generateContract()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              Generate Contract (.docx)
+            </button>
+            <button class="btn btn-secondary" id="gdocs-btn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Copy to Google Doc
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// summary: short label shown in preview cell
+// fullClause: verbatim text from the actual contract document
+const contractData = {
+  template: {
+    name: "TEMPLATE",
+    deliverables: "1 × Reel about Deliciously Ella products, syndicated to TikTok",
+    deliverablesFull: `a. Talent agrees to publishing 1 x Reel about Deliciously Ella products syndicated to TikTok
+
+1. Talking points to be provided by the Brand and agency Watertight
+
+2. Video Content to be shared to both feed and reposted to stories including a UTM link to site provided by Watertight
+   i. Tags must feature @deliciouslyella on Instagram, and #deliciouslyellapartner in compliance with FTC guidelines
+   ii. Tags must feature @deliciouslyella on TikTok, and #deliciouslyellapartner in compliance with FTC guidelines
+
+3. Talent will provide videos and audio in two formats: raw, without any text overlays or music, and edited, including any captions and/or music where applicable prior to the organic live date
+   i. Any music used in the content should be royalty-free
+
+4. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+5. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.
+
+The Deliverables shall conform to the specifications and instructions of the Brand and adhere to the guidelines of the relevant social media platforms. All content must be in good taste and free of inappropriate language and content promoting bigotry, racism, or discrimination.`,
+    whitelisting: "Whitelisting 60 days ad usage + 90 days paid brand handle",
+    whitelistingFull: `Deliciously Ella has the right to whitelist with 60 days usage rights following the live date across Meta and TikTok AND 90 days brand handle ad usage.`,
+    payment: "$2,000 — Net 60 days",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$2,000 to be paid net 60 days
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to [influence agent] on behalf of the Influencer.`,
+    term: "Deliverable to be live on [date] or mutually agreed upon date",
+    termFull: `Deliverable to be live on [date] or mutually agreed upon date
+
+Whitelisting 60 days ad usage and 90 days paid brand handle: starting the first day of 'live ad'`,
+    syndication: "90 days organic + 60 days paid whitelist",
+    syndicationFull: `2.1 The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use any content created pursuant to the following terms:
+
+2.1.1 The Brand may organically display, post, publish, retween, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Deliverables solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, and websites, which are owned and/or controlled by the Brand, as well as in emails and other digital marketing materials distributed by the Brand and/or on the Brand's behalf for ninety (90) days following the post live date.
+
+2.1.2 The Brand may promote the Deliverables via paid ads / promoted advertising including but not limited to boosting, dark posting, whitelisting, for 60 days after the first ad goes live.`
+  },
+
+  alondra: {
+    name: "Alondra Priscilla",
+    deliverables: "1 × Reel + ManyChat syndication to TikTok",
+    deliverablesFull: `A. Talent agrees to publishing 1 x Reel about Deliciously Ella products syndicated to TikTok using ManyChat
+
+1. Video Content to be shared to Feed on IG and TikTok, including a link to site provided by Watertight when appropriate
+   i. Tags must feature @deliciouslyella on Instagram, and #DeliciouslyEllaPartner in compliance with FTC guidelines
+   ii. Tags must feature @_deliciouslyella on TikTok, and #DeliciouslyEllaPartner in compliance with FTC guidelines
+
+2. Talent will provide videos and audio in two formats: captions and no captions
+   i. Any music used in the content should be royalty-free
+
+3. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+4. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.`,
+    whitelisting: "Whitelisting 60 days ad usage + 60 days paid brand handle",
+    whitelistingFull: `Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    payment: "$2,000 — Net 60 days (via Shine Talent Group)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$2,000 to be paid net 60 days
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to Shine Talent Group on behalf of the Influencer. Influencer hereby authorizes and directs Company to make all payments due and/or become due hereunder to influencer in the name of Shine Talent Group, who's receipt shall constitute a full and lawful receipt by Influencer.`,
+    term: "Deliverable to be live on [date] or mutually agreed upon date",
+    termFull: `Deliverable to be live on [date] or mutually agreed upon date
+
+Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    syndication: "60 days organic + 60 days paid whitelist",
+    syndicationFull: `2.1 The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use any content created pursuant to the following terms:
+
+2.1.1 The Brand may organically display, post, publish, retween, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Deliverables solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, and websites, which are owned and/or controlled by the Brand, as well as in emails and other digital marketing materials distributed by the Brand and/or on the Brand's behalf for sixty (60) days following the post live date.
+
+2.1.2 The Brand may promote the Deliverables via paid ads / promoted advertising including but not limited to boosting, dark posting, whitelisting, for 60 days after the first ad goes live.`
+  },
+
+  mandy: {
+    name: "Mandy Ansari",
+    deliverables: "1 × IG Story set (3+ frames, 2 UTM links) + 1 × single-frame reminder",
+    deliverablesFull: `During the Term, Influencer shall produce, provide, and publish the following content deliverables featuring products provided to Influencer by Brand (the "Content") and render the following services (collectively, the "Services") for the Campaign.
+
+A. Influencer agrees to publishing 1 x IG Story set (3+ video frames at minimum) with 2 x UTM links
+
+1. Talking points to be provided to Influencer by the Brand and agency Watertight in advance of Influencer's scheduled shoot dates
+
+2. Content to be shared to Influencer's Stories on Instagram, and including a link to site provided by Watertight on 2 x frames
+   i. Tags must feature @deliciouslyella on Instagram, and #deliciouslyellapartner in compliance with FTC guidelines
+
+3. Influencer will provide videos in two formats: raw, without any text overlays or music, and edited, including any captions and/or music where applicable.
+   i. Any music used in the content should be royalty-free
+
+4. All video/still assets to be provided to the Brand for use on organic social channels
+
+B. Influencer agrees to publishing 1x single-frame reminder with UTM link
+
+Brand, and or their agency Watertight on behalf of Brand, agrees to provide Influencer with the aforementioned talking points along with content requirements and any creative direction in a consolidated document (a "Brief").`,
+    whitelisting: "N/A — no whitelisting",
+    whitelistingFull: `N/A`,
+    payment: "$5,000 — Net 30 days (agent exception, via Maker Collaborative LLC)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+Brand shall pay a flat fee of $5,000 USD (the "Fee") to Maker Collaborative LLC on behalf of Influencer, and such Fee to be paid net 30 days upon completion of Influencer's Services.
+
+*Inclusive of all Content
+
+Influencer hereby authorizes and directs Brand to make all payments due and/or become due hereunder to Influencer in the name of The Maker Collective LLC, whose receipt shall constitute a full and lawful receipt by Influencer.
+
+Influencer shall be responsible for any withholdings, taxes, agency and/or other fees due on and/or in connection with such total compensation payable hereunder (including, without limitation, income taxes, Social Security taxes, withholding taxes, or other contributions required by law).`,
+    term: "Effective Date through publication — full defined Term",
+    termFull: `The Effective Date through publication of the Content, defined herein, which is tentatively scheduled to be live on [date] (the "Term"). For clarity, the Term is the period in which Influencer shall perform the Services.`,
+    syndication: "30 days organic use only (no paid)",
+    syndicationFull: `The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use the Content created pursuant to the following terms:
+
+The Brand may display, post, publish, retweet, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Content solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, which are owned and/or controlled by the Brand for thirty (30) days within forty (40) days from the Content live date (the "Usage Term").
+
+- Content can live in a historical context indefinitely
+
+A non-exclusive, worldwide, royalty-free right and licence to use the Content for non-commercial, internal corporate purposes including, conventions and meetings, advertising competitions, trade publications.`
+  },
+
+  katie: {
+    name: "Katie Sands",
+    deliverables: "1 × IG Story set (3 frames, 2 UTM links)",
+    deliverablesFull: `a. Talent agrees to publishing 1 x IG Story set (3 video frames) with 2 x UTM links
+
+1. Talking points to be provided by the Brand and agency Watertight
+
+2. Video Content to be shared to both feed and reposted to stories including a UTM link to site provided by Watertight
+   i. Tags must feature @deliciouslyella on Instagram, and #deliciouslyellapartner in compliance with FTC guidelines
+
+3. Talent will provide videos and audio in two formats: raw, without any text overlays or music, and edited, including any captions and/or music where applicable prior to the organic live date
+   i. Any music used in the content should be royalty-free
+
+4. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+5. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.`,
+    whitelisting: "Whitelisting 60 days ad usage + 60 days paid brand handle",
+    whitelistingFull: `Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    payment: "$6,000 — Net 60 days, guaranteed pay or play (via Night)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$6,000 to be paid net 60 days on a guaranteed pay or play basis
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to Night on behalf of the Influencer. Influencer hereby authorizes and directs Company to make all payments due and/or become due hereunder to influencer in the name of Night, who's receipt shall constitute a full and lawful receipt by Influencer.`,
+    term: "Deliverable to be live on or around [date] or mutually agreed upon date",
+    termFull: `Deliverable to be live on or around [date] or mutually agreed upon date
+
+Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    syndication: "60 days organic + 60 days paid whitelist",
+    syndicationFull: `2.1 The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use the Deliverables created pursuant to the following terms:
+
+2.1.1 The Brand may organically display, post, publish, retweet, re-gram, repost, feature, or otherwise re-transmit, display or use the Deliverables solely for the purpose of promoting the Brand's products or services on the Brand's social media channels which are owned and/or controlled by the Brand for sixty (60) days following the post live date.
+
+2.1.2 The Brand may promote the Deliverables via paid ads / promoted advertising including but not limited to boosting, dark posting, whitelisting, for 60 days after the first ad goes live.
+
+- to promote Deliverables via paid ad support/promotion, in whole, part or modified, from Deliciously Ella owned social channels`
+  },
+
+  jenna: {
+    name: "Jenna Rennert",
+    deliverables: "1 × IG Story set (3 frames, 2 UTM links)",
+    deliverablesFull: `a. Talent agrees to publishing 1 x IG Story set (3 video frames) with 2 x UTM links
+
+1. Talking points to be provided by the Brand and agency Watertight
+
+2. Video Content to be shared to both feed and reposted to stories including a UTM link to site provided by Watertight
+   i. Tags must feature @deliciouslyella on Instagram, and #deliciouslyellapartner in compliance with FTC guidelines
+
+3. Talent will provide videos and audio in two formats: raw, without any text overlays or music, and edited, including any captions and/or music where applicable prior to the organic live date
+   i. Any music used in the content should be royalty-free
+
+4. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+5. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.`,
+    whitelisting: "Whitelisting 45 days ad usage + 45 days paid brand handle",
+    whitelistingFull: `Whitelisting 45 days ad usage and 45 days paid brand handle: starting the first day of 'live ad'`,
+    payment: "$6,500 — Net 60 days (via The Digital Brand Architects)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$6,500 to be paid net 60 days
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to The Digital Brand Architects on behalf of the Influencer. Influencer hereby authorizes and directs Company to make all payments due and/or become due hereunder to influencer in the name of The Digital Brand Architects, who's receipt shall constitute a full and lawful receipt by Influencer.`,
+    term: "Deliverable to be live on [date] or mutually agreed upon date",
+    termFull: `Deliverable to be live on [date] or mutually agreed upon date
+
+Whitelisting 45 days ad usage and 45 days paid brand handle: starting the first day of 'live ad'`,
+    syndication: "45 days organic + 45 days paid whitelist",
+    syndicationFull: `2.1 The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use any content created pursuant to the following terms:
+
+2.1.1 The Brand may organically display, post, publish, retween, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Deliverables solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, and websites, which are owned and/or controlled by the Brand, as well as in emails and other digital marketing materials distributed by the Brand and/or on the Brand's behalf for forty-five (45) days following the post live date.
+
+2.1.2 The Brand may promote the Deliverables via paid ads / promoted advertising including but not limited to boosting, dark posting, whitelisting, for 45 days after the first ad goes live.`
+  },
+
+  georgia: {
+    name: "Georgia Perkins",
+    deliverables: "1 × Reel + ManyChat syndication to TikTok",
+    deliverablesFull: `A. Talent agrees to publishing 1 x Reel about Deliciously Ella products syndicated to TikTok using ManyChat
+
+1. Video Content to be shared to Feed on IG and TikTok, including a link to site provided by Watertight when appropriate
+   i. Tags must feature @deliciouslyella on Instagram, and #DeliciouslyEllaPartner in compliance with FTC guidelines
+   ii. Tags must feature @_deliciouslyella on TikTok, and #DeliciouslyEllaPartner in compliance with FTC guidelines
+
+2. Talent will provide videos and audio in two formats: captions and no captions
+   i. Any music used in the content should be royalty-free
+
+3. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+4. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.`,
+    whitelisting: "Whitelisting 60 days ad usage + 60 days paid brand handle",
+    whitelistingFull: `Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    payment: "$4,500 — Net 60 days (via Illuminate Social)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$4,500 to be paid net 60 days
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to Illuminate Social on behalf of the Influencer. Influencer hereby authorizes and directs Company to make all payments due and/or become due hereunder to influencer in the name of Illuminate Social, who's receipt shall constitute a full and lawful receipt by Influencer.`,
+    term: "Deliverable to be live on [date] or mutually agreed upon date",
+    termFull: `Deliverable to be live on [date] or mutually agreed upon date
+
+Whitelisting 60 days ad usage and 60 days paid brand handle: starting the first day of 'live ad'`,
+    syndication: "60 days organic + 60 days paid whitelist",
+    syndicationFull: `2.1 The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use any content created pursuant to the following terms:
+
+2.1.1 The Brand may organically display, post, publish, retween, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Deliverables solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, and websites, which are owned and/or controlled by the Brand, as well as in emails and other digital marketing materials distributed by the Brand and/or on the Brand's behalf for sixty (60) consecutive days following the post live date.
+
+2.1.2 The Brand shall be granted a non-exclusive, non-assignable, non-transferrable, non-sublicensable, limited right and license to promote the Deliverables via paid ads / promoted advertising including but not limited to boosting, dark posting, whitelisting, for 60 consecutive days after the first ad goes live.`
+  },
+
+  eliz: {
+    name: "Elizabeth Endres",
+    deliverables: "1 × IG Story set (3 frames, 1 UTM link)",
+    deliverablesFull: `a. Talent agrees to publishing 1 x IG Story set (3 video frames) with 1 x UTM links
+
+1. Talking points to be provided by the Brand and agency Watertight
+
+2. Video Content to be shared to both feed and reposted to stories including a UTM link to site provided by Watertight
+   i. Tags must feature @deliciouslyella on Instagram, and #deliciouslyellapartner in compliance with FTC guidelines
+
+3. Talent will provide videos and audio in two formats: raw, without any text overlays or music, and edited, including any captions and/or music where applicable prior to the organic live date
+   i. Any music used in the content should be royalty-free
+
+4. All video/still assets to be provided to the Brand for use on organic social channels and paid media usage prior to the live date
+
+5. Talent must provide analytics post live date by onboarding to the watertight campaign manager for the duration of the term
+
+All other content must allow for Brand's approval, including 2 x rounds of reasonable edits and 1 x reshoot if necessary for each content deliverable.`,
+    whitelisting: "No ad usage",
+    whitelistingFull: `N/A — No ad usage.`,
+    payment: "$3,800 — Net 60 days, 5% late fee (via Ponte Firm)",
+    paymentFull: `As compensation in full for performing the Services in accordance with this Agreement:
+
+$3,800 to be paid net 60 days
+
+*Inclusive of all deliverables, whitelisting, and usage
+
+Payments to be made to Ponte Firm on behalf of the Influencer. Influencer hereby authorizes and directs Company to make all payments due and/or become due hereunder to influencer in the name of Ponte Firm LLC, who's receipt shall constitute a full and lawful receipt by Influencer.
+
+Client agrees to pay a 5% "late fee" for every day the invoice is considered "past due."`,
+    term: "Deliverable to be live on [date] or mutually agreed upon date — No ad usage",
+    termFull: `Deliverable to be live on [date] or mutually agreed upon date
+
+No ad usage`,
+    syndication: "30 days organic use only, no paid media",
+    syndicationFull: `The Influencer hereby grants the Brand a non-exclusive, royalty-free licence to use the Content created pursuant to the following terms:
+
+The Brand may display, post, publish, retweet, re-gram, repost, feature, or otherwise re-transmit, display, syndicate or use the Content solely for the purpose of promoting the Brand's products or services on the Brand's social media channels, which are owned and/or controlled by the Brand for thirty (30) days within forty (40) days from the Content live date (the "Usage Term").
+
+- Content can live in a historical context indefinitely
+
+A non-exclusive, worldwide, royalty-free right and licence to use the Content for non-commercial, internal corporate purposes including, conventions and meetings, advertising competitions, trade publications.`
+  }
+};
+
+let moduleOverrides = {};
+let baseContract = null;
+
+function onBaseChange() {
+  const val = document.getElementById('base-contract').value;
+  if (!val) {
+    document.getElementById('modules-section').style.display = 'none';
+    return;
+  }
+  baseContract = val;
+  moduleOverrides = {};
+  document.getElementById('modules-section').style.display = 'block';
+
+  // Reset all module sources
+  ['deliverables','whitelisting','payment','term','syndication'].forEach(mod => {
+    const el = document.getElementById(`mod-${mod}`);
+    if (!el) return;
+    el.classList.remove('customized');
+    document.getElementById(`source-${mod}`)?.textContent && (document.getElementById(`source-${mod}`).textContent = `From: ${contractData[val]?.name || 'TEMPLATE'}`);
+    // Reset selects
+    const sel = el.querySelector('select');
+    if (sel) sel.value = val === 'template' ? 'template' : val;
+  });
+
+  updatePreview();
+  document.getElementById('generate-btn').disabled = false;
+  document.getElementById('gdocs-btn').disabled = false;
+}
+
+function toggleModule(id) {
+  const mod = document.getElementById(`mod-${id}`);
+  mod.classList.toggle('open');
+}
+
+function onModuleOverride(modId, selectEl) {
+  const val = selectEl.value;
+  const mod = document.getElementById(`mod-${modId}`);
+  const source = document.getElementById(`source-${modId}`);
+
+  if (val === 'custom') {
+    const customField = document.getElementById(`custom-${modId}`);
+    if (customField) customField.style.display = 'block';
+  }
+
+  if (val !== baseContract && val !== '') {
+    mod.classList.add('customized');
+    const label = val === 'custom' ? 'Custom text' : (contractData[val]?.name || val);
+    source.textContent = `Custom: ${label}`;
+    moduleOverrides[modId] = val;
+  } else {
+    mod.classList.remove('customized');
+    source.textContent = `From: ${contractData[baseContract]?.name || 'TEMPLATE'}`;
+    delete moduleOverrides[modId];
+  }
+
+  updateCustomCount();
+  updatePreview();
+}
+
+function updateCustomCount() {
+  const count = Object.keys(moduleOverrides).length;
+  const row = document.getElementById('status-row');
+  if (count > 0 && baseContract) {
+    row.style.display = 'flex';
+    document.getElementById('custom-count').textContent = count;
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+function updatePreview() {
+  const name = document.getElementById('inf-name').value;
+  const handle = document.getElementById('inf-handle').value;
+  const legal = document.getElementById('inf-legal').value;
+  const address = document.getElementById('inf-address').value;
+  const agency = document.getElementById('inf-agency').value;
+  const date = document.getElementById('inf-date').value;
+  const liveDate = document.getElementById('live-date').value;
+  const feeAmount = document.getElementById('fee-amount').value;
+  const payTo = document.getElementById('pay-to').value;
+
+  // Date
+  document.getElementById('prev-date').textContent = date ? new Date(date).toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'}) : '—';
+
+  // Influencer
+  const infParts = [];
+  if (legal) infParts.push(legal);
+  else if (name) infParts.push(name);
+  if (handle) infParts.push(handle);
+  if (address) infParts.push(address);
+  document.getElementById('prev-influencer').innerHTML = infParts.length ? infParts.join('<br>') : '—';
+
+  // Agency
+  document.getElementById('prev-agency').textContent = agency || 'N/A';
+
+  if (!baseContract) return;
+
+  const base = contractData[baseContract] || contractData.template;
+
+  // Deliverables
+  const delSel = document.querySelector('#mod-deliverables select');
+  const delSrcKey = (delSel && contractData[delSel.value]) ? delSel.value : baseContract;
+  const delSrc = contractData[delSrcKey] || base;
+  const delEl = document.getElementById('prev-deliverables');
+  if (!inlineOverrides['deliverables']) {
+    delEl.textContent = delSrc?.deliverables || base.deliverables;
+    delEl.className = 'cp-value' + (moduleOverrides['deliverables'] ? ' custom' : '');
+  }
+  updateClausePanel('deliverables', delSrcKey);
+
+  // Term
+  const termEl = document.getElementById('prev-term');
+  const liveDateStr = liveDate ? new Date(liveDate).toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'}) : '[TBD]';
+  const termSrcKey = moduleOverrides['term'] || baseContract;
+  const termBase = contractData[termSrcKey] || base;
+  if (!inlineOverrides['term']) {
+    termEl.textContent = (termBase?.term || base.term).replace('[date]', liveDateStr);
+    termEl.className = 'cp-value' + (moduleOverrides['term'] ? ' custom' : '');
+  }
+  updateClausePanel('term', termSrcKey);
+
+  // Whitelisting
+  const wlEl = document.getElementById('prev-whitelisting');
+  const wlSrcKey = moduleOverrides['whitelisting'] || baseContract;
+  const wlSrc = contractData[wlSrcKey] || base;
+  if (!inlineOverrides['whitelisting']) {
+    wlEl.textContent = wlSrc?.whitelisting || base.whitelisting;
+    wlEl.className = 'cp-value' + (moduleOverrides['whitelisting'] ? ' custom' : '');
+  }
+  updateClausePanel('whitelisting', wlSrcKey);
+
+  // Payment
+  const payEl = document.getElementById('prev-payment');
+  const paySrcKey = moduleOverrides['payment'] || baseContract;
+  const paySrc = contractData[paySrcKey] || base;
+  if (!inlineOverrides['payment']) {
+    let payText = paySrc?.payment || base.payment;
+    if (feeAmount) payText = `${feeAmount} — ` + (payText.split('—')[1]?.trim() || payText);
+    if (payTo) payText += `\nPay to: ${payTo}`;
+    payEl.textContent = payText;
+    payEl.className = 'cp-value' + (moduleOverrides['payment'] ? ' custom' : '');
+  }
+  updateClausePanel('payment', paySrcKey);
+}
+
+function generateContract() {
+  const btn = document.getElementById('generate-btn');
+  const name = document.getElementById('inf-name').value || 'New_Influencer';
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg> Generating...`;
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Contract Ready — Download`;
+    btn.disabled = false;
+    btn.style.background = 'var(--green-dark)';
+  }, 1800);
+}
+
+// FULL CLAUSE VIEWER
+const clauseFields = ['deliverables', 'term', 'whitelisting', 'payment'];
+
+function toggleClause(field) {
+  const panel = document.getElementById(`clause-${field}`);
+  const btn = document.getElementById(`clause-btn-${field}`);
+  const isOpen = panel.classList.contains('open');
+  // Close all
+  clauseFields.forEach(f => {
+    document.getElementById(`clause-${f}`)?.classList.remove('open');
+    document.getElementById(`clause-btn-${f}`)?.classList.remove('open');
+  });
+  if (!isOpen) {
+    panel.classList.add('open');
+    btn.classList.add('open');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Hide clause`;
+  } else {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View full clause`;
+  }
+}
+
+function updateClausePanel(field, sourceKey) {
+  const data = contractData[sourceKey];
+  if (!data) return;
+  const fieldKey = field + 'Full';
+  const text = data[fieldKey] || '';
+  const sourceEl = document.getElementById(`clause-source-${field}`);
+  const textEl = document.getElementById(`clause-text-${field}`);
+  const btn = document.getElementById(`clause-btn-${field}`);
+  if (sourceEl) sourceEl.textContent = `From: ${data.name}`;
+  if (textEl) textEl.textContent = text;
+  if (btn) btn.style.display = text ? 'inline-flex' : 'none';
+}
+
+// FULL CLAUSE VIEWER
+
+const inlineDefaults = {
+  date: () => document.getElementById('prev-date').textContent,
+  influencer: () => document.getElementById('prev-influencer').innerText,
+  agency: () => document.getElementById('prev-agency').textContent,
+  campaign: () => 'Deliciously Ella – Q1 2026 Granola Bars',
+  deliverables: () => document.getElementById('prev-deliverables').textContent,
+  term: () => document.getElementById('prev-term').textContent,
+  whitelisting: () => document.getElementById('prev-whitelisting').textContent,
+  payment: () => document.getElementById('prev-payment').textContent,
+  disclosure: () => '#DeliciouslyEllaPartner',
+  territory: () => '48 Contiguous United States',
+};
+
+const inlineOverrides = {};
+
+function openInlineEdit(field) {
+  // Close any other open editors
+  document.querySelectorAll('.inline-editor.open').forEach(el => {
+    if (el.id !== `edit-${field}`) el.classList.remove('open');
+  });
+  document.querySelectorAll('.edit-btn.active').forEach(el => el.classList.remove('active'));
+
+  const editor = document.getElementById(`edit-${field}`);
+  const btn = editor.previousElementSibling;
+  const textarea = document.getElementById(`edit-${field}-input`);
+  const currentText = inlineOverrides[field] ?? document.getElementById(`prev-${field}`)?.innerText ?? '';
+
+  textarea.value = currentText;
+  editor.classList.toggle('open');
+  btn.classList.toggle('active', editor.classList.contains('open'));
+  if (editor.classList.contains('open')) textarea.focus();
+}
+
+function saveInlineEdit(field) {
+  const textarea = document.getElementById(`edit-${field}-input`);
+  const val = textarea.value.trim();
+  const el = document.getElementById(`prev-${field}`);
+
+  inlineOverrides[field] = val;
+  el.textContent = val;
+  el.classList.add('custom');
+
+  closeInlineEdit(field);
+  updateCustomCount();
+}
+
+function closeInlineEdit(field) {
+  const editor = document.getElementById(`edit-${field}`);
+  const btn = editor.previousElementSibling;
+  editor.classList.remove('open');
+  btn.classList.remove('active');
+}
+
+function resetInlineEdit(field) {
+  const el = document.getElementById(`prev-${field}`);
+  delete inlineOverrides[field];
+  el.classList.remove('custom');
+  // Trigger a preview refresh for computed fields
+  updatePreview();
+  closeInlineEdit(field);
+  updateCustomCount();
+}
+
+// Override updateCustomCount to also count inline overrides
+const _origUpdateCustomCount = updateCustomCount;
+function updateCustomCount() {
+  const modCount = Object.keys(moduleOverrides).length;
+  const inlineCount = Object.keys(inlineOverrides).length;
+  const total = modCount + inlineCount;
+  const row = document.getElementById('status-row');
+  if (total > 0 && baseContract) {
+    row.style.display = 'flex';
+    document.getElementById('custom-count').textContent = total;
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+const style = document.createElement('style');
+style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+document.head.appendChild(style);
+
+// ─── CLIENT CONFIG ────────────────────────────────────────────────────
+const clientConfigs = {
+  de: {
+    name: 'Deliciously Ella',
+    badge: 'Deliciously Ella — Q1 2026',
+    address: '1 Nutritious Place, Amsterdam, NY 12010',
+    disclosure: '#DeliciouslyEllaPartner',
+    territory: '48 Contiguous United States excluding Hawaii, Alaska, and any US territories',
+    tcClauses: 'de'
+  },
+  evolv: null // coming soon
+};
+
+let activeClient = 'de';
+
+function selectClient(id) {
+  if (id === 'evolv') { alert('Evolv is coming soon. Stay tuned!'); return; }
+  activeClient = id;
+  document.querySelectorAll('.client-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`ctab-${id}`)?.classList.add('active');
+  const cfg = clientConfigs[id];
+  if (!cfg) return;
+  document.getElementById('client-badge').textContent = cfg.badge;
+  document.getElementById('cfg-brand').textContent = cfg.name;
+  document.getElementById('cfg-address').textContent = cfg.address;
+  document.getElementById('cfg-disclosure').textContent = cfg.disclosure;
+}
+
+// ─── T&C CLAUSE DATA (Deliciously Ella TEMPLATE — verbatim) ───────────
+const tcClauses = {
+  de: [
+    {
+      num: '1',
+      title: 'Deliverables',
+      negotiated: false,
+      text: `The Influencer will deliver the number of posts and/or digital assets on the agreed platforms as stated in this Deliverables section. The Services shall conform to the specifications and instructions of the Brand. The Influencer will also abide by the guidelines of any relevant social media platforms and are subject to the Brand's acceptance and approval. The Influencer agrees to avoid mentioning any negative statements that could shed any negativity on the Brand and agrees to represent the Brand in only a positive way during the Term. All social media statuses, tweets, posts, reels, videos and/or comments should be in good taste and free of inappropriate language and/or any content promoting bigotry, racism or discrimination based on race, gender, religion, nationality, disability, sexual orientation, or age. The Influencer understands that all promotions and products they promote as part of this Agreement are controlled by the Brand. The Influencer assumes all responsibility for verifying that the campaign materials used meet the Brand's approval.`
+    },
+    {
+      num: '2',
+      title: 'Usage',
+      negotiated: true,
+      text: `Brand has the non-exclusive, royalty free, right, but not the obligation, to license, use, post or feature the content generated by the Influencer as part of the Brand campaign in accordance with the Usage section. This may include the influencer's name, image, likeness, social-media handle(s), avatar, profile picture, information, performance, photo, signature, voice, headshot, and biographical information (collectively, the Persona). Content may be used on the Brands and Brand's affiliate owned and controlled social media platforms, and within third party digital and broadcast platforms and print platforms. This includes the social channels: TikTok, Instagram, Pinterest, Facebook, Twitter, Tumblr, YouTube, Vine, Google+ and website blogs, email marketing, paid search listings, television, radio, newspapers, magazines, and brochures (the Material), during the term of this Agreement. During the Term, as stated in the above Usage Section, the content may be used anywhere in the world unless specified, by the Brand. Influencers adhere to keeping to the schedule given by the Brand, and deliver content on dates stated by the Brand in the Schedule section.`
+    },
+    {
+      num: '3',
+      title: 'Payment',
+      negotiated: false,
+      text: `In full consideration of the Influencer's performance, their obligations and the rights granted herein, the Influencer shall be paid the amount agreed upon between the Influencer and Brand in the above compensation section. The Influencer will otherwise perform the services at his/her own expense and use his/her own resources and equipment. The Influencer acknowledges that the agreed upon compensation represents the Influencer's entire compensation with respect to this agreement and the Brand shall have no other obligation for any other compensation to or expenses or costs incurred by the Influencer in connection with the performance of its obligations under this agreement.`
+    },
+    {
+      num: '4',
+      title: 'Confidentiality',
+      negotiated: false,
+      text: `Influencer will not disclose (including, without limitation, via social media, etc.) any trade secrets or confidential information of the Brand to any third parties, including, without limitation, any content of any advertising that the Brand has not yet released to the general public, Influencer's relationship with the Brand (until publicly disclosed by Brand), and any of the terms of this Agreement (including, without limitation, the amount of compensation paid hereunder). Nothing in this Agreement prevents cooperation with any regulator or enforcement agency as required or permitted by law.
+
+(a.) Avoid disclosing confidential or proprietary information by any means necessary that is not authorized by the Brand to any third parties, both during the term of this Contract and for at least one (1) year following its termination.
+(b.) Avoid making copies or duplicating the Brand's confidential and proprietary information unless directed to do so by the Brand.
+(c.) Only use specific information provided by the Brand for use that is explicitly authorized by the Advertiser.
+(d.) Inform the Brand immediately if they become aware of unauthorized disclosure or use of any potential confidential or proprietary information.`
+    },
+    {
+      num: '5',
+      title: 'Waiver',
+      negotiated: false,
+      text: `Influencer consents to the Brand's using the intended digital content, which can include but is not limited to photographs, videos, GIF's or audio recordings of them or by them for promotional, commercial, and marketing purposes, in accordance with the Usage section of this contract. The influencer hereby waives all personal rights and objections to, including the right to inspect, any use which will be made of their appearance by the Brand.`
+    },
+    {
+      num: '6',
+      title: 'Limitation of Liability',
+      negotiated: false,
+      text: `The Brand's liability will be limited to the total Payment Amount due to the Influencer.`
+    },
+    {
+      num: '7',
+      title: 'Indemnification',
+      negotiated: false,
+      text: `(a) Influencer Indemnity.
+The Influencer shall indemnify, defend, and hold harmless the Brand and its affiliates, parent companies, successors, assigns, officers, directors, employees, and agents from and against any and all claims, demands, actions, investigations, damages, losses, liabilities, penalties, fines, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to:
+(i) any content, statements, opinions, representations, or conduct of the Influencer in connection with this Agreement;
+(ii) any breach or alleged breach by the Influencer of this Agreement;
+(iii) the Influencer's failure to comply with applicable laws, regulations, advertising standards, or platform policies (including, without limitation, FTC or ASA endorsement and disclosure requirements); or
+(iv) any allegation that the Influencer's content is false, misleading, defamatory, infringing, or otherwise unlawful.
+
+(b) Brand Indemnity (Limited).
+The Brand shall indemnify and hold harmless the Influencer solely from and against third-party claims, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) to the extent arising directly from Brand-created materials or Brand-mandated factual statements supplied to the Influencer in writing for use in the approved Deliverables, provided that such materials or statements are used by the Influencer without modification, strictly in accordance with the Brand's written instructions and approvals, and in compliance with applicable laws and platform policies.
+
+(c) Exclusions.
+In no event shall the Brand be responsible for, or required to indemnify the Influencer against, any claim arising from:
+(i) the Influencer's own statements, opinions, tone, or creative expression;
+(ii) any modification, embellishment, interpretation, or deviation from Brand-approved materials;
+(iii) the Influencer's failure to make required disclosures or comply with advertising, consumer protection, or platform rules; or
+(iv) the Influencer's conduct, whether online or offline.
+
+(d) Indemnification Procedure.
+The indemnified party shall promptly notify the indemnifying party of any claim subject to indemnification and shall reasonably cooperate in the defence and resolution of such claim. The indemnifying party shall not settle any claim in a manner that admits fault or imposes obligations on the indemnified party without the indemnified party's prior written consent, which shall not be unreasonably withheld.`
+    },
+    {
+      num: '8',
+      title: 'Severability',
+      negotiated: false,
+      text: `If any portion of this Agreement shall be held invalid or unenforceable for any reason, the remaining provisions shall continue to be valid and enforceable. If a court finds that any provision of this Agreement is invalid or unenforceable, but that by limiting such provision, it would become valid and enforceable, then such provision shall be deemed to be written, construed, and enforced as so limited.`
+    },
+    {
+      num: '9',
+      title: 'Governing Law',
+      negotiated: false,
+      text: `This Agreement shall be construed and enforced pursuant to the laws and decisions of the Commonwealth of Massachusetts.`
+    },
+    {
+      num: '10',
+      title: 'Entire Contract',
+      negotiated: false,
+      text: `This Agreement constitutes the entire contract between the Parties. No modification or amendment of this Agreement shall be effective unless in writing and signed by both Parties.`
+    },
+    {
+      num: '11',
+      title: 'Representations and Warranties',
+      negotiated: false,
+      text: `The Brand and the Influencer each represent and warrant to the other that each person executing this Agreement on behalf of each Party is duly authorized to execute and deliver this Agreement on behalf of that Party. Influencer has not made, nor will make, any agreement or commitment with any third party which prevents or interferes in any way with the full and complete rendition of Influencer's obligations or the exercise of the rights granted to Brand hereunder; Influencer has all necessary rights to any content provided by Influencer hereunder, and no materials drafted, created, collected, or placed by Influencer (including Post(s), headshot/bio, Influencer Info, etc.), nor any elements thereof in connection with this Agreement will violate or infringe the rights of any third party. All work product produced by Influencer on behalf of the Brand will be an original work of authorship and will not incorporate or be based on any third-party material that would infringe the intellectual property rights of others. Influencer has not granted to any third party any rights to any such materials created and produced on behalf of the Brand, and Influencer will perform obligations hereunder in compliance with applicable law, regulation, codes and rules, appropriate FTC compliance, and using sound, professional practices.`
+    },
+    {
+      num: '12',
+      title: 'Cancellation and Termination',
+      negotiated: false,
+      text: `Either party may terminate this Agreement upon thirty (30) days' prior written notice if the other party breaches this Agreement and does not cure such breach within that notice period. In addition, either party may terminate this Agreement at any time, without cause, upon thirty (30) days' prior written notice.
+
+Definition of Brand Harm:
+For purposes of this Agreement, "Brand Harm" includes any actual or reasonably foreseeable negative impact to the Brand, including but not limited to: reputational damage; loss of goodwill; regulatory scrutiny; retailer or distributor concerns; loss of sales, placements, or listings; and platform sanctions, restrictions, or penalties.
+
+Reputational Harm and Immediate Action:
+Only if the Influencer materially breaches this Agreement—including, but not limited to, engaging in or making public statements or conduct that is racist, discriminatory, hateful, harassing, defamatory, or otherwise reasonably likely to damage the Brand's reputation, goodwill, commercial interests, or otherwise cause Brand Harm—the Brand may, effective immediately and without penalty:
+(i) issue a cease-and-desist and require the Influencer to immediately stop all promotional activity;
+(ii) suspend, restrict, or revoke the Influencer's access to Brand assets, accounts, materials, or communication channels;
+(iii) require removal or deletion of related content within twenty-four (24) hours;
+(iv) withhold unpaid fees for undelivered or non-compliant deliverables; and
+(v) require pre-approval of any public clarification, response, or statement regarding the matter.
+(vi) reasonably cooperate with the Brand's legal, compliance, and public relations teams.
+
+Survival:
+The following provisions shall survive termination or expiration of this Agreement for any reason, and shall remain in full force and effect: Indemnification, Confidentiality, Non-Disparagement, Limitation of Liability, Governing Law, and any other provisions that, by their nature, are intended to survive.`
+    },
+    {
+      num: '13',
+      title: 'Miscellaneous',
+      negotiated: false,
+      text: `Brand shall provide the necessary content and briefing materials to enable the Influencer to perform the influencer marketing services. If the Influencer has obtained employees or agents ("Influencer Personnel"), the Influencer shall be solely responsible for all costs associated with the Influencer Personnel.`
+    },
+    {
+      num: '14',
+      title: 'Force Majeure',
+      negotiated: false,
+      text: `If either party is unable to perform any of its obligations by reason of fire or other casualty, strike, act or order of public authority, act of God, or other cause beyond the control of such party, then such party shall be excused from such performance during the pendency of such cause.`
+    },
+    {
+      num: '15',
+      title: 'Independent Contractor / Work for Hire',
+      negotiated: false,
+      text: `The Influencer is retained as an independent contractor of the Brand. The Influencer acknowledges and agrees that (i.) the Influencer is solely responsible for the manner and form by which the Influencer performs under this Agreement, and (ii) the Influencer is a self-employed individual, who performs services similar to the services outlined in the above job description and schedule of services for various entities and individuals other than the Brand. The Brand and their successors, licensees, and assigns shall have any and all rights whether now known or hereafter devised in and to any and all Materials (except for Persona), and all the results and proceeds of Influencer's Services hereunder, including, without limitation, any contributions Influencer makes in connection with any of the foregoing shall be a "work-for-hire" for the Brand's copyright purposes.`
+    },
+    {
+      num: '16',
+      title: 'Injunctive Relief',
+      negotiated: false,
+      text: `It is hereby acknowledged that the Services and rights granted to Brand hereunder are of a unique character, and that, accordingly, no remedy at law for damages is adequate to compensate for Influencer's breach of the provisions set forth herein, and the Brand shall be entitled to seek temporary or injunctive relief against any such breach, without the necessity of proving actual damages. The award of permanent or temporary injunctive relief shall in no way limit any other remedies to which the Brand may be entitled because of any such breach.`
+    },
+    {
+      num: '17',
+      title: 'Entire Agreement',
+      negotiated: false,
+      text: `This Agreement constitutes the entire understanding between the Influencer and the Brand regarding the subject matter hereto and cannot be altered or modified except by an agreement in writing signed by both Parties. The Parties to this Agreement shall be considered as independent contractors; no partnership, joint venture, or employer-employee relationship shall be attributed to or arise from this Agreement. Upon its execution, (in counterpart or otherwise), this Agreement shall supersede all prior negotiations, understandings, and agreements, whether oral or written, regarding the subject matter hereto, and such prior agreements shall thereupon be null and void and without further legal effect.`
+    },
+    {
+      num: '18',
+      title: 'Post-term',
+      negotiated: false,
+      text: `Notwithstanding anything to the contrary contained herein, the Content may be used on third party websites and/or social media platforms to use the Content in accordance with their terms of use, and the Permitted Parties shall not be under any obligation to remove any Content from its social media platforms following the Term, provided Permitted Parties do not run any paid media to support/promote such Content on the social media platforms following the Term. The Brand will not be in breach of this Agreement if the Content remains in use on such third party websites and social media platforms after the expiry of the Term.`
+    },
+    {
+      num: 'B',
+      title: 'Exhibit B — Influencer Conduct',
+      negotiated: false,
+      text: `(a) Compliance With FTC Guidelines
+The Influencer will comply with all applicable Federal Trade Commission (FTC) endorsement and advertising guides, including any related rules, FAQs, and updates governing influencer and social media disclosures.
+
+(b) Sponsored Content Disclosures
+For any post made in connection with compensation or value received from the Brand (including gifted product), the Influencer will clearly and conspicuously disclose the relationship in the caption and any applicable media format (e.g., "Partnership with [Brand]" or "Gifted by [Brand]"). Disclosures must be visible, unambiguous, and not hidden behind scrolling, tapping, or secondary screens.
+
+(c) Ownership of Content / Accuracy of Representation
+The Influencer will create original content and will not copy or misappropriate work, opinions, or statements from others. The Influencer may use Brand-provided information solely to ensure accurate representation of the Brand's product, trademarks, or campaign messaging. Disclosures must be used on every platform where related content is posted.
+
+(d) Truthful Statements / Prohibited Claims
+The Influencer will ensure that any statements offered as factual, will indeed, be true. The Influencer will rely on information supplied by the Brand or rely on information that the Influencer knows to be true or can verify. In particular, the Influencer will avoid making any medical claims about the product or claims about a competitor's product.
+
+(e) Use of Intellectual Property / Privacy Rights
+The Influencer will only use intellectual property which they have authority to use including from the Brand, e.g., slogans or trademarked graphics. The Influencer will not use the intellectual property of any third-party without both the third-party's authorization and the authorization of the Brand.
+
+(f) Standards of Conduct / Morals Clause
+The Influencer will conduct themselves in a manner that does not negatively impact the Brand's reputation. This includes avoiding racist, discriminatory, hateful, harassing, defamatory, or politically extremist content or statements, whether in campaign content or in public behavior unrelated to it. Reputational harm is grounds for enforcement and potential termination pursuant to Section 12 of this Agreement.
+
+Additional Moral Code Expectation: In connection with the Brand's values and commercial standing, the Influencer agrees to refrain from any conduct, statements, content, or affiliations that, in the Brand's reasonable judgment, could bring the Brand into disrepute or harm its credibility. This includes, without limitation: hate speech; discriminatory or derogatory language; harassment or targeted abuse; medical or scientific misinformation; politically extremist or polarizing activism; criminal, unethical, or fraudulent conduct; or behavior resulting in significant public complaints, platform reports, regulatory scrutiny, or retailer concern.
+
+(g) Platform Rules & Monitoring
+The Influencer will follow the rules of the social media platforms where the Influencer posts or distributes content and the Influencer will not negatively engage with any commentator.
+
+(h) Crisis Control Clause
+In the event of actual or potential Brand Harm, the Brand may implement immediate crisis control measures. Upon notice from the Brand, the Influencer shall, without delay:
+(i) remove or delete any specified content immediately, and no later than within twenty-four (24) hours;
+(ii) cease posting, commenting, or engaging publicly regarding the Brand, campaign, or related issues;
+(iii) obtain pre-approval from the Brand for any public response, clarification, or statement, including those on personal channels; and
+(iv) cooperate fully with the Brand's PR, legal, and communications teams.`
+    }
+  ]
+};
+
+let tcEdits = {}; // { clauseId: customText }
+let tcSectionOpen = true;
+
+function buildTCSection(clientId) {
+  const clauses = tcClauses[clientId];
+  if (!clauses) return;
+  const body = document.getElementById('tc-body');
+  body.innerHTML = '';
+  clauses.forEach((clause, i) => {
+    const div = document.createElement('div');
+    div.className = 'tc-clause';
+    div.id = `tc-clause-${clause.num}`;
+    div.innerHTML = `
+      <div class="tc-clause-header" onclick="toggleTCClause('${clause.num}')">
+        <span class="tc-clause-num">${clause.num}</span>
+        <span class="tc-clause-title">${clause.title}</span>
+        ${clause.negotiated ? '<span class="tc-negotiated-badge">⚡ Often negotiated</span>' : ''}
+        <button class="tc-edit-btn" onclick="event.stopPropagation(); openTCEdit('${clause.num}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text-muted);transition:transform 0.2s" id="tc-chev-${clause.num}"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="tc-clause-body" id="tc-body-${clause.num}">
+        <div class="tc-clause-text" id="tc-text-${clause.num}">${clause.text}</div>
+        <div class="tc-edited-note" id="tc-note-${clause.num}">✏️ Custom language applied</div>
+        <div class="tc-inline-editor" id="tc-editor-${clause.num}">
+          <textarea id="tc-textarea-${clause.num}" placeholder="Paste negotiated clause text...">${clause.text}</textarea>
+          <div class="tc-inline-actions">
+            <button class="tc-save" onclick="saveTCEdit('${clause.num}')">Save</button>
+            <button class="tc-cancel" onclick="closeTCEdit('${clause.num}')">Cancel</button>
+            <button class="tc-reset" onclick="resetTCEdit('${clause.num}')">↺ Reset to standard</button>
+          </div>
+        </div>
+      </div>`;
+    body.appendChild(div);
+  });
+}
+
+function toggleTCSection() {
+  tcSectionOpen = !tcSectionOpen;
+  document.getElementById('tc-body').style.display = tcSectionOpen ? 'block' : 'none';
+  document.getElementById('tc-chevron').style.transform = tcSectionOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function toggleTCClause(num) {
+  const body = document.getElementById(`tc-body-${num}`);
+  const chev = document.getElementById(`tc-chev-${num}`);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (chev) chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function openTCEdit(num) {
+  const editor = document.getElementById(`tc-editor-${num}`);
+  const body = document.getElementById(`tc-body-${num}`);
+  body.classList.add('open');
+  editor.classList.add('open');
+  const ta = document.getElementById(`tc-textarea-${num}`);
+  ta.value = tcEdits[num] || tcClauses[activeClient].find(c => c.num === num)?.text || '';
+  ta.focus();
+}
+
+function closeTCEdit(num) {
+  document.getElementById(`tc-editor-${num}`).classList.remove('open');
+}
+
+function saveTCEdit(num) {
+  const ta = document.getElementById(`tc-textarea-${num}`);
+  const val = ta.value.trim();
+  const original = tcClauses[activeClient].find(c => c.num === num)?.text || '';
+  if (val && val !== original) {
+    tcEdits[num] = val;
+    document.getElementById(`tc-text-${num}`).textContent = val;
+    document.getElementById(`tc-clause-${num}`).classList.add('edited');
+  } else {
+    delete tcEdits[num];
+    document.getElementById(`tc-text-${num}`).textContent = original;
+    document.getElementById(`tc-clause-${num}`).classList.remove('edited');
+  }
+  closeTCEdit(num);
+  updateTCEditCount();
+}
+
+function resetTCEdit(num) {
+  const original = tcClauses[activeClient].find(c => c.num === num)?.text || '';
+  document.getElementById(`tc-textarea-${num}`).value = original;
+  delete tcEdits[num];
+  document.getElementById(`tc-text-${num}`).textContent = original;
+  document.getElementById(`tc-clause-${num}`).classList.remove('edited');
+  closeTCEdit(num);
+  updateTCEditCount();
+}
+
+function updateTCEditCount() {
+  const count = Object.keys(tcEdits).length;
+  const badge = document.getElementById('tc-edited-count');
+  if (count > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = `${count} edited`;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// Show T&C section when a base contract is selected — patched into onBaseChange
+const _tcPatch = () => {
+  const val = document.getElementById('base-contract').value;
+  const tcSection = document.getElementById('tc-section');
+  if (val) {
+    tcSection.style.display = 'block';
+    buildTCSection(activeClient);
+  }
+};
+const _origOnBaseChange = onBaseChange;
+window.onBaseChange = function() {
+  _origOnBaseChange();
+  _tcPatch();
+};
+
+// T&C section builds on demand when base contract is selected
+</script>
+
+    </div>
+
   </main>
 
   <!-- TOAST -->
@@ -929,8 +2387,9 @@
 
     function handleRoute() {
       const hash = window.location.hash.replace('#', '') || 'home';
-      document.getElementById('view-home').style.display = (hash === 'utm') ? 'none' : 'block';
-      document.getElementById('view-utm').style.display  = (hash === 'utm') ? 'block' : 'none';
+      document.getElementById('view-home').style.display     = (hash === 'home' || hash === '') ? 'block' : 'none';
+      document.getElementById('view-utm').style.display      = (hash === 'utm') ? 'block' : 'none';
+      document.getElementById('view-contract').style.display = (hash === 'contract') ? 'block' : 'none';
     }
 
     window.addEventListener('hashchange', handleRoute);
