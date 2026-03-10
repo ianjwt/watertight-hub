@@ -1711,6 +1711,16 @@
           <div class="tool-card-desc">Generate influencer agreements from templates. Auto-populate by client and base contract.</div>
         </a>
 
+        <!-- Card 3: Recap Generator -->
+        <a class="tool-card" onclick="navigateTo('recap')">
+          <svg class="tool-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div class="tool-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="tool-card-name">Recap Generator</div>
+          <div class="tool-card-desc">Paste a Read AI transcript and get a formatted weekly client recap, ready to review and send.</div>
+        </a>
+
       </div>
     </div>
 
@@ -3421,6 +3431,265 @@ function showGDocToast(msg) {
 
   </main>
 
+  <!-- ══════════════════════════════════════════ -->
+  <!-- RECAP VIEW                                -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="view-recap" style="display:none;">
+
+    <button class="back-link" onclick="navigateTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Vortex
+    </button>
+
+    <div class="section-title">Recap Generator</div>
+
+    <!-- INPUT CARD -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-top">
+        <div class="card-title-group">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Recap Generator</div>
+            <div class="card-subtitle">Paste a Read AI transcript → get a formatted client recap</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-body">
+
+        <!-- SECTION: Call details -->
+        <div class="form-section">
+          <div class="form-section-label">Call Details</div>
+          <div class="row-3">
+            <div class="field">
+              <label>Client</label>
+              <div class="select-wrap">
+                <select id="recap-client">
+                  <option value="">— select client —</option>
+                  <option value="Deliciously Ella">Deliciously Ella</option>
+                  <option value="Evolv">Evolv</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Client Contact <span class="tag">first name</span></label>
+              <input type="text" id="recap-contact" placeholder="e.g. Georgia" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label>Call Date</label>
+              <input type="date" id="recap-date" />
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Transcript -->
+        <div class="form-section">
+          <div class="form-section-label">Read AI Transcript</div>
+          <div class="field">
+            <label>Paste transcript <span class="tag">full transcript recommended over summary</span></label>
+            <textarea
+              id="recap-transcript"
+              rows="12"
+              style="width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:13px; font-weight:300; color:var(--text); background:var(--bg); resize:vertical; outline:none; line-height:1.65; transition:border-color 0.15s, box-shadow 0.15s;"
+              placeholder="Open your Read AI meeting report → copy the full transcript → paste here."
+              oninput="document.getElementById('recap-char-count').textContent = this.value.length.toLocaleString() + ' chars'"
+              onfocus="this.style.borderColor='var(--wt-green)'; this.style.boxShadow='0 0 0 3px rgba(17,110,83,0.10)'; this.style.background='white';"
+              onblur="this.style.borderColor=''; this.style.boxShadow=''; this.style.background='';"
+            ></textarea>
+            <div style="display:flex; justify-content:space-between; margin-top:5px;">
+              <span class="field-hint">The full transcript gives Claude more fidelity than the AI-generated summary — better action items, more accurate takeaways.</span>
+              <span class="field-hint" id="recap-char-count">0 chars</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate button -->
+        <button class="generate-btn" onclick="generateRecap()" id="recap-generate-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v3M12 18v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M3 12h3M18 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+          </svg>
+          Generate Recap
+        </button>
+
+      </div>
+    </div>
+
+    <!-- RESULT CARD (hidden until generated) -->
+    <div class="result-card" id="recap-result-card">
+      <div class="result-top" style="display:flex; align-items:center; justify-content:space-between; padding:16px 24px; background:var(--wt-green);">
+        <span class="result-top-label">Draft Recap — Review &amp; Edit Before Sending</span>
+        <span id="recap-generating-indicator" style="font-size:11px; font-weight:500; color:rgba(255,255,255,0.75); display:none;">Generating…</span>
+      </div>
+      <div class="result-body">
+        <textarea
+          id="recap-output"
+          rows="24"
+          style="width:100%; font-family:'Poppins',sans-serif; font-size:13px; font-weight:300; line-height:1.75; color:var(--text); background:var(--wt-green-4); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:18px 20px; resize:vertical; outline:none; transition:border-color 0.15s, box-shadow 0.15s;"
+          placeholder="Your formatted recap will appear here…"
+          onfocus="this.style.borderColor='var(--wt-green)'; this.style.boxShadow='0 0 0 3px rgba(17,110,83,0.10)'; this.style.background='white';"
+          onblur="this.style.borderColor=''; this.style.boxShadow=''; this.style.background='';"
+          spellcheck="true"
+        ></textarea>
+        <div class="result-actions" style="margin-top:14px;">
+          <button class="btn btn-primary" id="recap-copy-btn" onclick="copyRecap()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            Copy Recap
+          </button>
+          <button class="btn btn-secondary" onclick="resetRecap()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+            </svg>
+            New Recap
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /view-recap -->
+
+  <script>
+  // ── RECAP GENERATOR ──
+
+  // Set today's date on load
+  (function() {
+    const d = document.getElementById('recap-date');
+    if (d) d.value = new Date().toISOString().split('T')[0];
+  })();
+
+  function formatRecapDate(dateStr) {
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  async function generateRecap() {
+    const client    = document.getElementById('recap-client').value;
+    const contact   = document.getElementById('recap-contact').value.trim();
+    const dateVal   = document.getElementById('recap-date').value;
+    const transcript = document.getElementById('recap-transcript').value.trim();
+
+    if (!client)      { alert('Please select a client.'); return; }
+    if (!contact)     { alert('Please enter the client contact name.'); return; }
+    if (!dateVal)     { alert('Please select the call date.'); return; }
+    if (transcript.length < 80) { alert('Please paste the Read AI transcript before generating.'); return; }
+
+    const dateStr = formatRecapDate(dateVal);
+
+    // Show result card with loading state
+    const resultCard = document.getElementById('recap-result-card');
+    const outputEl   = document.getElementById('recap-output');
+    const genBtn     = document.getElementById('recap-generate-btn');
+    const indicator  = document.getElementById('recap-generating-indicator');
+
+    resultCard.classList.add('visible');
+    outputEl.value = '';
+    genBtn.disabled = true;
+    genBtn.style.opacity = '0.55';
+    indicator.style.display = 'block';
+    setTimeout(() => resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+
+    const systemPrompt = `You are a professional account manager at Watertight, a boutique wellness influencer agency. You write polished, concise weekly client recap emails based on raw call transcripts.
+
+FORMAT — follow this exactly:
+
+${dateStr} | ${client} Weekly Recap
+
+Hi ${contact},
+
+I hope all is well. Following up here with key takeaways from this week's call.
+
+Action Items —
+
+WT Team
+- [action item]
+
+${client} Team
+- [action item]
+
+Key Takeaways —
+
+- [Section Name e.g. Brand Partnerships, Influencer Collaborations & Content Status, Paid, Finance & Invoices, Podcast Opportunities]:
+  - [detail]
+  - [detail]
+
+RULES:
+- Use ✅ for confirmed/completed items and ⚠️ for pending, blocked, or awaiting action
+- Only include Key Takeaway sections that have actual content from the call
+- Keep action items crisp and action-oriented; clearly separate WT Team from ${client} Team
+- Tone: warm, professional, concise — like a smart colleague summarising a call
+- Plain text only — no markdown formatting, no asterisks, no bold syntax
+- Use em dashes (—) not double hyphens (--)
+- Do NOT include a subject line, sign-off, or signature`;
+
+    const userPrompt = `Client: ${client}
+Contact: ${contact}
+Date: ${dateStr}
+
+Read AI transcript:
+${transcript}
+
+Write the weekly recap email body.`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1500,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userPrompt }]
+        })
+      });
+
+      if (!response.ok) throw new Error('API error ' + response.status);
+      const data = await response.json();
+      const draft = data.content.find(b => b.type === 'text')?.text || '';
+      outputEl.value = draft.trim();
+
+    } catch (err) {
+      outputEl.value = 'Error generating recap: ' + err.message + '\n\nPlease try again.';
+    } finally {
+      genBtn.disabled = false;
+      genBtn.style.opacity = '';
+      indicator.style.display = 'none';
+    }
+  }
+
+  function copyRecap() {
+    const text = document.getElementById('recap-output').value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('recap-copy-btn');
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Recap`;
+      }, 2000);
+      showToast();
+    });
+  }
+
+  function resetRecap() {
+    document.getElementById('recap-client').value = '';
+    document.getElementById('recap-contact').value = '';
+    document.getElementById('recap-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('recap-transcript').value = '';
+    document.getElementById('recap-char-count').textContent = '0 chars';
+    document.getElementById('recap-output').value = '';
+    document.getElementById('recap-result-card').classList.remove('visible');
+  }
+  </script>
+
   <!-- TOAST -->
   <div class="toast" id="toast">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -3440,6 +3709,7 @@ function showGDocToast(msg) {
       document.getElementById('view-home').style.display     = (hash === 'home' || hash === '') ? 'block' : 'none';
       document.getElementById('view-utm').style.display      = (hash === 'utm') ? 'block' : 'none';
       document.getElementById('view-contract').style.display = (hash === 'contract') ? 'block' : 'none';
+      document.getElementById('view-recap').style.display    = (hash === 'recap') ? 'block' : 'none';
     }
 
     window.addEventListener('hashchange', handleRoute);
