@@ -1582,7 +1582,28 @@
   .cg .cg-cta-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 12px;
     padding: 8px 0 4px;
+  }
+  .cg .cg-reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 24px;
+    background: white;
+    color: var(--green);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cg .cg-reset-btn:hover {
+    border-color: var(--green);
+    background: var(--green-light);
   }
   .cg .cg-primary-cta {
     display: flex;
@@ -2442,6 +2463,10 @@
   </div>
 
   <div class="cg-cta-wrapper">
+    <button class="cg-reset-btn" onclick="resetGenerator()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+      Reset
+    </button>
     <button class="cg-primary-cta" id="gdocs-btn" disabled onclick="copyToGDoc()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       Copy to Google Doc
@@ -3324,6 +3349,50 @@ function updateTCEditCount() {
   } else {
     badge.style.display = 'none';
   }
+}
+
+function resetGenerator() {
+  if (!confirm('Reset everything? This will clear all inputs, overrides, and T&C edits.')) return;
+
+  // Clear influencer detail inputs
+  ['inf-name','inf-handle','inf-legal','inf-address','inf-agency','inf-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  // Reset base contract select
+  const sel = document.getElementById('base-contract');
+  if (sel) sel.value = '';
+  baseContract = null;
+
+  // Reset module overrides
+  moduleOverrides = {};
+
+  // Clear inline overrides (const — must delete keys)
+  Object.keys(inlineOverrides).forEach(k => delete inlineOverrides[k]);
+
+  // Reset T&C edits
+  tcEdits = {};
+
+  // Disable CTA
+  document.getElementById('gdocs-btn').disabled = true;
+
+  // Hide modules and TC sections
+  const modulesSection = document.getElementById('modules-section');
+  if (modulesSection) modulesSection.style.display = 'none';
+
+  const tcSection = document.getElementById('tc-section');
+  if (tcSection) { tcSection.style.display = 'none'; tcSection.querySelector('#tc-body').innerHTML = ''; }
+
+  // Reset preview rows to dashes
+  ['prev-influencer','prev-agency','prev-date','prev-campaign','prev-deliverables','prev-term','prev-whitelisting','prev-payment','prev-disclosure','prev-territory'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = '—';
+  });
+
+  // Update badges
+  updateCustomCount();
+  updateTCEditCount();
 }
 
 // Show T&C section when a base contract is selected — patched into onBaseChange
