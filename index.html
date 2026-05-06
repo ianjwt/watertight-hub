@@ -1639,21 +1639,9 @@
 <body>
 <script>
 (function() {
-  var token = localStorage.getItem('wt_token');
-  if (!token) {
+  if (sessionStorage.getItem('wt_auth') !== 'true') {
     window.location.replace('/login.html');
-    return;
   }
-  fetch('/api/verify', {
-    headers: { 'x-wt-token': token }
-  }).then(function(r) {
-    if (!r.ok) {
-      localStorage.removeItem('wt_token');
-      window.location.replace('/login.html');
-    }
-  }).catch(function() {
-    window.location.replace('/login.html');
-  });
 })();
 </script>
 

@@ -24,13 +24,8 @@
   .toggle-pw:hover { color: var(--green); }
   .error-msg { font-size: 12px; color: #c0392b; margin-bottom: 14px; display: none; text-align: left; }
   .error-msg.visible { display: block; }
-  button.submit { width: 100%; padding: 13px; background: var(--green); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  button.submit { width: 100%; padding: 13px; background: var(--green); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.18s; }
   button.submit:hover { background: var(--green-dark); }
-  button.submit:disabled { opacity: 0.6; cursor: not-allowed; }
-  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-  button.submit.loading .spinner { display: block; }
-  button.submit.loading .btn-text { display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
   .footer { margin-top: 28px; font-size: 11px; color: var(--muted); opacity: 0.6; }
 </style>
 </head>
@@ -52,15 +47,16 @@
     </button>
   </div>
   <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
-  <button class="submit" id="submitBtn" onclick="handleLogin()">
-    <div class="spinner"></div>
-    <span class="btn-text">Enter Vortex</span>
-  </button>
+  <button class="submit" onclick="handleLogin()">Enter Vortex</button>
   <p class="footer">Watertight &nbsp;·&nbsp; Internal use only</p>
 </div>
 <script>
-  // Already logged in? Skip to Vortex
-  if (localStorage.getItem('wt_token')) {
+  // The hashed password check happens entirely in the browser
+  // SHA-256 hash of the correct password is stored here
+  const CORRECT_HASH = 'HASH_PLACEHOLDER';
+
+  // If already authenticated, go straight to the Vortex
+  if (sessionStorage.getItem('wt_auth') === 'true') {
     window.location.replace('/');
   }
 
@@ -71,34 +67,24 @@
     document.getElementById('errorMsg').classList.remove('visible');
   });
 
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
   async function handleLogin() {
     const password = input.value.trim();
     if (!password) { input.focus(); return; }
-    const btn = document.getElementById('submitBtn');
-    btn.classList.add('loading');
-    btn.disabled = true;
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json();
-      if (res.ok && data.token) {
-        localStorage.setItem('wt_token', data.token);
-        window.location.replace('/');
-      } else {
-        input.classList.add('error');
-        document.getElementById('errorMsg').classList.add('visible');
-        input.value = '';
-        input.focus();
-      }
-    } catch {
-      document.getElementById('errorMsg').textContent = 'Something went wrong. Please try again.';
+    const hash = await sha256(password);
+    if (hash === CORRECT_HASH) {
+      sessionStorage.setItem('wt_auth', 'true');
+      window.location.replace('/');
+    } else {
+      input.classList.add('error');
       document.getElementById('errorMsg').classList.add('visible');
+      input.value = '';
+      input.focus();
     }
-    btn.classList.remove('loading');
-    btn.disabled = false;
   }
 
   function togglePassword() {
