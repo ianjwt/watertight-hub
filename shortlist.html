@@ -398,6 +398,7 @@ function getFiltered() {
 }
 
 function resetFilters() {
+  selected.clear();
   selectedClients.clear();
   document.querySelectorAll('.client-toggle').forEach(btn => btn.classList.remove('active'));
   ['fTier','fPlatform','fScored'].forEach(id => document.getElementById(id).value = '');
