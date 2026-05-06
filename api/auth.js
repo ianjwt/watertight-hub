@@ -1,5 +1,3 @@
-const crypto = require('crypto');
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -27,13 +25,5 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Incorrect password' });
   }
 
-  const secret = process.env.SESSION_SECRET || SITE_PASSWORD;
-  const token = crypto
-    .createHmac('sha256', secret)
-    .update(SITE_PASSWORD)
-    .digest('hex');
-
-  const cookieStr = `wt_session=${token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax; HttpOnly`;
-  res.setHeader('Set-Cookie', cookieStr);
-  res.status(200).json({ ok: true });
+  res.status(200).json({ ok: true, token: 'wt_' + Buffer.from(SITE_PASSWORD).toString('base64') });
 };

@@ -1639,15 +1639,21 @@
 <body>
 <script>
 (function() {
-  setTimeout(function() {
-    fetch('/api/verify')
-      .then(function(r) {
-        if (!r.ok) window.location.replace('/login.html');
-      })
-      .catch(function() {
-        window.location.replace('/login.html');
-      });
-  }, 500);
+  var token = localStorage.getItem('wt_token');
+  if (!token) {
+    window.location.replace('/login.html');
+    return;
+  }
+  fetch('/api/verify', {
+    headers: { 'x-wt-token': token }
+  }).then(function(r) {
+    if (!r.ok) {
+      localStorage.removeItem('wt_token');
+      window.location.replace('/login.html');
+    }
+  }).catch(function() {
+    window.location.replace('/login.html');
+  });
 })();
 </script>
 

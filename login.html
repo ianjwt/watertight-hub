@@ -6,145 +6,35 @@
 <title>Watertight Vortex</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #116E53; --green-light: #e8f4f0; --green-dark: #0d5540;
-    --cream: #faf9f7; --border: #e2e8e5; --text: #1a2e28; --muted: #6b8a80;
-  }
+  :root { --green: #116E53; --green-dark: #0d5540; --cream: #faf9f7; --border: #e2e8e5; --text: #1a2e28; --muted: #6b8a80; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-
-  .card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 48px 40px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 32px rgba(17,110,83,0.1);
-    text-align: center;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 32px;
-  }
+  body { font-family: 'Poppins', sans-serif; background: var(--cream); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 32px rgba(17,110,83,0.1); text-align: center; }
+  .logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 32px; }
   .logo svg { width: 36px; height: 36px; }
-  .logo-text {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--green);
-    letter-spacing: -0.02em;
-  }
-
-  h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--green-dark);
-    margin-bottom: 6px;
-  }
-  .subtitle {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 32px;
-  }
-
-  .input-wrap {
-    position: relative;
-    margin-bottom: 16px;
-  }
-  input[type="password"] {
-    width: 100%;
-    padding: 13px 44px 13px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.2s;
-    letter-spacing: 0.1em;
-  }
-  input[type="password"]::placeholder { letter-spacing: 0; color: #aab8b2; }
-  input[type="password"]:focus { border-color: var(--green); }
-  input[type="password"].error { border-color: #c0392b; }
-
-  .toggle-pw {
-    position: absolute;
-    right: 14px; top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--muted);
-    background: none;
-    border: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-  }
+  .logo-text { font-size: 18px; font-weight: 700; color: var(--green); }
+  h1 { font-size: 22px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+  .input-wrap { position: relative; margin-bottom: 16px; }
+  input[type="password"], input[type="text"] { width: 100%; padding: 13px 44px 13px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.2s; letter-spacing: 0.1em; }
+  input::placeholder { letter-spacing: 0; color: #aab8b2; }
+  input:focus { border-color: var(--green); }
+  input.error { border-color: #c0392b; }
+  .toggle-pw { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--muted); background: none; border: none; padding: 0; display: flex; align-items: center; }
   .toggle-pw:hover { color: var(--green); }
-
-  .error-msg {
-    font-size: 12px;
-    color: #c0392b;
-    margin-bottom: 14px;
-    display: none;
-    text-align: left;
-  }
+  .error-msg { font-size: 12px; color: #c0392b; margin-bottom: 14px; display: none; text-align: left; }
   .error-msg.visible { display: block; }
-
-  button.submit {
-    width: 100%;
-    padding: 13px;
-    background: var(--green);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.18s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
+  button.submit { width: 100%; padding: 13px; background: var(--green); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   button.submit:hover { background: var(--green-dark); }
   button.submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.4);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   button.submit.loading .spinner { display: block; }
   button.submit.loading .btn-text { display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .footer {
-    margin-top: 28px;
-    font-size: 11px;
-    color: var(--muted);
-    opacity: 0.6;
-  }
+  .footer { margin-top: 28px; font-size: 11px; color: var(--muted); opacity: 0.6; }
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="logo">
     <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -153,32 +43,26 @@
     </svg>
     <span class="logo-text">Watertight Vortex</span>
   </div>
-
   <h1>Welcome back</h1>
   <p class="subtitle">Enter the team password to continue.</p>
-
   <div class="input-wrap">
     <input type="password" id="password" placeholder="Password" autocomplete="current-password">
-    <button class="toggle-pw" type="button" onclick="togglePassword()" tabindex="-1" aria-label="Show password">
+    <button class="toggle-pw" type="button" onclick="togglePassword()" tabindex="-1">
       <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
     </button>
   </div>
-
   <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
-
   <button class="submit" id="submitBtn" onclick="handleLogin()">
     <div class="spinner"></div>
     <span class="btn-text">Enter Vortex</span>
   </button>
-
   <p class="footer">Watertight &nbsp;·&nbsp; Internal use only</p>
 </div>
-
 <script>
-  // If already authenticated, redirect immediately
-  fetch('/api/verify')
-    .then(r => { if (r.ok) window.location.replace('/'); })
-    .catch(() => {});
+  // Already logged in? Skip to Vortex
+  if (localStorage.getItem('wt_token')) {
+    window.location.replace('/');
+  }
 
   const input = document.getElementById('password');
   input.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
@@ -190,20 +74,19 @@
   async function handleLogin() {
     const password = input.value.trim();
     if (!password) { input.focus(); return; }
-
     const btn = document.getElementById('submitBtn');
     btn.classList.add('loading');
     btn.disabled = true;
-
     try {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       });
-
-      if (res.ok) {
-        setTimeout(() => window.location.replace('/'), 300);
+      const data = await res.json();
+      if (res.ok && data.token) {
+        localStorage.setItem('wt_token', data.token);
+        window.location.replace('/');
       } else {
         input.classList.add('error');
         document.getElementById('errorMsg').classList.add('visible');
@@ -214,7 +97,6 @@
       document.getElementById('errorMsg').textContent = 'Something went wrong. Please try again.';
       document.getElementById('errorMsg').classList.add('visible');
     }
-
     btn.classList.remove('loading');
     btn.disabled = false;
   }
