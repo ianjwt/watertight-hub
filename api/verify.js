@@ -1,10 +1,17 @@
-const cookie = require('cookie');
 const crypto = require('crypto');
 
 module.exports = async (req, res) => {
-  const cookies = cookie.parse(req.headers.cookie || '');
-  const token = cookies.wt_session;
+  const cookieHeader = req.headers.cookie || '';
+  const cookies = {};
+  cookieHeader.split(';').forEach(pair => {
+    const idx = pair.indexOf('=');
+    if (idx < 0) return;
+    const key = pair.slice(0, idx).trim();
+    const val = pair.slice(idx + 1).trim();
+    cookies[key] = val;
+  });
 
+  const token = cookies['wt_session'];
   const SITE_PASSWORD = process.env.SITE_PASSWORD;
   const secret = process.env.SESSION_SECRET || SITE_PASSWORD;
 

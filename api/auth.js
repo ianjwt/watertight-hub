@@ -1,4 +1,3 @@
-const cookie = require('cookie');
 const crypto = require('crypto');
 
 module.exports = async (req, res) => {
@@ -28,21 +27,13 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Incorrect password' });
   }
 
-  // Create a signed token: sha256(password + secret)
   const secret = process.env.SESSION_SECRET || SITE_PASSWORD;
   const token = crypto
     .createHmac('sha256', secret)
     .update(SITE_PASSWORD)
     .digest('hex');
 
-  const serialized = cookie.serialize('wt_session', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  });
-
-  res.setHeader('Set-Cookie', serialized);
+  const cookieStr = `wt_session=${token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Strict; HttpOnly`;
+  res.setHeader('Set-Cookie', cookieStr);
   res.status(200).json({ ok: true });
 };
