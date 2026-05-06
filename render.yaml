@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: watertight-hub
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: SITE_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
