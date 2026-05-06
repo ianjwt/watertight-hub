@@ -1639,13 +1639,15 @@
 <body>
 <script>
 (function() {
-  fetch('/api/verify')
-    .then(function(r) {
-      if (!r.ok) window.location.replace('/login.html');
-    })
-    .catch(function() {
-      window.location.replace('/login.html');
-    });
+  setTimeout(function() {
+    fetch('/api/verify')
+      .then(function(r) {
+        if (!r.ok) window.location.replace('/login.html');
+      })
+      .catch(function() {
+        window.location.replace('/login.html');
+      });
+  }, 500);
 })();
 </script>
 
