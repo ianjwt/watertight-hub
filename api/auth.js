@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
     .update(SITE_PASSWORD)
     .digest('hex');
 
-  const cookieStr = `wt_session=${token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Strict; HttpOnly`;
+  const cookieStr = `wt_session=${token}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax; HttpOnly`;
   res.setHeader('Set-Cookie', cookieStr);
   res.status(200).json({ ok: true });
 };

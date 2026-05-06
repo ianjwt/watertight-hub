@@ -203,7 +203,7 @@
       });
 
       if (res.ok) {
-        window.location.replace('/');
+        setTimeout(() => window.location.replace('/'), 300);
       } else {
         input.classList.add('error');
         document.getElementById('errorMsg').classList.add('visible');
