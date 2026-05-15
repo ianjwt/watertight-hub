@@ -634,6 +634,333 @@
     }
   </style>
 
+  <style id="db-styles">
+    /* ─── DECK BUILDER ─── */
+    .db-progress {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+    .db-progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .db-progress-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      transition: all 0.2s;
+    }
+    .db-progress-dot.active { background: var(--wt-green); border-color: var(--wt-green); color: white; }
+    .db-progress-dot.done   { background: var(--wt-green); border-color: var(--wt-green); color: white; }
+    .db-progress-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .db-progress-label.active, .db-progress-label.done { color: var(--wt-green); }
+    .db-progress-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin-top: 14px;
+      transition: background 0.2s;
+    }
+    .db-progress-line.done { background: var(--wt-green); }
+
+    /* KPI tiles */
+    .db-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .db-kpi-tile {
+      background: #f0f7f4;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 16px 14px;
+    }
+    .db-kpi-tile-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .db-kpi-row { display: flex; gap: 8px; align-items: center; }
+    .db-kpi-row input { flex: 1; min-width: 0; }
+    .db-dir-toggle {
+      height: 40px;
+      width: 42px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    .db-dir-toggle.up   { background: #e8f5ee; border-color: var(--wt-green-2); color: var(--wt-green); }
+    .db-dir-toggle.down { background: #fff0ee; border-color: var(--wt-pink-1);  color: var(--wt-pink-1); }
+    .db-wow-input { width: 72px !important; flex: none !important; }
+
+    /* Creator cards */
+    .db-creator-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    .db-creator-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .db-creator-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .db-creator-card .db-field-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+      display: block;
+    }
+    .db-creator-card input[type="text"],
+    .db-creator-card input[type="number"] {
+      width: 100%;
+      height: 34px;
+      font-size: 12px;
+    }
+    .db-metric-toggle {
+      display: flex;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      height: 34px;
+    }
+    .db-metric-toggle button {
+      flex: 1;
+      border: none;
+      background: white;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .db-metric-toggle button.active { background: var(--wt-green); color: white; font-weight: 600; }
+
+    /* Pipeline */
+    .db-pipeline-bucket { margin-bottom: 20px; }
+    .db-pipeline-bucket-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--wt-green);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .db-pipeline-bucket-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .db-pipeline-creator-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .db-pipeline-creator-row input { height: 36px; font-size: 12px; }
+    .db-remove-btn {
+      width: 30px; height: 30px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: white;
+      color: var(--text-light);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .db-remove-btn:hover { border-color: var(--wt-pink-1); color: var(--wt-pink-1); }
+    .db-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      background: none;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.15s;
+      margin-top: 4px;
+    }
+    .db-add-btn:hover { border-color: var(--wt-green-2); color: var(--wt-green); }
+
+    /* Step nav */
+    .db-step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Loading overlay */
+    .db-loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(238, 245, 237, 0.95);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .db-loading-overlay.visible { display: flex; }
+    .db-loading-spinner {
+      width: 44px; height: 44px;
+      border: 3px solid var(--wt-green-3);
+      border-top-color: var(--wt-green);
+      border-radius: 50%;
+      animation: db-spin 0.8s linear infinite;
+    }
+    @keyframes db-spin { to { transform: rotate(360deg); } }
+    .db-loading-status { font-size: 14px; font-weight: 500; color: var(--wt-green); }
+
+    /* Results panel */
+    .db-results { display: none; margin-top: 24px; animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .db-results.visible { display: block; }
+    .db-results-section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .db-results-header {
+      padding: 14px 22px;
+      background: var(--wt-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .db-results-header-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+    }
+    .db-results-body { padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+    .db-ai-block label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    .db-ai-textarea {
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--wt-green-4);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      resize: vertical;
+      outline: none;
+      min-height: 80px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .db-ai-textarea:focus { border-color: var(--wt-green); box-shadow: 0 0 0 3px rgba(17,110,83,0.1); background: white; }
+    .db-brief-box {
+      width: 100%;
+      font-family: 'Courier New', monospace;
+      font-size: 11.5px;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--wt-green-4);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      resize: vertical;
+      outline: none;
+      min-height: 420px;
+      transition: border-color 0.15s;
+    }
+    .db-brief-box:focus { border-color: var(--wt-green); box-shadow: 0 0 0 3px rgba(17,110,83,0.1); }
+    .db-copy-brief-btn {
+      width: 100%;
+      height: 52px;
+      background: var(--wt-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity 0.15s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .db-copy-brief-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .db-copy-brief-btn.copied { background: #22C55E; }
+    .db-paste-note { text-align: center; font-size: 12px; color: var(--text-light); font-weight: 300; margin-top: 10px; }
+
+    /* Step visibility */
+    .db-step-content { display: none; }
+    .db-step-content.active { display: block; }
+
+    @media (max-width: 600px) {
+      .db-kpi-grid { grid-template-columns: 1fr; }
+      .db-creator-row { grid-template-columns: 1fr; }
+      .db-pipeline-creator-row { grid-template-columns: 1fr 1fr; }
+      .db-pipeline-creator-row .db-remove-btn { display: none; }
+    }
+  </style>
+
   <style id="cg-styles">
 
   .cg {
@@ -1769,6 +2096,20 @@
           <div class="tool-card-name">The Shortlist</div>
           <div class="tool-card-desc">Browse and filter Watertight's influencer roster with reach and engagement scores.</div>
         </a>
+
+        <!-- Card 6: Deck Builder -->
+        <div class="tool-card" onclick="navigateTo('deck')">
+          <svg class="tool-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <div class="tool-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="tool-card-name">Deck Builder</div>
+          <div class="tool-card-desc">Auto-populate your weekly client decks</div>
+        </div>
 
       </div>
     </div>
@@ -3690,6 +4031,249 @@ function showGDocToast(msg) {
 
   </div><!-- /view-recap -->
 
+  <!-- ══════════════════════════════════════════ -->
+  <!-- DECK BUILDER VIEW                          -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="view-deck" style="display:none;">
+
+    <button class="back-link" onclick="navigateTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Vortex
+    </button>
+
+    <div class="section-title">Deck Builder</div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title-group">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Deck Builder</div>
+            <div class="card-subtitle">SoWell Weekly Report</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-body">
+
+        <!-- PROGRESS BAR -->
+        <div class="db-progress">
+          <div class="db-progress-step">
+            <div class="db-progress-dot active" id="db-dot-1">1</div>
+            <div class="db-progress-label active" id="db-label-1">Setup</div>
+          </div>
+          <div class="db-progress-line" id="db-line-1"></div>
+          <div class="db-progress-step">
+            <div class="db-progress-dot" id="db-dot-2">2</div>
+            <div class="db-progress-label" id="db-label-2">Performance</div>
+          </div>
+          <div class="db-progress-line" id="db-line-2"></div>
+          <div class="db-progress-step">
+            <div class="db-progress-dot" id="db-dot-3">3</div>
+            <div class="db-progress-label" id="db-label-3">Creative</div>
+          </div>
+          <div class="db-progress-line" id="db-line-3"></div>
+          <div class="db-progress-step">
+            <div class="db-progress-dot" id="db-dot-4">4</div>
+            <div class="db-progress-label" id="db-label-4">Pipeline</div>
+          </div>
+        </div>
+
+        <!-- ── STEP 1: SETUP ── -->
+        <div class="db-step-content active" id="db-step-1">
+          <div class="form-section">
+            <div class="form-section-label">Week Range</div>
+            <div class="row-2">
+              <div class="field">
+                <label>Week Start <span class="tag">required</span></label>
+                <input type="date" id="db-week-start" oninput="dbUpdateWeekLabel()" />
+              </div>
+              <div class="field">
+                <label>Week End <span class="tag">required</span></label>
+                <input type="date" id="db-week-end" oninput="dbUpdateWeekLabel()" />
+              </div>
+            </div>
+            <div class="field-hint" id="db-week-label" style="font-size:13px; font-weight:500; color:var(--wt-green); min-height:20px; margin-top:4px;"></div>
+          </div>
+          <div class="form-section" style="border-bottom:none; padding-bottom:0;">
+            <div class="form-section-label">Client</div>
+            <div class="field">
+              <input type="text" value="SoWell" readonly style="background:var(--wt-green-4); color:var(--text-light); cursor:default;" />
+              <span class="field-hint">Locked to SoWell in V1.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STEP 2: PERFORMANCE ── -->
+        <div class="db-step-content" id="db-step-2">
+          <div class="form-section">
+            <div class="form-section-label">KPI Overview</div>
+            <div class="db-kpi-grid">
+
+              <div class="db-kpi-tile">
+                <div class="db-kpi-tile-label">Shopify New Customer Sales</div>
+                <div class="field" style="margin-bottom:8px;">
+                  <label>Value</label>
+                  <input type="text" id="db-kpi-sales-val" placeholder="$5,309" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label>WoW Change</label>
+                  <div class="db-kpi-row">
+                    <input type="text" id="db-kpi-sales-wow" placeholder="2.6%" class="db-wow-input" autocomplete="off" />
+                    <button class="db-dir-toggle up" id="db-kpi-sales-dir" onclick="dbToggleDir(this)">↑</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="db-kpi-tile">
+                <div class="db-kpi-tile-label">New Customer ROAS</div>
+                <div class="field" style="margin-bottom:8px;">
+                  <label>Value</label>
+                  <input type="text" id="db-kpi-roas-val" placeholder="1.42" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label>WoW Change</label>
+                  <div class="db-kpi-row">
+                    <input type="text" id="db-kpi-roas-wow" placeholder="5.2%" class="db-wow-input" autocomplete="off" />
+                    <button class="db-dir-toggle up" id="db-kpi-roas-dir" onclick="dbToggleDir(this)">↑</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="db-kpi-tile">
+                <div class="db-kpi-tile-label">Meta Weekly Spend</div>
+                <div class="field" style="margin-bottom:8px;">
+                  <label>Value</label>
+                  <input type="text" id="db-kpi-spend-val" placeholder="$8,450" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label>WoW Change</label>
+                  <div class="db-kpi-row">
+                    <input type="text" id="db-kpi-spend-wow" placeholder="12.0%" class="db-wow-input" autocomplete="off" />
+                    <button class="db-dir-toggle up" id="db-kpi-spend-dir" onclick="dbToggleDir(this)">↑</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="db-kpi-tile">
+                <div class="db-kpi-tile-label">Meta ROAS</div>
+                <div class="field" style="margin-bottom:8px;">
+                  <label>Value</label>
+                  <input type="text" id="db-kpi-metaroas-val" placeholder="1.18" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label>WoW Change</label>
+                  <div class="db-kpi-row">
+                    <input type="text" id="db-kpi-metaroas-wow" placeholder="3.1%" class="db-wow-input" autocomplete="off" />
+                    <button class="db-dir-toggle up" id="db-kpi-metaroas-dir" onclick="dbToggleDir(this)">↑</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-section" style="border-bottom:none; padding-bottom:0;">
+            <div class="form-section-label">Context</div>
+            <div class="field">
+              <label>Context notes <span class="tag">optional</span></label>
+              <textarea id="db-context-notes" rows="3"
+                style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:13px; font-weight:300; color:var(--text); background:var(--bg); resize:vertical; outline:none; line-height:1.6; transition:border-color 0.15s, box-shadow 0.15s;"
+                placeholder="Any extra context for the AI narrative — e.g. 'spend increased intentionally', 'learning phase', 'new creative launched'"
+                onfocus="this.style.borderColor='var(--wt-green)'; this.style.boxShadow='0 0 0 3px rgba(17,110,83,0.10)'; this.style.background='white';"
+                onblur="this.style.borderColor=''; this.style.boxShadow=''; this.style.background='';"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STEP 3: CREATIVE ── -->
+        <div class="db-step-content" id="db-step-3">
+          <div class="form-section">
+            <div class="db-creator-section-label">Creative Performance — Video</div>
+            <div class="db-creator-row" id="db-video-cards"></div>
+          </div>
+          <div class="form-section" style="border-bottom:none; padding-bottom:0;">
+            <div class="db-creator-section-label">Creative Performance — Images</div>
+            <div class="db-creator-row" id="db-image-cards"></div>
+          </div>
+        </div>
+
+        <!-- ── STEP 4: PIPELINE ── -->
+        <div class="db-step-content" id="db-step-4">
+          <div id="db-pipeline-secured" class="db-pipeline-bucket"></div>
+          <div id="db-pipeline-talks" class="db-pipeline-bucket"></div>
+          <div id="db-pipeline-seeded" class="db-pipeline-bucket"></div>
+        </div>
+
+        <!-- STEP NAV -->
+        <div class="db-step-nav">
+          <button class="btn btn-secondary" id="db-back-btn" onclick="dbBack()" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+          <div></div>
+          <button class="generate-btn" id="db-next-btn" onclick="dbNext()" style="width:auto; padding:0 32px; margin-top:0;">
+            Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </div><!-- /form-body -->
+    </div><!-- /card -->
+
+    <!-- RESULTS PANEL -->
+    <div class="db-results" id="db-results">
+
+      <div class="db-results-section">
+        <div class="db-results-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" width="15" height="15"><path d="M12 3v3M12 18v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M3 12h3M18 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+          <span class="db-results-header-title">AI-Generated Copy</span>
+        </div>
+        <div class="db-results-body">
+          <div class="db-ai-block">
+            <label>Context Blurb</label>
+            <textarea class="db-ai-textarea" id="db-ai-blurb" rows="4"></textarea>
+          </div>
+          <div class="db-ai-block">
+            <label>Meta Performance Bullets</label>
+            <textarea class="db-ai-textarea" id="db-ai-bullets" rows="7"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="db-results-section">
+        <div class="db-results-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" width="15" height="15"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="db-results-header-title">Deck Brief</span>
+        </div>
+        <div class="db-results-body">
+          <textarea class="db-brief-box" id="db-brief-output" readonly></textarea>
+          <button class="db-copy-brief-btn" id="db-copy-brief-btn" onclick="dbCopyBrief()">
+            📋 Copy Deck Brief
+          </button>
+          <div class="db-paste-note">Paste this into Claude chat to auto-populate your Canva deck.</div>
+        </div>
+      </div>
+
+    </div><!-- /db-results -->
+
+    <!-- LOADING OVERLAY -->
+    <div class="db-loading-overlay" id="db-loading-overlay">
+      <div class="db-loading-spinner"></div>
+      <div class="db-loading-status" id="db-loading-status">Generating narrative…</div>
+    </div>
+
+  </div><!-- /view-deck -->
+
   </main>
 
   <script>
@@ -3846,6 +4430,7 @@ Write the weekly recap email body.`;
       document.getElementById('view-utm').style.display      = (hash === 'utm') ? 'block' : 'none';
       document.getElementById('view-contract').style.display = (hash === 'contract') ? 'block' : 'none';
       document.getElementById('view-recap').style.display    = (hash === 'recap') ? 'block' : 'none';
+      document.getElementById('view-deck').style.display     = (hash === 'deck') ? 'block' : 'none';
     }
 
     window.addEventListener('hashchange', handleRoute);
@@ -3974,6 +4559,366 @@ Write the weekly recap email body.`;
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter' && e.target.tagName === 'INPUT') buildUTM();
     });
+  </script>
+
+  <script>
+  // ── DECK BUILDER ──────────────────────────────────────────────────────
+
+  let dbCurrentStep = 1;
+  const DB_TOTAL_STEPS = 4;
+  const dbPipelineCounters = {};
+
+  function dbUpdateWeekLabel() {
+    const s = document.getElementById('db-week-start').value;
+    const e = document.getElementById('db-week-end').value;
+    const el = document.getElementById('db-week-label');
+    if (s && e) {
+      const ds = new Date(s + 'T12:00:00');
+      const de = new Date(e + 'T12:00:00');
+      const startStr = ds.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+      const endDay   = de.getDate();
+      const endYear  = de.getFullYear();
+      el.textContent = `Week of ${startStr}–${endDay}, ${endYear}`;
+    } else {
+      el.textContent = '';
+    }
+  }
+
+  function dbGetWeekRange() {
+    const s = document.getElementById('db-week-start').value;
+    const e = document.getElementById('db-week-end').value;
+    if (!s || !e) return '[DATE RANGE]';
+    const ds = new Date(s + 'T12:00:00');
+    const de = new Date(e + 'T12:00:00');
+    const startStr = ds.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const endDay   = de.getDate();
+    const endYear  = de.getFullYear();
+    return `${startStr}–${endDay}, ${endYear}`;
+  }
+
+  function dbToggleDir(btn) {
+    if (btn.classList.contains('up')) {
+      btn.classList.replace('up', 'down');
+      btn.textContent = '↓';
+    } else {
+      btn.classList.replace('down', 'up');
+      btn.textContent = '↑';
+    }
+  }
+
+  function dbRenderCreatorCards(containerId, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 1; i <= 3; i++) {
+      const p = `db-${type}-${i}`;
+      const card = document.createElement('div');
+      card.className = 'db-creator-card';
+      card.innerHTML = `
+        <div>
+          <span class="db-field-label">Creator Name</span>
+          <input type="text" id="${p}-name" placeholder="@handle or name" />
+        </div>
+        <div>
+          <span class="db-field-label">Metric</span>
+          <div class="db-metric-toggle">
+            <button class="active" id="${p}-btn-p" onclick="dbToggleMetric('${p}','Purchases')">Purchases</button>
+            <button id="${p}-btn-a" onclick="dbToggleMetric('${p}','ATC')">ATC</button>
+          </div>
+          <input type="hidden" id="${p}-metric-type" value="Purchases" />
+        </div>
+        <div>
+          <span class="db-field-label" id="${p}-metric-label">Purchases</span>
+          <input type="number" id="${p}-metric-val" placeholder="12" step="any" />
+        </div>
+        <div>
+          <span class="db-field-label" id="${p}-cpa-label">CPA ($)</span>
+          <input type="number" id="${p}-cpa-val" placeholder="18.50" step="any" />
+        </div>
+        <div>
+          <span class="db-field-label">Image URL</span>
+          <input type="text" id="${p}-img" placeholder="Paste image URL from Meta or MagicBrief" />
+        </div>`;
+      container.appendChild(card);
+    }
+  }
+
+  function dbToggleMetric(prefix, metric) {
+    document.getElementById(`${prefix}-metric-type`).value = metric;
+    document.getElementById(`${prefix}-metric-label`).textContent = metric;
+    document.getElementById(`${prefix}-btn-p`).classList.toggle('active', metric === 'Purchases');
+    document.getElementById(`${prefix}-btn-a`).classList.toggle('active', metric === 'ATC');
+    document.getElementById(`${prefix}-cpa-label`).textContent = metric === 'Purchases' ? 'CPA ($)' : 'ROAS';
+  }
+
+  function dbRenderPipelineBucket(containerId, label) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = `
+      <div class="db-pipeline-bucket-label">${label}</div>
+      <div id="${containerId}-rows"></div>
+      <button class="db-add-btn" onclick="dbAddPipelineRow('${containerId}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M12 5v14M5 12h14"/></svg>
+        Add Creator
+      </button>`;
+    dbAddPipelineRow(containerId);
+  }
+
+  function dbAddPipelineRow(containerId) {
+    const rowsEl = document.getElementById(`${containerId}-rows`);
+    if (!rowsEl) return;
+    if (rowsEl.querySelectorAll('.db-pipeline-creator-row').length >= 3) return;
+    if (!dbPipelineCounters[containerId]) dbPipelineCounters[containerId] = 0;
+    dbPipelineCounters[containerId]++;
+    const rowId = `${containerId}-r${dbPipelineCounters[containerId]}`;
+    const row = document.createElement('div');
+    row.className = 'db-pipeline-creator-row';
+    row.id = rowId;
+    row.innerHTML = `
+      <input type="text" placeholder="Creator name" />
+      <input type="text" placeholder="One-line description" />
+      <button class="db-remove-btn" onclick="dbRemovePipelineRow('${containerId}', this)" title="Remove">×</button>`;
+    rowsEl.appendChild(row);
+  }
+
+  function dbRemovePipelineRow(containerId, btn) {
+    const rowsEl = document.getElementById(`${containerId}-rows`);
+    const row = btn.closest('.db-pipeline-creator-row');
+    if (row && rowsEl.querySelectorAll('.db-pipeline-creator-row').length > 1) row.remove();
+  }
+
+  function dbUpdateProgress(step) {
+    for (let i = 1; i <= DB_TOTAL_STEPS; i++) {
+      const dot   = document.getElementById(`db-dot-${i}`);
+      const label = document.getElementById(`db-label-${i}`);
+      if (i < step) {
+        dot.className = 'db-progress-dot done'; dot.textContent = '✓';
+        label.className = 'db-progress-label done';
+      } else if (i === step) {
+        dot.className = 'db-progress-dot active'; dot.textContent = String(i);
+        label.className = 'db-progress-label active';
+      } else {
+        dot.className = 'db-progress-dot'; dot.textContent = String(i);
+        label.className = 'db-progress-label';
+      }
+      if (i < DB_TOTAL_STEPS) {
+        const line = document.getElementById(`db-line-${i}`);
+        if (line) line.classList.toggle('done', i < step);
+      }
+    }
+  }
+
+  function dbValidateStep(step) {
+    if (step === 1) {
+      const s = document.getElementById('db-week-start').value;
+      const e = document.getElementById('db-week-end').value;
+      if (!s || !e) { alert('Please set both Week Start and Week End.'); return false; }
+    }
+    if (step === 2) {
+      const ids = ['db-kpi-sales-val','db-kpi-roas-val','db-kpi-spend-val','db-kpi-metaroas-val'];
+      for (const id of ids) {
+        if (!document.getElementById(id)?.value.trim()) {
+          alert('Please fill in all four KPI values before continuing.'); return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function dbNext() {
+    if (dbCurrentStep < DB_TOTAL_STEPS) {
+      if (!dbValidateStep(dbCurrentStep)) return;
+      document.getElementById(`db-step-${dbCurrentStep}`).classList.remove('active');
+      dbCurrentStep++;
+      document.getElementById(`db-step-${dbCurrentStep}`).classList.add('active');
+      dbUpdateProgress(dbCurrentStep);
+      document.getElementById('db-back-btn').style.display = 'inline-flex';
+      if (dbCurrentStep === DB_TOTAL_STEPS) {
+        const btn = document.getElementById('db-next-btn');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3v3M12 18v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M3 12h3M18 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg> Generate`;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      dbGenerate();
+    }
+  }
+
+  function dbBack() {
+    if (dbCurrentStep > 1) {
+      document.getElementById(`db-step-${dbCurrentStep}`).classList.remove('active');
+      dbCurrentStep--;
+      document.getElementById(`db-step-${dbCurrentStep}`).classList.add('active');
+      dbUpdateProgress(dbCurrentStep);
+      if (dbCurrentStep === 1) document.getElementById('db-back-btn').style.display = 'none';
+      const btn = document.getElementById('db-next-btn');
+      btn.innerHTML = `Next <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function dbGetCreatorData(type) {
+    return Array.from({ length: 3 }, (_, i) => {
+      const p = `db-${type}-${i + 1}`;
+      return {
+        name:       document.getElementById(`${p}-name`)?.value.trim() || '',
+        metricType: document.getElementById(`${p}-metric-type`)?.value || 'Purchases',
+        metricVal:  document.getElementById(`${p}-metric-val`)?.value.trim() || '',
+        cpaVal:     document.getElementById(`${p}-cpa-val`)?.value.trim() || '',
+        img:        document.getElementById(`${p}-img`)?.value.trim() || '',
+      };
+    });
+  }
+
+  function dbGetPipelineData(containerId) {
+    const rowsEl = document.getElementById(`${containerId}-rows`);
+    if (!rowsEl) return [];
+    return Array.from(rowsEl.querySelectorAll('.db-pipeline-creator-row')).map(row => {
+      const inputs = row.querySelectorAll('input[type="text"]');
+      return { name: inputs[0]?.value.trim() || '', desc: inputs[1]?.value.trim() || '' };
+    }).filter(r => r.name || r.desc);
+  }
+
+  async function dbGenerate() {
+    const weekRange    = dbGetWeekRange();
+    const contextNotes = document.getElementById('db-context-notes').value.trim();
+    const kpis = {
+      sales:    { val: document.getElementById('db-kpi-sales-val').value.trim(),    wow: document.getElementById('db-kpi-sales-wow').value.trim(),    dir: document.getElementById('db-kpi-sales-dir').textContent },
+      roas:     { val: document.getElementById('db-kpi-roas-val').value.trim(),     wow: document.getElementById('db-kpi-roas-wow').value.trim(),     dir: document.getElementById('db-kpi-roas-dir').textContent },
+      spend:    { val: document.getElementById('db-kpi-spend-val').value.trim(),    wow: document.getElementById('db-kpi-spend-wow').value.trim(),    dir: document.getElementById('db-kpi-spend-dir').textContent },
+      metaroas: { val: document.getElementById('db-kpi-metaroas-val').value.trim(), wow: document.getElementById('db-kpi-metaroas-wow').value.trim(), dir: document.getElementById('db-kpi-metaroas-dir').textContent },
+    };
+    const videoCreators = dbGetCreatorData('video');
+    const imageCreators = dbGetCreatorData('image');
+    const secured = dbGetPipelineData('db-pipeline-secured');
+    const talks   = dbGetPipelineData('db-pipeline-talks');
+    const seeded  = dbGetPipelineData('db-pipeline-seeded');
+
+    const overlay  = document.getElementById('db-loading-overlay');
+    const statusEl = document.getElementById('db-loading-status');
+    overlay.classList.add('visible');
+    const msgs = ['Generating narrative…', 'Building deck brief…', 'Ready.'];
+    let mi = 0;
+    statusEl.textContent = msgs[0];
+    const ticker = setInterval(() => { mi = Math.min(mi + 1, msgs.length - 1); statusEl.textContent = msgs[mi]; }, 1400);
+
+    const systemPrompt = `You are an expert paid media strategist at a top influencer marketing agency. You write sharp, data-driven weekly performance narratives for client decks. Be concise, confident, and specific. Use numbers. No fluff.`;
+
+    const userPrompt = `Generate two pieces of copy for the SoWell weekly deck for the week of ${weekRange}:
+
+1. CONTEXT BLURB (2-3 sentences max): A brief executive summary that explains the week's performance in plain English. Reference the KPIs directly.${contextNotes ? ` Additional context from the team: ${contextNotes}` : ''}
+
+KPIs this week:
+- Shopify New Customer Sales: ${kpis.sales.val} (${kpis.sales.dir}${kpis.sales.wow} WoW)
+- New Customer ROAS: ${kpis.roas.val} (${kpis.roas.dir}${kpis.roas.wow} WoW)
+- Meta Weekly Spend: ${kpis.spend.val} (${kpis.spend.dir}${kpis.spend.wow} WoW)
+- Meta ROAS: ${kpis.metaroas.val} (${kpis.metaroas.dir}${kpis.metaroas.wow} WoW)
+
+2. META PERFORMANCE BULLETS (3-4 bullets): Each bullet leads with a bolded key stat or finding, followed by a dash and one sentence of context/implication. Write these as if presenting to a sophisticated client who wants signal, not noise.
+
+Format your response exactly as:
+CONTEXT BLURB:
+[your blurb here]
+
+META PERFORMANCE:
+[your bullets here]`;
+
+    let blurb = '', bullets = '';
+    try {
+      const response = await fetch('/api/anthropic', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 800,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userPrompt }]
+        })
+      });
+      if (!response.ok) throw new Error('API error ' + response.status);
+      const data = await response.json();
+      const raw  = data.content.find(b => b.type === 'text')?.text || '';
+      const blurbM   = raw.match(/CONTEXT BLURB:\s*([\s\S]*?)(?=META PERFORMANCE:|$)/i);
+      const bulletsM = raw.match(/META PERFORMANCE:\s*([\s\S]*)$/i);
+      blurb   = blurbM   ? blurbM[1].trim()   : raw.trim();
+      bullets = bulletsM ? bulletsM[1].trim() : '';
+    } catch (err) {
+      blurb   = 'Error generating copy: ' + err.message;
+      bullets = 'Please try again.';
+    } finally {
+      clearInterval(ticker);
+      overlay.classList.remove('visible');
+    }
+
+    document.getElementById('db-ai-blurb').value   = blurb;
+    document.getElementById('db-ai-bullets').value = bullets;
+    document.getElementById('db-brief-output').value = dbBuildBrief(weekRange, kpis, blurb, bullets, videoCreators, imageCreators, secured, talks, seeded);
+
+    const resultsEl = document.getElementById('db-results');
+    resultsEl.classList.add('visible');
+    setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  }
+
+  function dbBuildBrief(weekRange, kpis, blurb, bullets, video, images, secured, talks, seeded) {
+    const fK = (k) => `${k.val}  ${k.dir}${k.wow} WoW`;
+    const fC = (creators) => creators.map((c, i) => {
+      if (!c.name && !c.metricVal && !c.cpaVal) return null;
+      const cL = c.metricType === 'Purchases' ? 'CPA' : 'ROAS';
+      return `${i+1}. ${c.name||'—'} | ${c.metricType}: ${c.metricVal||'—'} | ${cL}: ${c.cpaVal||'—'} | IMG: ${c.img||'—'}`;
+    }).filter(Boolean).join('\n') || '—';
+    const fP = (rows) => rows.length ? rows.map((r, i) => `${i+1}. ${r.name||'—'} | ${r.desc||'—'}`).join('\n') : '—';
+
+    return `SOWELL WEEKLY DECK — ${weekRange}
+
+COVER
+Week of ${weekRange}
+
+WEEKLY SUMMARY
+Shopify New Customer Sales: ${fK(kpis.sales)}
+New Customer ROAS:          ${fK(kpis.roas)}
+Meta Weekly Spend:          ${fK(kpis.spend)}
+Meta ROAS:                  ${fK(kpis.metaroas)}
+
+CONTEXT (AI-generated — edit above if needed)
+${blurb}
+
+META PERFORMANCE (AI-generated — edit above if needed)
+${bullets}
+
+CREATIVE — VIDEO
+${fC(video)}
+
+CREATIVE — IMAGES
+${fC(images)}
+
+PIPELINE — SECURED
+${fP(secured)}
+
+PIPELINE — IN TALKS
+${fP(talks)}
+
+PIPELINE — REACHED OUT
+${fP(seeded)}`;
+  }
+
+  function dbCopyBrief() {
+    const text = document.getElementById('db-brief-output').value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('db-copy-brief-btn');
+      btn.classList.add('copied');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy Deck Brief'; }, 2000);
+    });
+  }
+
+  // Init on load
+  (function() {
+    dbRenderCreatorCards('db-video-cards', 'video');
+    dbRenderCreatorCards('db-image-cards', 'image');
+    dbRenderPipelineBucket('db-pipeline-secured', 'Secured');
+    dbRenderPipelineBucket('db-pipeline-talks',   'In Talks');
+    dbRenderPipelineBucket('db-pipeline-seeded',  'Reached Out / Seeded');
+  })();
   </script>
 </body>
 </html>
