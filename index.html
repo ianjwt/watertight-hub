@@ -4098,52 +4098,22 @@ function showGDocToast(msg) {
         <div class="db-progress">
           <div class="db-progress-step">
             <div class="db-progress-dot active" id="db-dot-1">1</div>
-            <div class="db-progress-label active" id="db-label-1">Setup</div>
+            <div class="db-progress-label active" id="db-label-1">Performance</div>
           </div>
           <div class="db-progress-line" id="db-line-1"></div>
           <div class="db-progress-step">
             <div class="db-progress-dot" id="db-dot-2">2</div>
-            <div class="db-progress-label" id="db-label-2">Performance</div>
+            <div class="db-progress-label" id="db-label-2">Creative</div>
           </div>
           <div class="db-progress-line" id="db-line-2"></div>
           <div class="db-progress-step">
             <div class="db-progress-dot" id="db-dot-3">3</div>
-            <div class="db-progress-label" id="db-label-3">Creative</div>
-          </div>
-          <div class="db-progress-line" id="db-line-3"></div>
-          <div class="db-progress-step">
-            <div class="db-progress-dot" id="db-dot-4">4</div>
-            <div class="db-progress-label" id="db-label-4">Pipeline</div>
+            <div class="db-progress-label" id="db-label-3">Pipeline</div>
           </div>
         </div>
 
-        <!-- ── STEP 1: SETUP ── -->
+        <!-- ── STEP 1: PERFORMANCE ── -->
         <div class="db-step-content active" id="db-step-1">
-          <div class="form-section">
-            <div class="form-section-label">Week Range</div>
-            <div class="row-2">
-              <div class="field">
-                <label>Week Start <span class="tag">required</span></label>
-                <input type="date" id="db-week-start" oninput="dbUpdateWeekLabel()" />
-              </div>
-              <div class="field">
-                <label>Week End <span class="tag">required</span></label>
-                <input type="date" id="db-week-end" oninput="dbUpdateWeekLabel()" />
-              </div>
-            </div>
-            <div class="field-hint" id="db-week-label" style="font-size:13px; font-weight:500; color:var(--wt-green); min-height:20px; margin-top:4px;"></div>
-          </div>
-          <div class="form-section" style="border-bottom:none; padding-bottom:0;">
-            <div class="form-section-label">Client</div>
-            <div class="field">
-              <input type="text" value="SoWell" readonly style="background:var(--wt-green-4); color:var(--text-light); cursor:default;" />
-              <span class="field-hint">Locked to SoWell in V1.</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── STEP 2: PERFORMANCE ── -->
-        <div class="db-step-content" id="db-step-2">
 
           <!-- ── SHEET PULL ── -->
           <div class="form-section">
@@ -4239,8 +4209,8 @@ function showGDocToast(msg) {
           </div>
         </div>
 
-        <!-- ── STEP 3: CREATIVE ── -->
-        <div class="db-step-content" id="db-step-3">
+        <!-- ── STEP 2: CREATIVE ── -->
+        <div class="db-step-content" id="db-step-2">
 
           <!-- ── CREATIVE SHEET PULL ── -->
           <div class="form-section">
@@ -4261,8 +4231,8 @@ function showGDocToast(msg) {
           </div>
         </div>
 
-        <!-- ── STEP 4: PIPELINE ── -->
-        <div class="db-step-content" id="db-step-4">
+        <!-- ── STEP 3: PIPELINE ── -->
+        <div class="db-step-content" id="db-step-3">
           <div id="db-pipeline-secured" class="db-pipeline-bucket"></div>
           <div id="db-pipeline-talks" class="db-pipeline-bucket"></div>
           <div id="db-pipeline-seeded" class="db-pipeline-bucket"></div>
@@ -4625,34 +4595,18 @@ Write the weekly recap email body.`;
   // ── DECK BUILDER ──────────────────────────────────────────────────────
 
   let dbCurrentStep = 1;
-  const DB_TOTAL_STEPS = 4;
+  const DB_TOTAL_STEPS = 3;
   const dbPipelineCounters = {};
   let dbLastPptxB64 = null;
   let dbLastPptxFilename = null;
   let dbCreativeData = { video: [], image: [] };
 
-  function dbUpdateWeekLabel() {
-    const s = document.getElementById('db-week-start').value;
-    const e = document.getElementById('db-week-end').value;
-    const el = document.getElementById('db-week-label');
-    if (s && e) {
-      const ds = new Date(s + 'T12:00:00');
-      const de = new Date(e + 'T12:00:00');
-      const startStr = ds.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-      const endDay   = de.getDate();
-      const endYear  = de.getFullYear();
-      el.textContent = `Week of ${startStr}–${endDay}, ${endYear}`;
-    } else {
-      el.textContent = '';
-    }
-  }
-
   function dbGetWeekRange() {
-    const s = document.getElementById('db-week-start').value;
-    const e = document.getElementById('db-week-end').value;
-    if (!s || !e) return '[DATE RANGE]';
+    const s = document.getElementById('db-sheet-week').value;
+    if (!s) return '[DATE RANGE]';
     const ds = new Date(s + 'T12:00:00');
-    const de = new Date(e + 'T12:00:00');
+    const de = new Date(s + 'T12:00:00');
+    de.setDate(de.getDate() + 6);
     const startStr = ds.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     const endDay   = de.getDate();
     const endYear  = de.getFullYear();
@@ -4757,11 +4711,6 @@ Write the weekly recap email body.`;
 
   function dbValidateStep(step) {
     if (step === 1) {
-      const s = document.getElementById('db-week-start').value;
-      const e = document.getElementById('db-week-end').value;
-      if (!s || !e) { alert('Please set both Week Start and Week End.'); return false; }
-    }
-    if (step === 2) {
       const ids = ['db-kpi-sales-val','db-kpi-roas-val','db-kpi-spend-val','db-kpi-metaroas-val'];
       for (const id of ids) {
         if (!document.getElementById(id)?.value.trim()) {
