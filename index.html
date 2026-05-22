@@ -983,6 +983,9 @@
     .db-sheet-status { margin-top: 10px; font-size: 12px; font-weight: 500; min-height: 18px; }
     .db-sheet-status.success { color: var(--wt-green); }
     .db-sheet-status.error   { color: var(--wt-pink-1); }
+    .db-creative-meta { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; align-items: center; }
+    .db-creative-chip { font-size: 11px; background: #f0f7f4; color: #116E53; border-radius: 99px; padding: 2px 8px; }
+    .db-ad-name { font-size: 11px; color: var(--text-mid); font-style: italic; }
   </style>
 
   <style id="cg-styles">
@@ -4235,6 +4238,16 @@ function showGDocToast(msg) {
 
         <!-- ── STEP 3: CREATIVE ── -->
         <div class="db-step-content" id="db-step-3">
+
+          <!-- ── CREATIVE SHEET PULL ── -->
+          <div class="form-section">
+            <div class="form-section-label">Creative Performance</div>
+            <div class="db-sheet-pull-row">
+              <button class="db-sheet-btn" id="db-creative-btn" onclick="dbPullCreativeData()">Pull Creative Data</button>
+            </div>
+            <div id="db-creative-status" class="db-sheet-status"></div>
+          </div>
+
           <div class="form-section">
             <div class="db-creator-section-label">Creative Performance — Video</div>
             <div class="db-creator-row" id="db-video-cards"></div>
@@ -5053,6 +5066,67 @@ ${fP(seeded)}`;
       Object.entries(kpiPlaceholders).forEach(([id, ph]) => {
         document.getElementById(id).placeholder = ph;
       });
+    }
+  }
+
+  async function dbPullCreativeData() {
+    const btn      = document.getElementById('db-creative-btn');
+    const statusEl = document.getElementById('db-creative-status');
+
+    btn.disabled    = true;
+    btn.textContent = 'Fetching…';
+    statusEl.className   = 'db-sheet-status';
+    statusEl.textContent = '';
+
+    try {
+      const resp = await fetch('/api/sheets-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'creative' }),
+      });
+      const data = await resp.json();
+
+      if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
+
+      const fill = (type, items) => {
+        items.forEach((item, idx) => {
+          const i = idx + 1;
+          const p = `db-${type}-${i}`;
+
+          document.getElementById(`${p}-name`).value        = item.influencer;
+          document.getElementById(`${p}-metric-val`).value  = item.purchases;
+          document.getElementById(`${p}-cpa-val`).value     = item.cpa;
+          document.getElementById(`${p}-metric-type`).value = 'Purchases';
+          document.getElementById(`${p}-btn-p`).classList.add('active');
+          document.getElementById(`${p}-btn-a`).classList.remove('active');
+          document.getElementById(`${p}-metric-label`).textContent = 'Purchases';
+          document.getElementById(`${p}-cpa-label`).textContent    = 'CPA';
+
+          const nameInput = document.getElementById(`${p}-name`);
+          let meta = nameInput.parentElement.querySelector('.db-creative-meta');
+          if (!meta) {
+            meta = document.createElement('div');
+            meta.className = 'db-creative-meta';
+            nameInput.after(meta);
+          }
+          meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">ROAS ${item.roas}</span><span class="db-creative-chip">${item.spend} spend</span>`;
+        });
+      };
+
+      fill('video', data.video || []);
+      fill('image', data.image || []);
+
+      const vCount = (data.video || []).length;
+      const iCount = (data.image || []).length;
+      statusEl.className   = 'db-sheet-status success';
+      statusEl.textContent = `✓ Creative data pulled — ${vCount} video, ${iCount} image ads populated`;
+
+    } catch (err) {
+      statusEl.className   = 'db-sheet-status error';
+      statusEl.textContent = 'Failed to pull creative data — check sheet';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Pull Creative Data';
     }
   }
 
