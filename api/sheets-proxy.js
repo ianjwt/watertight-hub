@@ -89,18 +89,29 @@ async function handleCreative(sheets, res) {
   const colPurch  = headers.indexOf('Purchases');
   const colROAS   = headers.indexOf('Purchase ROAS (return on ad spend)');
 
+  console.log('[creative] header row:', JSON.stringify(headers));
+  console.log('[creative] column indices — Ad name:', colAdName, '| Amount spent (USD):', colSpend, '| Purchases:', colPurch, '| Purchase ROAS:', colROAS);
+
   if ([colAdName, colSpend, colPurch, colROAS].includes(-1)) {
     return res.status(500).json({ error: 'Creative sheet column mapping failed' });
   }
 
   const map = new Map(); // key: `${influencer}|${type}`
+  let debugCount = 0;
 
   for (const row of rows.slice(1)) {
     const rawName = String(row[colAdName] || '').trim();
     if (!rawName.startsWith('Sales_')) continue;
 
-    const spend = parseNum(row[colSpend]);
-    const purch = parseNum(row[colPurch]);
+    const rawSpend = row[colSpend];
+    const spend    = parseNum(rawSpend);
+    const purch    = parseNum(row[colPurch]);
+
+    if (debugCount < 5) {
+      console.log(`[creative] row debug #${debugCount + 1} — ad: "${rawName}" | raw spend: ${JSON.stringify(rawSpend)} | parsed spend: ${spend} | raw purch: ${JSON.stringify(row[colPurch])} | parsed purch: ${purch}`);
+      debugCount++;
+    }
+
     if (!spend || !purch) continue;
 
     const roas   = parseNum(row[colROAS]) || 0;
@@ -113,14 +124,19 @@ async function handleCreative(sheets, res) {
       e.spend     += spend;
       e.purchases += purch;
       if (roas > e.roas) e.roas = roas;
+      if (purch > e.bestPurchases) {
+        e.bestPurchases = purch;
+        e.adName        = parsed.adName;
+      }
     } else {
       map.set(key, {
-        influencer: parsed.influencer,
-        adName:     parsed.adName,
-        type:       parsed.type,
+        influencer:    parsed.influencer,
+        adName:        parsed.adName,
+        type:          parsed.type,
         spend,
-        purchases:  purch,
+        purchases:     purch,
         roas,
+        bestPurchases: purch,
       });
     }
   }
