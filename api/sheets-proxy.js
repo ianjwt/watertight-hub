@@ -90,7 +90,7 @@ async function handleCreative(sheets, res) {
   const colROAS   = headers.indexOf('Purchase ROAS (return on ad spend)');
 
   console.log('[creative] header row:', JSON.stringify(headers));
-  console.log('[creative] column indices — Ad name:', colAdName, '| Amount spent (USD):', colSpend, '| Purchases:', colPurch, '| Purchase ROAS:', colROAS);
+  console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colROAS });
 
   if ([colAdName, colSpend, colPurch, colROAS].includes(-1)) {
     return res.status(500).json({ error: 'Creative sheet column mapping failed' });
@@ -103,18 +103,23 @@ async function handleCreative(sheets, res) {
     const rawName = String(row[colAdName] || '').trim();
     if (!rawName.startsWith('Sales_')) continue;
 
-    const rawSpend = row[colSpend];
-    const spend    = parseNum(rawSpend);
-    const purch    = parseNum(row[colPurch]);
+    const spend = parseFloat((String(row[colSpend] || '')).replace(/[$,]/g, '').trim());
+    const purch = parseFloat((String(row[colPurch] || '0')).trim());
 
     if (debugCount < 5) {
-      console.log(`[creative] row debug #${debugCount + 1} — ad: "${rawName}" | raw spend: ${JSON.stringify(rawSpend)} | parsed spend: ${spend} | raw purch: ${JSON.stringify(row[colPurch])} | parsed purch: ${purch}`);
+      console.log('[creative] row data:', {
+        adName:           row[colAdName],
+        rawSpend:         row[colSpend],
+        rawPurchases:     row[colPurch],
+        parsedSpend:      parseFloat((row[colSpend]||'').replace(/[$,]/g,'')),
+        parsedPurchases:  parseFloat(row[colPurch]||'0'),
+      });
       debugCount++;
     }
 
-    if (!spend || !purch) continue;
+    if (!spend || !purch || !Number.isFinite(spend) || !Number.isFinite(purch)) continue;
 
-    const roas   = parseNum(row[colROAS]) || 0;
+    const roas = parseFloat(String(row[colROAS] || '0'));
     const parsed = parseAdName(rawName);
     if (!parsed) continue;
 
