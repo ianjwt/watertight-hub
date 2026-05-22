@@ -4157,7 +4157,7 @@ function showGDocToast(msg) {
             <div class="db-kpi-grid">
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">Shopify New Customer Sales</div>
+                <div class="db-kpi-tile-label">Shopify Sales</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-sales-val" placeholder="$5,309" autocomplete="off" />
@@ -4172,7 +4172,7 @@ function showGDocToast(msg) {
               </div>
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">New Customer ROAS</div>
+                <div class="db-kpi-tile-label">Blended ROAS</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-roas-val" placeholder="1.42" autocomplete="off" />
@@ -5008,7 +5008,9 @@ ${fP(seeded)}`;
       });
       const data = await resp.json();
 
-      if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
+      const hasData = data.shopifyNewCustomerSales != null && data.metaSpend != null &&
+                      data.metaROAS != null && data.blendedROAS != null;
+      if (!hasData) throw new Error(data.error || 'Incomplete data returned');
 
       document.getElementById('db-kpi-sales-val').value    = data.shopifyNewCustomerSales;
       document.getElementById('db-kpi-spend-val').value    = data.metaSpend;

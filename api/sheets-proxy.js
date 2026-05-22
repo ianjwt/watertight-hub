@@ -1,16 +1,13 @@
 import { google } from 'googleapis';
 
 const SPREADSHEET_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
-const SHEET_NAME = 'Performance Tracker';
 
-function findCol(headers, ...terms) {
-  const h = headers.map(v => (v || '').toString().toLowerCase());
-  for (const term of terms) {
-    const idx = h.findIndex(cell => cell.includes(term.toLowerCase()));
-    if (idx !== -1) return idx;
-  }
-  return -1;
-}
+// Explicit column indices (0-based), first sheet, no tab prefix in range
+const COL_WEEK_START   = 0;  // A
+const COL_META_SPEND   = 2;  // C
+const COL_META_ROAS    = 4;  // E
+const COL_BLENDED_ROAS = 9;  // J
+const COL_SHOPIFY      = 10; // K
 
 function parseNum(val) {
   if (val == null || val === '') return null;
@@ -59,27 +56,16 @@ export default async function handler(req, res) {
     const sheets = google.sheets({ version: 'v4', auth });
     const { data } = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A1:Z200`,
+      range: 'A1:Z200',
     });
 
     const rows = data.values || [];
     if (rows.length < 2) return res.status(404).json({ error: 'Week not found' });
 
-    const headers = rows[0];
-    const colWeekStart   = findCol(headers, 'week start', 'week');
-    const colMetaSpend   = findCol(headers, 'meta spend', 'meta weekly spend');
-    const colMetaROAS    = findCol(headers, 'meta roas');
-    const colShopify     = findCol(headers, 'shopify new customer', 'new customer sales');
-    const colBlendedROAS = findCol(headers, 'blended roas', 'nc roas', 'new customer roas');
-
-    if ([colWeekStart, colMetaSpend, colMetaROAS, colShopify, colBlendedROAS].includes(-1)) {
-      return res.status(500).json({ error: 'Sheet column mapping failed' });
-    }
-
     const target = normDate(weekStart);
     const dataRows = rows.slice(1);
     const rowIdx = dataRows.findIndex(r => {
-      const cellNorm = normDate(r[colWeekStart] || '');
+      const cellNorm = normDate(r[COL_WEEK_START] || '');
       return cellNorm === target || cellNorm.startsWith(target + '/');
     });
 
@@ -88,15 +74,15 @@ export default async function handler(req, res) {
     const curr = dataRows[rowIdx];
     const prev = rowIdx > 0 ? dataRows[rowIdx - 1] : null;
 
-    const metaSpendCurr   = parseNum(curr[colMetaSpend]);
-    const metaROASCurr    = parseNum(curr[colMetaROAS]);
-    const shopifyCurr     = parseNum(curr[colShopify]);
-    const blendedROASCurr = parseNum(curr[colBlendedROAS]);
+    const metaSpendCurr   = parseNum(curr[COL_META_SPEND]);
+    const metaROASCurr    = parseNum(curr[COL_META_ROAS]);
+    const shopifyCurr     = parseNum(curr[COL_SHOPIFY]);
+    const blendedROASCurr = parseNum(curr[COL_BLENDED_ROAS]);
 
-    const metaSpendPrev   = prev ? parseNum(prev[colMetaSpend])   : null;
-    const metaROASPrev    = prev ? parseNum(prev[colMetaROAS])    : null;
-    const shopifyPrev     = prev ? parseNum(prev[colShopify])     : null;
-    const blendedROASPrev = prev ? parseNum(prev[colBlendedROAS]) : null;
+    const metaSpendPrev   = prev ? parseNum(prev[COL_META_SPEND])   : null;
+    const metaROASPrev    = prev ? parseNum(prev[COL_META_ROAS])    : null;
+    const shopifyPrev     = prev ? parseNum(prev[COL_SHOPIFY])      : null;
+    const blendedROASPrev = prev ? parseNum(prev[COL_BLENDED_ROAS]) : null;
 
     return res.status(200).json({
       metaSpend:                  fmtCurrency(metaSpendCurr),
