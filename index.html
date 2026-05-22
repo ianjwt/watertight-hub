@@ -947,6 +947,9 @@
     }
     .db-copy-brief-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .db-copy-brief-btn.copied { background: #22C55E; }
+    .db-copy-brief-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+    .db-results-btn-row { display: flex; gap: 12px; justify-content: center; }
+    .db-pptx-btn { background: var(--wt-green-2); color: white; }
     .db-paste-note { text-align: center; font-size: 12px; color: var(--text-light); font-weight: 300; margin-top: 10px; }
 
     /* Step visibility */
@@ -4308,9 +4311,15 @@ function showGDocToast(msg) {
         </div>
         <div class="db-results-body">
           <textarea class="db-brief-box" id="db-brief-output" readonly></textarea>
-          <button class="db-copy-brief-btn" id="db-copy-brief-btn" onclick="dbCopyBrief()">
-            📋 Copy Deck Brief
-          </button>
+          <div class="db-results-btn-row">
+            <button class="db-copy-brief-btn" id="db-copy-brief-btn" onclick="dbCopyBrief()">
+              📋 Copy Deck Brief
+            </button>
+            <button class="db-copy-brief-btn db-pptx-btn" id="db-pptx-btn" onclick="dbTriggerPptxDownload()" disabled>
+              ⬇ Download PPTX
+            </button>
+          </div>
+          <div id="db-pptx-status" class="db-sheet-status"></div>
           <div class="db-paste-note">Paste this into Claude chat to auto-populate your Canva deck.</div>
         </div>
       </div>
@@ -4618,6 +4627,8 @@ Write the weekly recap email body.`;
   let dbCurrentStep = 1;
   const DB_TOTAL_STEPS = 4;
   const dbPipelineCounters = {};
+  let dbLastPptxB64 = null;
+  let dbLastPptxFilename = null;
 
   function dbUpdateWeekLabel() {
     const s = document.getElementById('db-week-start').value;
@@ -4891,6 +4902,49 @@ META PERFORMANCE:
     const resultsEl = document.getElementById('db-results');
     resultsEl.classList.add('visible');
     setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+    // Fire PPTX generation in the background
+    dbLastPptxB64 = null;
+    dbLastPptxFilename = null;
+    const pptxBtn    = document.getElementById('db-pptx-btn');
+    const pptxStatus = document.getElementById('db-pptx-status');
+    pptxBtn.disabled = true;
+    pptxStatus.className = 'db-sheet-status';
+    pptxStatus.textContent = 'Building PPTX…';
+
+    const pptxPayload = {
+      weekRange,
+      kpis: {
+        sales:    { val: kpis.sales.val,    wow: kpis.sales.wow,    dir: kpis.sales.dir },
+        roas:     { val: kpis.roas.val,     wow: kpis.roas.wow,     dir: kpis.roas.dir },
+        spend:    { val: kpis.spend.val,    wow: kpis.spend.wow,    dir: kpis.spend.dir },
+        metaroas: { val: kpis.metaroas.val, wow: kpis.metaroas.wow, dir: kpis.metaroas.dir },
+      },
+      contextBlurb: blurb,
+      metaBullets:  bullets,
+      video: videoCreators,
+      image: imageCreators,
+      pipeline: { secured, talks, seeded },
+    };
+
+    fetch('/api/generate-pptx', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pptxPayload),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        dbLastPptxB64 = data.pptx;
+        dbLastPptxFilename = data.filename;
+        pptxBtn.disabled = false;
+        pptxStatus.className = 'db-sheet-status success';
+        pptxStatus.textContent = 'PPTX ready — click Download.';
+      })
+      .catch(err => {
+        pptxStatus.className = 'db-sheet-status error';
+        pptxStatus.textContent = 'PPTX error: ' + err.message;
+      });
   }
 
   function dbBuildBrief(weekRange, kpis, blurb, bullets, video, images, secured, talks, seeded) {
@@ -4944,6 +4998,22 @@ ${fP(seeded)}`;
       btn.textContent = '✓ Copied!';
       setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy Deck Brief'; }, 2000);
     });
+  }
+
+  function dbTriggerPptxDownload() {
+    if (!dbLastPptxB64) return;
+    const bytes = atob(dbLastPptxB64);
+    const arr   = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+    const blob = new Blob([arr], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = dbLastPptxFilename || 'SoWell_Weekly.pptx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
   // ── SHEET PULL ──────────────────────────────────────────────────────────
