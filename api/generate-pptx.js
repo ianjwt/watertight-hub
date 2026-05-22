@@ -74,7 +74,7 @@ function addSlide2(pres, kpis, contextBlurb) {
       rectRadius: 0.12,
       fill: { color: fill }, line: { width: 0, color: fill },
     });
-    slide.addText(kpi.value || '—', {
+    slide.addText(kpi.val || '—', {
       x, y: tileY + 0.1, w: tileW, h: 0.7,
       fontSize: 30, bold: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
     });
@@ -99,7 +99,7 @@ function addSlide2(pres, kpis, contextBlurb) {
     x: 0.5, y: 2.65, w: 1.2, h: 0.25,
     fontSize: 9, bold: true, color: GREEN, fontFace: 'Calibri',
   });
-  slide.addText(mr.value || '—', {
+  slide.addText(mr.val || '—', {
     x: 1.7, y: 2.63, w: 0.5, h: 0.3,
     fontSize: 14, bold: true, color: GREEN, fontFace: 'Calibri',
   });
@@ -133,7 +133,7 @@ function addSlide4(pres, metaBullets) {
 
   const lines = (metaBullets || '')
     .split('\n')
-    .map(l => l.replace(/^[•\-]\s*/, '').trim())
+    .map(l => l.replace(/^[•\-]\s*/, '').replace(/\*\*/g, '').trim())
     .filter(Boolean);
 
   const runs = [];
@@ -187,8 +187,13 @@ function addCreativeSlide(pres, title, creators) {
     });
 
     slide.addText(c.adName || '—', {
-      x: cx + 0.12, y: cy + 0.12, w: 2.61, h: 1.85,
+      x: cx + 0.12, y: cy + 0.12, w: 2.61, h: 0.9,
       fontSize: 10, italic: true, color: 'FFFFFF',
+      align: 'center', valign: 'middle', fontFace: 'Calibri',
+    });
+    slide.addText(c.name || '', {
+      x: cx + 0.12, y: cy + 1.1, w: 2.61, h: 0.7,
+      fontSize: 9, color: 'FFFFFF',
       align: 'center', valign: 'middle', fontFace: 'Calibri',
     });
 
@@ -268,7 +273,10 @@ function addSlide7(pres, pipeline) {
       fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
     });
 
-    const entries = (pipeline[bucket] || []).filter(e => e.name || e.desc).slice(0, 3);
+    const entries = (pipeline[bucket] || []).filter(e => {
+      const n = (e.name || '').trim();
+      return n && n.toLowerCase() !== 'na';
+    }).slice(0, 3);
     if (entries.length === 0) {
       slide.addText('—', {
         x: x + 0.15, y: cardY + 1.8, w: 2.6, h: 0.4,
