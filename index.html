@@ -959,6 +959,30 @@
       .db-pipeline-creator-row { grid-template-columns: 1fr 1fr; }
       .db-pipeline-creator-row .db-remove-btn { display: none; }
     }
+
+    /* Sheet pull row */
+    .db-sheet-pull-row { display: flex; align-items: flex-end; gap: 12px; }
+    .db-sheet-pull-row .field { margin-bottom: 0; flex: 0 0 auto; }
+    .db-sheet-btn {
+      height: 40px;
+      padding: 0 18px;
+      background: var(--wt-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .db-sheet-btn:hover { opacity: 0.88; }
+    .db-sheet-btn:disabled { opacity: 0.55; cursor: default; }
+    .db-sheet-status { margin-top: 10px; font-size: 12px; font-weight: 500; min-height: 18px; }
+    .db-sheet-status.success { color: var(--wt-green); }
+    .db-sheet-status.error   { color: var(--wt-pink-1); }
   </style>
 
   <style id="cg-styles">
@@ -4114,6 +4138,20 @@ function showGDocToast(msg) {
 
         <!-- ── STEP 2: PERFORMANCE ── -->
         <div class="db-step-content" id="db-step-2">
+
+          <!-- ── SHEET PULL ── -->
+          <div class="form-section">
+            <div class="form-section-label">Data Source</div>
+            <div class="db-sheet-pull-row">
+              <div class="field">
+                <label>Week of</label>
+                <input type="date" id="db-sheet-week" onchange="dbPullFromSheet()" />
+              </div>
+              <button class="db-sheet-btn" id="db-sheet-btn" onclick="dbPullFromSheet()">Pull from Sheet</button>
+            </div>
+            <div id="db-sheet-status" class="db-sheet-status"></div>
+          </div>
+
           <div class="form-section">
             <div class="form-section-label">KPI Overview</div>
             <div class="db-kpi-grid">
@@ -4911,6 +4949,111 @@ ${fP(seeded)}`;
     });
   }
 
+  // ── SHEET PULL ──────────────────────────────────────────────────────────
+
+  function dbLastMonday() {
+    const d = new Date();
+    const day = d.getDay(); // 0=Sun, 1=Mon, ...6=Sat
+    d.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+    return d.toISOString().slice(0, 10);
+  }
+
+  function dbSetKpiDir(btnEl, sign) {
+    const up = sign === '+';
+    btnEl.classList.remove('up', 'down');
+    btnEl.classList.add(up ? 'up' : 'down');
+    btnEl.textContent = up ? '↑' : '↓';
+  }
+
+  function dbParseWoW(wow) {
+    const sign = wow.startsWith('+') ? '+' : (wow.startsWith('-') ? '-' : '+');
+    const mag  = wow.replace(/^[+\-]/, '');
+    return { sign, mag };
+  }
+
+  async function dbPullFromSheet() {
+    const dateEl   = document.getElementById('db-sheet-week');
+    const btn      = document.getElementById('db-sheet-btn');
+    const statusEl = document.getElementById('db-sheet-status');
+
+    if (!dateEl.value) return;
+
+    const d = new Date(dateEl.value + 'T12:00:00');
+    const weekStart = `${d.getMonth() + 1}/${d.getDate()}`;
+
+    btn.disabled = true;
+    statusEl.className = 'db-sheet-status';
+    statusEl.textContent = '';
+
+    const kpiPlaceholders = {
+      'db-kpi-sales-val':    '$5,309',
+      'db-kpi-roas-val':     '1.42',
+      'db-kpi-spend-val':    '$8,450',
+      'db-kpi-metaroas-val': '1.18',
+      'db-kpi-sales-wow':    '2.6%',
+      'db-kpi-roas-wow':     '5.2%',
+      'db-kpi-spend-wow':    '12.0%',
+      'db-kpi-metaroas-wow': '3.1%',
+    };
+    ['sales', 'roas', 'spend', 'metaroas'].forEach(k => {
+      document.getElementById(`db-kpi-${k}-val`).placeholder = 'Fetching…';
+      document.getElementById(`db-kpi-${k}-wow`).placeholder = '…';
+    });
+
+    try {
+      const resp = await fetch('/api/sheets-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weekStart }),
+      });
+      const data = await resp.json();
+
+      if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
+
+      document.getElementById('db-kpi-sales-val').value    = data.shopifyNewCustomerSales;
+      document.getElementById('db-kpi-spend-val').value    = data.metaSpend;
+      document.getElementById('db-kpi-metaroas-val').value = data.metaROAS;
+      document.getElementById('db-kpi-roas-val').value     = data.blendedROAS;
+
+      const wowMap = {
+        sales:    data.shopifyNewCustomerSalesWoW,
+        roas:     data.blendedROASWoW,
+        spend:    data.metaSpendWoW,
+        metaroas: data.metaROASWoW,
+      };
+      Object.entries(wowMap).forEach(([k, wow]) => {
+        const { sign, mag } = dbParseWoW(wow);
+        document.getElementById(`db-kpi-${k}-wow`).value = mag;
+        dbSetKpiDir(document.getElementById(`db-kpi-${k}-dir`), sign);
+      });
+
+      const endDate = new Date(d);
+      endDate.setDate(endDate.getDate() + 6);
+      const monthName = d.toLocaleDateString('en-US', { month: 'long' });
+      const endYear   = endDate.getFullYear();
+      let rangeStr;
+      if (d.getMonth() === endDate.getMonth()) {
+        rangeStr = `${monthName} ${d.getDate()}–${endDate.getDate()}, ${endYear}`;
+      } else {
+        const endMonthName = endDate.toLocaleDateString('en-US', { month: 'long' });
+        rangeStr = `${monthName} ${d.getDate()}–${endMonthName} ${endDate.getDate()}, ${endYear}`;
+      }
+      statusEl.className   = 'db-sheet-status success';
+      statusEl.textContent = `✓ Pulled from sheet — ${rangeStr}`;
+
+    } catch (err) {
+      statusEl.className   = 'db-sheet-status error';
+      statusEl.textContent = err.message === 'Week not found'
+        ? 'Week not found — enter manually'
+        : `Error: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+      Object.entries(kpiPlaceholders).forEach(([id, ph]) => {
+        document.getElementById(id).placeholder = ph;
+      });
+    }
+  }
+
   // Init on load
   (function() {
     dbRenderCreatorCards('db-video-cards', 'video');
@@ -4918,6 +5061,7 @@ ${fP(seeded)}`;
     dbRenderPipelineBucket('db-pipeline-secured', 'Secured');
     dbRenderPipelineBucket('db-pipeline-talks',   'In Talks');
     dbRenderPipelineBucket('db-pipeline-seeded',  'Reached Out / Seeded');
+    document.getElementById('db-sheet-week').value = dbLastMonday();
   })();
   </script>
 </body>
