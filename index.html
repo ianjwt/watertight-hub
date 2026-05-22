@@ -4671,19 +4671,11 @@ Write the weekly recap email body.`;
           <input type="text" id="${p}-name" placeholder="@handle or name" />
         </div>
         <div>
-          <span class="db-field-label">Metric</span>
-          <div class="db-metric-toggle">
-            <button class="active" id="${p}-btn-p" onclick="dbToggleMetric('${p}','Purchases')">Purchases</button>
-            <button id="${p}-btn-a" onclick="dbToggleMetric('${p}','ATC')">ATC</button>
-          </div>
-          <input type="hidden" id="${p}-metric-type" value="Purchases" />
-        </div>
-        <div>
-          <span class="db-field-label" id="${p}-metric-label">Purchases</span>
+          <span class="db-field-label">PURCHASES</span>
           <input type="number" id="${p}-metric-val" placeholder="12" step="any" />
         </div>
         <div>
-          <span class="db-field-label" id="${p}-cpa-label">CPA ($)</span>
+          <span class="db-field-label">CPA ($)</span>
           <input type="number" id="${p}-cpa-val" placeholder="18.50" step="any" />
         </div>
         <div>
@@ -4692,14 +4684,6 @@ Write the weekly recap email body.`;
         </div>`;
       container.appendChild(card);
     }
-  }
-
-  function dbToggleMetric(prefix, metric) {
-    document.getElementById(`${prefix}-metric-type`).value = metric;
-    document.getElementById(`${prefix}-metric-label`).textContent = metric;
-    document.getElementById(`${prefix}-btn-p`).classList.toggle('active', metric === 'Purchases');
-    document.getElementById(`${prefix}-btn-a`).classList.toggle('active', metric === 'ATC');
-    document.getElementById(`${prefix}-cpa-label`).textContent = metric === 'Purchases' ? 'CPA ($)' : 'ROAS';
   }
 
   function dbRenderPipelineBucket(containerId, label) {
@@ -4812,7 +4796,7 @@ Write the weekly recap email body.`;
       const p = `db-${type}-${i + 1}`;
       return {
         name:       document.getElementById(`${p}-name`)?.value.trim() || '',
-        metricType: document.getElementById(`${p}-metric-type`)?.value || 'Purchases',
+        metricType: 'Purchases',
         metricVal:  document.getElementById(`${p}-metric-val`)?.value.trim() || '',
         cpaVal:     document.getElementById(`${p}-cpa-val`)?.value.trim() || '',
         img:        document.getElementById(`${p}-img`)?.value.trim() || '',
@@ -5093,14 +5077,9 @@ ${fP(seeded)}`;
           const i = idx + 1;
           const p = `db-${type}-${i}`;
 
-          document.getElementById(`${p}-name`).value        = item.influencer;
-          document.getElementById(`${p}-metric-val`).value  = item.purchases;
-          document.getElementById(`${p}-cpa-val`).value     = item.cpa;
-          document.getElementById(`${p}-metric-type`).value = 'Purchases';
-          document.getElementById(`${p}-btn-p`).classList.add('active');
-          document.getElementById(`${p}-btn-a`).classList.remove('active');
-          document.getElementById(`${p}-metric-label`).textContent = 'Purchases';
-          document.getElementById(`${p}-cpa-label`).textContent    = 'CPA';
+          document.getElementById(`${p}-name`).value       = item.influencer;
+          document.getElementById(`${p}-metric-val`).value = item.purchases;
+          document.getElementById(`${p}-cpa-val`).value    = item.cpa;
 
           const nameInput = document.getElementById(`${p}-name`);
           let meta = nameInput.parentElement.querySelector('.db-creative-meta');

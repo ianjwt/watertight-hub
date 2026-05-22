@@ -41,7 +41,7 @@ function normDate(s) {
 // ── Creative helpers ──────────────────────────────────────────────────────────
 
 function fmtCPA(cpa) {
-  return cpa >= 10 ? '$' + Math.round(cpa) : '$' + cpa.toFixed(1);
+  return '$' + Math.round(cpa);
 }
 
 function splitCamelCase(s) {
@@ -49,6 +49,8 @@ function splitCamelCase(s) {
     .replace(/([a-z])([A-Z])/g, '$1 $2')
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
 }
+
+const NON_INFLUENCER = new Set(['WTPodcast', 'Short', 'SupportSystemLP']);
 
 function parseAdName(rawName) {
   const clean = rawName.replace(/ - Copy( \d+)?$/i, '').trim();
@@ -58,9 +60,14 @@ function parseAdName(rawName) {
   const typeStr = parts[parts.length - 1].toLowerCase();
   if (typeStr !== 'video' && typeStr !== 'image') return null;
 
-  const influencer = splitCamelCase(parts[parts.length - 2]);
-  const middleParts = parts.slice(1, parts.length - 2);
-  const adName = middleParts.length > 0 ? middleParts.join(' ') : influencer;
+  let influencerIdx = parts.length - 2;
+  if (NON_INFLUENCER.has(parts[influencerIdx]) && influencerIdx > 1) {
+    influencerIdx--;
+  }
+
+  const influencer  = splitCamelCase(parts[influencerIdx]);
+  const middleParts = parts.slice(1, influencerIdx);
+  const adName      = middleParts.join(' ');
 
   return { type: typeStr, influencer, adName };
 }
