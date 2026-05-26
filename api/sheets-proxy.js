@@ -84,10 +84,12 @@ async function handleCreative(sheets, res) {
   if (rows.length < 2) return res.status(200).json({ video: [], image: [] });
 
   const headers = rows[0];
-  const colAdName = headers.indexOf('Ad name');
-  const colSpend  = headers.indexOf('Amount spent (USD)');
-  const colPurch  = headers.indexOf('Purchases');
-  const colROAS   = headers.indexOf('Purchase ROAS (return on ad spend)');
+  const findCol = (hdrs, matchFn) => hdrs.findIndex(h => matchFn((h || '').toLowerCase().trim()));
+
+  const colAdName = findCol(headers, h => h.includes('ad name'));
+  const colSpend  = findCol(headers, h => h.includes('amount spent'));
+  const colPurch  = findCol(headers, h => h.includes('purchase') && !h.includes('roas') && !h.includes('value') && !h.includes('cost'));
+  const colROAS   = findCol(headers, h => h.includes('roas'));
 
   console.log('[creative] header row:', JSON.stringify(headers));
   console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colROAS });
