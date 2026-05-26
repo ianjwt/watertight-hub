@@ -77,7 +77,7 @@ function parseAdName(rawName) {
 async function handleCreative(sheets, res) {
   const { data } = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Creative Data!A:AB',
+    range: 'Creative Data!A:AM',
   });
 
   const rows = data.values || [];
@@ -86,15 +86,16 @@ async function handleCreative(sheets, res) {
   const headers = rows[0];
   const findCol = (hdrs, matchFn) => hdrs.findIndex(h => matchFn((h || '').toLowerCase().trim()));
 
-  const colAdName = findCol(headers, h => h.includes('ad name'));
-  const colSpend  = findCol(headers, h => h.includes('amount spent'));
-  const colPurch  = findCol(headers, h => h.includes('purchase') && !h.includes('roas') && !h.includes('value') && !h.includes('cost'));
-  const colROAS   = findCol(headers, h => h.includes('roas'));
+  const colAdName     = findCol(headers, h => h.includes('ad name'));
+  const colSpend      = findCol(headers, h => h.includes('amount spent'));
+  const colPurch      = findCol(headers, h => h === 'purchases');
+  const colPurchValue = findCol(headers, h => h.includes('purchases conversion value'));
+  const colCPA        = findCol(headers, h => h.includes('cost per purchase'));
 
   console.log('[creative] header row:', JSON.stringify(headers));
-  console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colROAS });
+  console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colPurchValue, colCPA });
 
-  if ([colAdName, colSpend, colPurch, colROAS].includes(-1)) {
+  if ([colAdName, colSpend, colPurch, colPurchValue, colCPA].includes(-1)) {
     return res.status(500).json({ error: 'Creative sheet column mapping failed' });
   }
 
@@ -105,32 +106,35 @@ async function handleCreative(sheets, res) {
     const rawName = String(row[colAdName] || '').trim();
     if (!rawName.startsWith('Sales_')) continue;
 
-    const spend = parseFloat((String(row[colSpend] || '')).replace(/[$,]/g, '').trim());
-    const purch = parseFloat((String(row[colPurch] || '0')).trim());
+    const spend      = parseFloat((String(row[colSpend]      || '')).replace(/[$,]/g, '').trim());
+    const purch      = parseFloat((String(row[colPurch]      || '0')).trim());
+    const purchValue = parseFloat((String(row[colPurchValue] || '0')).replace(/[$,]/g, '').trim());
 
     if (debugCount < 5) {
       console.log('[creative] row data:', {
         adName:           row[colAdName],
         rawSpend:         row[colSpend],
         rawPurchases:     row[colPurch],
-        parsedSpend:      parseFloat((row[colSpend]||'').replace(/[$,]/g,'')),
-        parsedPurchases:  parseFloat(row[colPurch]||'0'),
+        rawPurchValue:    row[colPurchValue],
+        rawCPA:           row[colCPA],
+        parsedSpend:      spend,
+        parsedPurchases:  purch,
+        parsedPurchValue: purchValue,
       });
       debugCount++;
     }
 
     if (!spend || !purch || !Number.isFinite(spend) || !Number.isFinite(purch)) continue;
 
-    const roas = parseFloat(String(row[colROAS] || '0'));
     const parsed = parseAdName(rawName);
     if (!parsed) continue;
 
     const key = `${parsed.influencer}|${parsed.type}`;
     if (map.has(key)) {
       const e = map.get(key);
-      e.spend     += spend;
-      e.purchases += purch;
-      if (roas > e.roas) e.roas = roas;
+      e.spend         += spend;
+      e.purchases     += purch;
+      e.purchaseValue += purchValue;
       if (purch > e.bestPurchases) {
         e.bestPurchases = purch;
         e.adName        = parsed.adName;
@@ -142,7 +146,7 @@ async function handleCreative(sheets, res) {
         type:          parsed.type,
         spend,
         purchases:     purch,
-        roas,
+        purchaseValue: purchValue,
         bestPurchases: purch,
       });
     }
@@ -153,12 +157,12 @@ async function handleCreative(sheets, res) {
     adName:     e.adName,
     purchases:  Math.round(e.purchases),
     cpa:        fmtCPA(e.spend / e.purchases),
-    roas:       fmtDecimal(e.roas),
+    roas:       (e.purchaseValue / e.spend).toFixed(2),
     spend:      fmtCurrency(e.spend),
   });
 
   const all    = Array.from(map.values());
-  const rank   = (a, b) => b.purchases - a.purchases || b.roas - a.roas;
+  const rank   = (a, b) => b.purchases - a.purchases || (b.purchaseValue / b.spend) - (a.purchaseValue / a.spend);
   const videos = all.filter(e => e.type === 'video').sort(rank).slice(0, 3).map(toResult);
   const images = all.filter(e => e.type === 'image').sort(rank).slice(0, 3).map(toResult);
 
