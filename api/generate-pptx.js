@@ -211,20 +211,20 @@ function addCreativeSlide(pres, title, creators) {
       fontSize: 20, bold: true, color: GREEN, fontFace: 'Calibri',
     });
 
-    slide.addText('CPA', {
+    slide.addText('ROAS', {
       x: cx + 0.15, y: cy + 3.22, w: 0.6, h: 0.2,
       fontSize: 8, color: '999999', fontFace: 'Calibri',
     });
-    slide.addText(String(c.cpaVal || '—'), {
+    slide.addText(String(c.roas || '—'), {
       x: cx + 0.75, y: cy + 3.2, w: 1.8, h: 0.25,
       fontSize: 12, color: '444444', fontFace: 'Calibri',
     });
 
-    slide.addText('ROAS', {
+    slide.addText('CPA', {
       x: cx + 0.15, y: cy + 3.5, w: 0.6, h: 0.2,
       fontSize: 8, color: '999999', fontFace: 'Calibri',
     });
-    slide.addText(String(c.roas || '—'), {
+    slide.addText(String(c.cpaVal || '—'), {
       x: cx + 0.75, y: cy + 3.48, w: 1.8, h: 0.25,
       fontSize: 12, color: '444444', fontFace: 'Calibri',
     });
