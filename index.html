@@ -4641,8 +4641,8 @@ Write the weekly recap email body.`;
           <input type="number" id="${p}-metric-val" placeholder="12" step="any" />
         </div>
         <div>
-          <span class="db-field-label">CPA</span>
-          <input type="number" id="${p}-cpa-val" placeholder="18.50" step="any" />
+          <span class="db-field-label">ROAS</span>
+          <input type="number" id="${p}-roas-val" placeholder="1.42" step="any" />
         </div>
         <div>
           <span class="db-field-label">Image URL</span>
@@ -4759,7 +4759,7 @@ Write the weekly recap email body.`;
         name:       document.getElementById(`${p}-name`)?.value.trim() || '',
         metricType: 'Purchases',
         metricVal:  document.getElementById(`${p}-metric-val`)?.value.trim() || '',
-        cpaVal:     document.getElementById(`${p}-cpa-val`)?.value.trim() || '',
+        roasVal:    document.getElementById(`${p}-roas-val`)?.value.trim() || '',
         img:        document.getElementById(`${p}-img`)?.value.trim() || '',
       };
     });
@@ -4873,11 +4873,11 @@ META PERFORMANCE:
       contextBlurb: blurb,
       metaBullets:  bullets,
       video: (() => {
-        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, cpaVal: c.cpa || c.cpaVal, roas: c.roas, spend: c.spend }));
+        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, roas: c.roas || c.roasVal, spend: c.spend }));
         return dbCreativeData.video.length ? mapC(dbCreativeData.video) : videoCreators;
       })(),
       image: (() => {
-        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, cpaVal: c.cpa || c.cpaVal, roas: c.roas, spend: c.spend }));
+        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, roas: c.roas || c.roasVal, spend: c.spend }));
         return dbCreativeData.image.length ? mapC(dbCreativeData.image) : imageCreators;
       })(),
       pipeline: { secured, talks, seeded },
@@ -4906,9 +4906,8 @@ META PERFORMANCE:
   function dbBuildBrief(weekRange, kpis, blurb, bullets, video, images, secured, talks, seeded) {
     const fK = (k) => `${k.val}  ${k.dir}${k.wow} WoW`;
     const fC = (creators) => creators.map((c, i) => {
-      if (!c.name && !c.metricVal && !c.cpaVal) return null;
-      const cL = c.metricType === 'Purchases' ? 'CPA' : 'ROAS';
-      return `${i+1}. ${c.name||'—'} | ${c.metricType}: ${c.metricVal||'—'} | ${cL}: ${c.cpaVal||'—'} | IMG: ${c.img||'—'}`;
+      if (!c.name && !c.metricVal && !c.roasVal) return null;
+      return `${i+1}. ${c.name||'—'} | ${c.metricType}: ${c.metricVal||'—'} | ROAS: ${c.roasVal||'—'} | IMG: ${c.img||'—'}`;
     }).filter(Boolean).join('\n') || '—';
     const fP = (rows) => rows.length ? rows.map((r, i) => `${i+1}. ${r.name||'—'} | ${r.desc||'—'}`).join('\n') : '—';
 
@@ -5105,7 +5104,7 @@ ${fP(seeded)}`;
 
           document.getElementById(`${p}-name`).value       = item.influencer;
           document.getElementById(`${p}-metric-val`).value = item.purchases;
-          document.getElementById(`${p}-cpa-val`).value    = item.cpa;
+          document.getElementById(`${p}-roas-val`).value   = item.roas;
 
           const nameInput = document.getElementById(`${p}-name`);
           let meta = nameInput.parentElement.querySelector('.db-creative-meta');
@@ -5114,7 +5113,7 @@ ${fP(seeded)}`;
             meta.className = 'db-creative-meta';
             nameInput.after(meta);
           }
-          meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">ROAS ${item.roas}</span><span class="db-creative-chip">${item.spend} spend</span>`;
+          meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">${item.spend} spend</span>`;
         });
       };
 
