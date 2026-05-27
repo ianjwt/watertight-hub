@@ -773,9 +773,21 @@
     }
     .db-metric-toggle button.active { background: var(--wt-green); color: white; font-weight: 600; }
 
-    /* Pipeline */
-    .db-pipeline-bucket { margin-bottom: 20px; }
-    .db-pipeline-bucket-label {
+    /* Partnerships preview */
+    .db-partnerships-pull-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .db-partnerships-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .db-partner-bucket {
+      background: #f8f6f1;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      min-height: 60px;
+    }
+    .db-partner-bucket-label {
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.1em;
@@ -786,15 +798,9 @@
       align-items: center;
       gap: 8px;
     }
-    .db-pipeline-bucket-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    .db-pipeline-creator-row {
-      display: grid;
-      grid-template-columns: 1fr 2fr auto;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .db-pipeline-creator-row input { height: 36px; font-size: 12px; }
+    .db-partner-bucket-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .db-partner-row { font-size: 12px; color: var(--text-dark); margin-bottom: 7px; line-height: 1.4; }
+    .db-partner-none { color: var(--text-light); font-style: italic; }
     .db-remove-btn {
       width: 30px; height: 30px;
       border-radius: var(--radius-sm);
@@ -959,8 +965,7 @@
     @media (max-width: 600px) {
       .db-kpi-grid { grid-template-columns: 1fr; }
       .db-creator-row { grid-template-columns: 1fr; }
-      .db-pipeline-creator-row { grid-template-columns: 1fr 1fr; }
-      .db-pipeline-creator-row .db-remove-btn { display: none; }
+      .db-partnerships-preview { grid-template-columns: 1fr; }
     }
 
     /* Sheet pull row */
@@ -4108,7 +4113,7 @@ function showGDocToast(msg) {
           <div class="db-progress-line" id="db-line-2"></div>
           <div class="db-progress-step">
             <div class="db-progress-dot" id="db-dot-3">3</div>
-            <div class="db-progress-label" id="db-label-3">Pipeline</div>
+            <div class="db-progress-label" id="db-label-3">Partnerships</div>
           </div>
         </div>
 
@@ -4233,9 +4238,14 @@ function showGDocToast(msg) {
 
         <!-- ── STEP 3: PIPELINE ── -->
         <div class="db-step-content" id="db-step-3">
-          <div id="db-pipeline-secured" class="db-pipeline-bucket"></div>
-          <div id="db-pipeline-talks" class="db-pipeline-bucket"></div>
-          <div id="db-pipeline-seeded" class="db-pipeline-bucket"></div>
+          <div class="form-section" style="border-bottom:none; padding-bottom:0;">
+            <div class="form-section-label">Partnership Status</div>
+            <div class="db-partnerships-pull-row">
+              <button class="db-sheet-btn" id="db-pull-partnerships-btn" onclick="dbPullPartnershipData()">Pull Partnership Data</button>
+            </div>
+            <div id="db-partnerships-status" class="db-sheet-status"></div>
+            <div id="db-partnerships-preview" class="db-partnerships-preview"></div>
+          </div>
         </div>
 
         <!-- STEP NAV -->
@@ -4596,7 +4606,7 @@ Write the weekly recap email body.`;
 
   let dbCurrentStep = 1;
   const DB_TOTAL_STEPS = 3;
-  const dbPipelineCounters = {};
+  let dbPartnershipData = [];
   let dbLastPptxB64 = null;
   let dbLastPptxFilename = null;
   let dbCreativeData = { video: [], image: [] };
@@ -4650,42 +4660,6 @@ Write the weekly recap email body.`;
         </div>`;
       container.appendChild(card);
     }
-  }
-
-  function dbRenderPipelineBucket(containerId, label) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    container.innerHTML = `
-      <div class="db-pipeline-bucket-label">${label}</div>
-      <div id="${containerId}-rows"></div>
-      <button class="db-add-btn" onclick="dbAddPipelineRow('${containerId}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M12 5v14M5 12h14"/></svg>
-        Add Creator
-      </button>`;
-    dbAddPipelineRow(containerId);
-  }
-
-  function dbAddPipelineRow(containerId) {
-    const rowsEl = document.getElementById(`${containerId}-rows`);
-    if (!rowsEl) return;
-    if (rowsEl.querySelectorAll('.db-pipeline-creator-row').length >= 3) return;
-    if (!dbPipelineCounters[containerId]) dbPipelineCounters[containerId] = 0;
-    dbPipelineCounters[containerId]++;
-    const rowId = `${containerId}-r${dbPipelineCounters[containerId]}`;
-    const row = document.createElement('div');
-    row.className = 'db-pipeline-creator-row';
-    row.id = rowId;
-    row.innerHTML = `
-      <input type="text" placeholder="Creator name" />
-      <input type="text" placeholder="One-line description" />
-      <button class="db-remove-btn" onclick="dbRemovePipelineRow('${containerId}', this)" title="Remove">×</button>`;
-    rowsEl.appendChild(row);
-  }
-
-  function dbRemovePipelineRow(containerId, btn) {
-    const rowsEl = document.getElementById(`${containerId}-rows`);
-    const row = btn.closest('.db-pipeline-creator-row');
-    if (row && rowsEl.querySelectorAll('.db-pipeline-creator-row').length > 1) row.remove();
   }
 
   function dbUpdateProgress(step) {
@@ -4765,15 +4739,6 @@ Write the weekly recap email body.`;
     });
   }
 
-  function dbGetPipelineData(containerId) {
-    const rowsEl = document.getElementById(`${containerId}-rows`);
-    if (!rowsEl) return [];
-    return Array.from(rowsEl.querySelectorAll('.db-pipeline-creator-row')).map(row => {
-      const inputs = row.querySelectorAll('input[type="text"]');
-      return { name: inputs[0]?.value.trim() || '', desc: inputs[1]?.value.trim() || '' };
-    }).filter(r => r.name || r.desc);
-  }
-
   async function dbGenerate() {
     const weekRange    = dbGetWeekRange();
     const contextNotes = document.getElementById('db-context-notes').value.trim();
@@ -4785,9 +4750,6 @@ Write the weekly recap email body.`;
     };
     const videoCreators = dbGetCreatorData('video');
     const imageCreators = dbGetCreatorData('image');
-    const secured = dbGetPipelineData('db-pipeline-secured');
-    const talks   = dbGetPipelineData('db-pipeline-talks');
-    const seeded  = dbGetPipelineData('db-pipeline-seeded');
 
     const overlay  = document.getElementById('db-loading-overlay');
     const statusEl = document.getElementById('db-loading-status');
@@ -4847,7 +4809,7 @@ META PERFORMANCE:
 
     document.getElementById('db-ai-blurb').value   = blurb;
     document.getElementById('db-ai-bullets').value = bullets;
-    document.getElementById('db-brief-output').value = dbBuildBrief(weekRange, kpis, blurb, bullets, videoCreators, imageCreators, secured, talks, seeded);
+    document.getElementById('db-brief-output').value = dbBuildBrief(weekRange, kpis, blurb, bullets, videoCreators, imageCreators);
 
     const resultsEl = document.getElementById('db-results');
     resultsEl.classList.add('visible');
@@ -4880,7 +4842,7 @@ META PERFORMANCE:
         const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, roas: c.roas || c.roasVal, spend: c.spend }));
         return dbCreativeData.image.length ? mapC(dbCreativeData.image) : imageCreators;
       })(),
-      pipeline: { secured, talks, seeded },
+      partnerships: dbPartnershipData,
     };
 
     fetch('/api/generate-pptx', {
@@ -4903,13 +4865,16 @@ META PERFORMANCE:
       });
   }
 
-  function dbBuildBrief(weekRange, kpis, blurb, bullets, video, images, secured, talks, seeded) {
+  function dbBuildBrief(weekRange, kpis, blurb, bullets, video, images) {
     const fK = (k) => `${k.val}  ${k.dir}${k.wow} WoW`;
     const fC = (creators) => creators.map((c, i) => {
       if (!c.name && !c.metricVal && !c.roasVal) return null;
       return `${i+1}. ${c.name||'—'} | ${c.metricType}: ${c.metricVal||'—'} | ROAS: ${c.roasVal||'—'} | IMG: ${c.img||'—'}`;
     }).filter(Boolean).join('\n') || '—';
-    const fP = (rows) => rows.length ? rows.map((r, i) => `${i+1}. ${r.name||'—'} | ${r.desc||'—'}`).join('\n') : '—';
+    const fPart = (status) => {
+      const entries = dbPartnershipData.filter(p => p.status.toLowerCase().trim() === status);
+      return entries.length ? entries.map((p, i) => `${i+1}. ${p.name||'—'} | ${p.goLive||'TBD'} | ${p.condensed||p.deliverables||'—'}`).join('\n') : '—';
+    };
 
     return `SOWELL WEEKLY DECK — ${weekRange}
 
@@ -4934,14 +4899,14 @@ ${fC(video)}
 CREATIVE — IMAGES
 ${fC(images)}
 
-PIPELINE — SECURED
-${fP(secured)}
+PARTNERSHIPS — CONFIRMED
+${fPart('confirmed')}
 
-PIPELINE — IN TALKS
-${fP(talks)}
+PARTNERSHIPS — OFFER OUT
+${fPart('offer out')}
 
-PIPELINE — REACHED OUT
-${fP(seeded)}`;
+PARTNERSHIPS — IN TALKS
+${fPart('in talks')}`;
   }
 
   function dbCopyBrief() {
@@ -5135,13 +5100,84 @@ ${fP(seeded)}`;
     }
   }
 
+  async function dbPullPartnershipData() {
+    const btn      = document.getElementById('db-pull-partnerships-btn');
+    const statusEl = document.getElementById('db-partnerships-status');
+    const preview  = document.getElementById('db-partnerships-preview');
+
+    btn.disabled    = true;
+    btn.textContent = 'Fetching…';
+    statusEl.className   = 'db-sheet-status';
+    statusEl.textContent = '';
+    preview.innerHTML    = '';
+
+    try {
+      // Step 1: pull from Partnerships sheet
+      const resp = await fetch('/api/sheets-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'partnerships' }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
+
+      dbPartnershipData = data.partnerships || [];
+
+      // Step 2: condense deliverables via Claude
+      let condensed = dbPartnershipData.map(p => p.deliverables); // fallback
+      try {
+        const aiResp = await fetch('/api/anthropic', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 500,
+            system: 'You are a concise copywriter for a marketing agency. Condense influencer deliverable descriptions to 6 words or fewer. Return ONLY a valid JSON array of strings in the same order as the input array. No preamble, no markdown, no code fences.',
+            messages: [{ role: 'user', content: JSON.stringify(dbPartnershipData.map(p => p.deliverables)) }],
+          }),
+        });
+        const aiData = await aiResp.json();
+        const raw = aiData.content?.[0]?.text || '[]';
+        const clean = raw.replace(/```[a-z]*\n?/g, '').replace(/```/g, '').trim();
+        condensed = JSON.parse(clean);
+      } catch (e) {
+        console.warn('[partnerships] condensing failed, using raw deliverables', e);
+      }
+
+      dbPartnershipData.forEach((p, i) => { p.condensed = condensed[i] || p.deliverables; });
+
+      // Step 3: render preview grouped by status
+      const buckets = [
+        { key: 'confirmed', label: 'CONFIRMED' },
+        { key: 'offer out', label: 'OFFER OUT' },
+        { key: 'in talks',  label: 'IN TALKS'  },
+      ];
+      preview.innerHTML = buckets.map(({ key, label }) => {
+        const entries = dbPartnershipData.filter(p => p.status.toLowerCase().trim() === key);
+        const rows = entries.length
+          ? entries.map(p =>
+              `<div class="db-partner-row"><strong>${p.name}</strong> — ${p.goLive || 'TBD'} — <em>${p.condensed || p.deliverables}</em></div>`
+            ).join('')
+          : '<div class="db-partner-row db-partner-none">None</div>';
+        return `<div class="db-partner-bucket"><div class="db-partner-bucket-label">${label}</div>${rows}</div>`;
+      }).join('');
+
+      statusEl.className   = 'db-sheet-status success';
+      statusEl.textContent = `✓ ${dbPartnershipData.length} partnerships loaded`;
+
+    } catch (err) {
+      statusEl.className   = 'db-sheet-status error';
+      statusEl.textContent = 'Failed to pull partnership data: ' + err.message;
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Pull Partnership Data';
+    }
+  }
+
   // Init on load
   (function() {
     dbRenderCreatorCards('db-video-cards', 'video');
     dbRenderCreatorCards('db-image-cards', 'image');
-    dbRenderPipelineBucket('db-pipeline-secured', 'Secured');
-    dbRenderPipelineBucket('db-pipeline-talks',   'In Talks');
-    dbRenderPipelineBucket('db-pipeline-seeded',  'Reached Out / Seeded');
     document.getElementById('db-sheet-week').value = dbLastMonday();
   })();
   </script>

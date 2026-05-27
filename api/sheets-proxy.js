@@ -1,7 +1,5 @@
 import { google } from 'googleapis';
 
-const SPREADSHEET_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
-
 // KPI column indices (0-based), first sheet
 const COL_WEEK_START   = 0;  // A
 const COL_META_SPEND   = 2;  // C
@@ -75,8 +73,9 @@ function parseAdName(rawName) {
 // ── Creative handler ──────────────────────────────────────────────────────────
 
 async function handleCreative(sheets, res) {
+  const SOWELL_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
   const { data } = await sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: SOWELL_ID,
     range: 'Creative Data!A:AM',
   });
 
@@ -203,6 +202,54 @@ async function handleCreative(sheets, res) {
   return res.status(200).json({ video: videos, image: images });
 }
 
+// ── Partnerships handler ──────────────────────────────────────────────────────
+
+async function handlePartnerships(sheets, res) {
+  const PARTNERSHIPS_ID = '1CCj-67IAGOlnMunLXrhZbr8cgUFptknOa7JbN6QAtpI';
+  const { data } = await sheets.spreadsheets.values.get({
+    spreadsheetId: PARTNERSHIPS_ID,
+    range: 'Pitch Tracker!A1:G50',
+  });
+
+  const rows = data.values || [];
+  if (rows.length < 2) return res.status(200).json({ partnerships: [] });
+
+  const headers = rows[0];
+  const findCol = (hdrs, matchFn) => hdrs.findIndex(h => matchFn((h || '').toLowerCase().trim()));
+
+  const colGoLive       = findCol(headers, h => h.includes('go live'));
+  const colStatus       = findCol(headers, h => h.includes('partnership status'));
+  const colName         = findCol(headers, h => h.includes('name'));
+  const colDeliverables = findCol(headers, h => h.includes('deliverable'));
+
+  console.log('[partnerships] header row:', JSON.stringify(headers));
+  console.log('[partnerships] column indices:', { colGoLive, colStatus, colName, colDeliverables });
+
+  if ([colGoLive, colStatus, colName, colDeliverables].includes(-1)) {
+    return res.status(500).json({ error: 'Partnership sheet column mapping failed' });
+  }
+
+  const VALID_STATUSES = new Set(['confirmed', 'in talks', 'offer out']);
+  const partnerships = [];
+
+  for (const row of rows.slice(1)) {
+    const nameVal = (row[colName] || '').toLowerCase().trim();
+    if (nameVal.includes('outreach')) break; // stop at outreach sentinel row
+
+    const status = (row[colStatus] || '').toLowerCase().trim();
+    if (!VALID_STATUSES.has(status)) continue;
+
+    partnerships.push({
+      name:         (row[colName]         || '').trim(),
+      status:       (row[colStatus]       || '').trim(),
+      goLive:       (row[colGoLive]       || '').trim(),
+      deliverables: (row[colDeliverables] || '').trim(),
+    });
+  }
+
+  return res.status(200).json({ partnerships });
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
@@ -224,12 +271,17 @@ export default async function handler(req, res) {
       return await handleCreative(sheets, res);
     }
 
+    if (body.type === 'partnerships') {
+      return await handlePartnerships(sheets, res);
+    }
+
     // ── KPI path ──────────────────────────────────────────────────────────────
     const { weekStart } = body;
     if (!weekStart) return res.status(400).json({ error: 'weekStart is required' });
 
+    const SOWELL_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
     const { data } = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
+      spreadsheetId: SOWELL_ID,
       range: 'A1:Z200',
     });
 

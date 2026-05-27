@@ -220,15 +220,6 @@ function addCreativeSlide(pres, title, creators) {
       fontSize: 12, color: '444444', fontFace: 'Calibri',
     });
 
-    slide.addText('CPA', {
-      x: cx + 0.15, y: cy + 3.5, w: 0.6, h: 0.2,
-      fontSize: 8, color: '999999', fontFace: 'Calibri',
-    });
-    slide.addText(String(c.cpaVal || '—'), {
-      x: cx + 0.75, y: cy + 3.48, w: 1.8, h: 0.25,
-      fontSize: 12, color: '444444', fontFace: 'Calibri',
-    });
-
     slide.addText('SPEND', {
       x: cx + 0.15, y: cy + 3.78, w: 0.6, h: 0.2,
       fontSize: 8, color: '999999', fontFace: 'Calibri',
@@ -240,8 +231,74 @@ function addCreativeSlide(pres, title, creators) {
   });
 }
 
-// ── Slide 7 — Questions ───────────────────────────────────────────────────────
-function addSlide7(pres) {
+// ── Slide 7 — Influencer Partnerships ────────────────────────────────────────
+function addSlide7(pres, partnerships) {
+  const items = Array.isArray(partnerships) ? partnerships : [];
+  const slide = pres.addSlide();
+  slide.background = { color: BG };
+  slideTitle(slide, 'Influencer Partnerships');
+
+  const cols = [
+    { x: 0.3,  label: 'Confirmed', bucket: 'confirmed'  },
+    { x: 3.55, label: 'Offer Out', bucket: 'offer out'  },
+    { x: 6.8,  label: 'In Talks',  bucket: 'in talks'   },
+  ];
+  const colW  = 2.9;
+  const hdrY  = 1.0;
+  const hdrH  = 0.42;
+  const cardY = 1.42;
+  const cardH = 3.95;
+
+  cols.forEach(({ x, label, bucket }) => {
+    // Column header bar
+    slide.addShape(pres.ShapeType.rect, {
+      x, y: hdrY, w: colW, h: hdrH,
+      fill: { color: GREEN }, line: { width: 0, color: GREEN },
+    });
+    slide.addText(label, {
+      x, y: hdrY, w: colW, h: hdrH,
+      fontSize: 12, bold: true, color: 'FFFFFF',
+      align: 'center', valign: 'middle', fontFace: 'Calibri',
+    });
+
+    // Column card background
+    slide.addShape(pres.ShapeType.rect, {
+      x, y: cardY, w: colW, h: cardH,
+      fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
+    });
+
+    const entries = items.filter(p => (p.status || '').toLowerCase().trim() === bucket).slice(0, 4);
+
+    if (entries.length === 0) {
+      slide.addText('—', {
+        x: x + 0.15, y: cardY + 1.8, w: 2.6, h: 0.4,
+        fontSize: 11, color: '999999', align: 'center', fontFace: 'Calibri',
+      });
+    } else {
+      entries.forEach((p, idx) => {
+        const ey = cardY + 0.2 + (idx * 0.88);
+        const deliverable = p.condensed || (p.deliverables ? p.deliverables.slice(0, 40) : '—');
+        const goLive = (p.goLive || '').trim() || 'TBD';
+
+        slide.addText(p.name || '—', {
+          x: x + 0.15, y: ey, w: 2.6, h: 0.25,
+          fontSize: 11, bold: true, color: GREEN, fontFace: 'Calibri',
+        });
+        slide.addText('Live: ' + goLive, {
+          x: x + 0.15, y: ey + 0.27, w: 2.6, h: 0.2,
+          fontSize: 9, color: '888888', fontFace: 'Calibri',
+        });
+        slide.addText(deliverable, {
+          x: x + 0.15, y: ey + 0.49, w: 2.6, h: 0.28,
+          fontSize: 9, italic: true, color: '555555', fontFace: 'Calibri',
+        });
+      });
+    }
+  });
+}
+
+// ── Slide 8 — Questions ───────────────────────────────────────────────────────
+function addSlide8(pres) {
   const slide = pres.addSlide();
   slide.background = { color: GREEN };
 
@@ -268,7 +325,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image } = req.body || {};
+    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image, partnerships } = req.body || {};
 
     const pres = new PptxGenJS();
     pres.layout = 'LAYOUT_16x9';
@@ -279,7 +336,8 @@ export default async function handler(req, res) {
     addSlide4(pres, metaBullets || '');
     addCreativeSlide(pres, 'Creative Performance — Video',  video  || []);
     addCreativeSlide(pres, 'Creative Performance — Images', image  || []);
-    addSlide7(pres);
+    addSlide7(pres, partnerships || []);
+    addSlide8(pres);
 
     const base64 = await pres.write({ outputType: 'base64' });
     const safeName = 'SoWell_Weekly_' + (weekRange || '').replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_') + '.pptx';
