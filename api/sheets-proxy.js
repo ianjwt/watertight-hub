@@ -217,13 +217,13 @@ async function handlePartnerships(sheets, res) {
   const headers = rows[0];
   const findCol = (hdrs, matchFn) => hdrs.findIndex(h => matchFn((h || '').toLowerCase().trim()));
 
-  const colGoLive       = findCol(headers, h => h.includes('go live'));
+  const colGoLive       = findCol(headers, h => h.includes('live date') || h.includes('go live') || h.includes('goal live'));
   const colStatus       = findCol(headers, h => h.includes('partnership status'));
   const colName         = findCol(headers, h => h.includes('name'));
   const colDeliverables = findCol(headers, h => h.includes('deliverable'));
 
-  console.log('[partnerships] header row:', JSON.stringify(headers));
   console.log('[partnerships] column indices:', { colGoLive, colStatus, colName, colDeliverables });
+  console.log('[partnerships] headers:', JSON.stringify(headers));
 
   if ([colGoLive, colStatus, colName, colDeliverables].includes(-1)) {
     return res.status(500).json({ error: 'Partnership sheet column mapping failed' });
