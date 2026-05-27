@@ -89,13 +89,14 @@ async function handleCreative(sheets, res) {
   const colAdName     = findCol(headers, h => h.includes('ad name'));
   const colSpend      = findCol(headers, h => h.includes('amount spent'));
   const colPurch      = findCol(headers, h => h === 'purchases');
-  const colPurchValue = findCol(headers, h => h.includes('purchases conversion value'));
-  const colCPA        = findCol(headers, h => h.includes('cost per purchase'));
+  const colROAS       = findCol(headers, h => h.includes('purchase roas'));        // optional
+  const colPurchValue = findCol(headers, h => h.includes('purchases conversion value')); // optional
+  const colCPA        = findCol(headers, h => h.includes('cost per purchase'));    // optional
 
   console.log('[creative] header row:', JSON.stringify(headers));
-  console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colPurchValue, colCPA });
+  console.log('[creative] column indices:', { colAdName, colSpend, colPurch, colROAS, colPurchValue, colCPA });
 
-  if ([colAdName, colSpend, colPurch, colPurchValue, colCPA].includes(-1)) {
+  if ([colAdName, colSpend, colPurch].includes(-1)) {
     return res.status(500).json({ error: 'Creative sheet column mapping failed' });
   }
 
@@ -106,19 +107,22 @@ async function handleCreative(sheets, res) {
     const rawName = String(row[colAdName] || '').trim();
     if (!rawName.startsWith('Sales_')) continue;
 
-    const spend      = parseFloat((String(row[colSpend]      || '')).replace(/[$,]/g, '').trim());
-    const purch      = parseFloat((String(row[colPurch]      || '0')).trim());
-    const purchValue = parseFloat((String(row[colPurchValue] || '0')).replace(/[$,]/g, '').trim());
+    const spend      = parseFloat((String(row[colSpend] || '')).replace(/[$,]/g, '').trim());
+    const purch      = parseFloat((String(row[colPurch] || '0')).trim());
+    const roasRaw    = colROAS       >= 0 ? parseFloat((String(row[colROAS]       || '0')).trim()) : null;
+    const purchValue = colPurchValue >= 0 ? parseFloat((String(row[colPurchValue] || '0')).replace(/[$,]/g, '').trim()) : null;
 
     if (debugCount < 5) {
       console.log('[creative] row data:', {
         adName:           row[colAdName],
         rawSpend:         row[colSpend],
         rawPurchases:     row[colPurch],
-        rawPurchValue:    row[colPurchValue],
-        rawCPA:           row[colCPA],
+        rawROAS:          colROAS       >= 0 ? row[colROAS]       : '(col absent)',
+        rawPurchValue:    colPurchValue >= 0 ? row[colPurchValue] : '(col absent)',
+        rawCPA:           colCPA        >= 0 ? row[colCPA]        : '(col absent)',
         parsedSpend:      spend,
         parsedPurchases:  purch,
+        parsedROAS:       roasRaw,
         parsedPurchValue: purchValue,
       });
       debugCount++;
@@ -132,37 +136,67 @@ async function handleCreative(sheets, res) {
     const key = `${parsed.influencer}|${parsed.type}`;
     if (map.has(key)) {
       const e = map.get(key);
-      e.spend         += spend;
-      e.purchases     += purch;
-      e.purchaseValue += purchValue;
+      e.spend     += spend;
+      e.purchases += purch;
+      if (colPurchValue >= 0 && purchValue != null) e.purchaseValue += purchValue;
+      // For ROAS-column path: accumulate weighted ROAS (roas * spend) to average later
+      if (colROAS >= 0 && roasRaw != null && Number.isFinite(roasRaw)) {
+        e.roasWeightedSum += roasRaw * spend;
+        e.roasWeightSpend += spend;
+      }
       if (purch > e.bestPurchases) {
         e.bestPurchases = purch;
         e.adName        = parsed.adName;
       }
     } else {
       map.set(key, {
-        influencer:    parsed.influencer,
-        adName:        parsed.adName,
-        type:          parsed.type,
+        influencer:       parsed.influencer,
+        adName:           parsed.adName,
+        type:             parsed.type,
         spend,
-        purchases:     purch,
-        purchaseValue: purchValue,
-        bestPurchases: purch,
+        purchases:        purch,
+        purchaseValue:    colPurchValue >= 0 && purchValue != null ? purchValue : 0,
+        roasWeightedSum:  colROAS >= 0 && roasRaw != null && Number.isFinite(roasRaw) ? roasRaw * spend : 0,
+        roasWeightSpend:  colROAS >= 0 && roasRaw != null && Number.isFinite(roasRaw) ? spend : 0,
+        bestPurchases:    purch,
       });
     }
   }
+
+  const calcROAS = (e) => {
+    if (colROAS >= 0 && e.roasWeightSpend > 0) {
+      return (e.roasWeightedSum / e.roasWeightSpend).toFixed(2);
+    }
+    if (colPurchValue >= 0 && e.spend > 0) {
+      return (e.purchaseValue / e.spend).toFixed(2);
+    }
+    return e.spend > 0 ? '—' : '0.00';
+  };
+
+  const calcCPA = (e) => {
+    if (colCPA >= 0) {
+      // column present — already summed via spend/purchases as best proxy
+      return fmtCPA(e.spend / e.purchases);
+    }
+    return fmtCPA(e.spend / e.purchases);
+  };
 
   const toResult = (e) => ({
     influencer: e.influencer,
     adName:     e.adName,
     purchases:  Math.round(e.purchases),
-    cpa:        fmtCPA(e.spend / e.purchases),
-    roas:       (e.purchaseValue / e.spend).toFixed(2),
+    cpa:        calcCPA(e),
+    roas:       calcROAS(e),
     spend:      fmtCurrency(e.spend),
   });
 
   const all    = Array.from(map.values());
-  const rank   = (a, b) => b.purchases - a.purchases || (b.purchaseValue / b.spend) - (a.purchaseValue / a.spend);
+  const roasNum = (e) => {
+    if (colROAS >= 0 && e.roasWeightSpend > 0) return e.roasWeightedSum / e.roasWeightSpend;
+    if (colPurchValue >= 0 && e.spend > 0)      return e.purchaseValue / e.spend;
+    return 0;
+  };
+  const rank   = (a, b) => b.purchases - a.purchases || roasNum(b) - roasNum(a);
   const videos = all.filter(e => e.type === 'video').sort(rank).slice(0, 3).map(toResult);
   const images = all.filter(e => e.type === 'image').sort(rank).slice(0, 3).map(toResult);
 

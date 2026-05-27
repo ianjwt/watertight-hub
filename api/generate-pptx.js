@@ -240,66 +240,8 @@ function addCreativeSlide(pres, title, creators) {
   });
 }
 
-// ── Slide 7 — Influencer Pipeline ─────────────────────────────────────────────
-function addSlide7(pres, pipeline) {
-  const slide = pres.addSlide();
-  slide.background = { color: BG };
-  slideTitle(slide, 'Influencer Pipeline');
-
-  const cols = [
-    { x: 0.3,  label: 'Secured',                bucket: 'secured' },
-    { x: 3.55, label: 'In Talks',               bucket: 'talks'   },
-    { x: 6.8,  label: 'Reached Out / Seeded',   bucket: 'seeded'  },
-  ];
-  const colW   = 2.9;
-  const hdrY   = 1.05;
-  const hdrH   = 0.42;
-  const cardY  = 1.47;
-  const cardH  = 3.85;
-
-  cols.forEach(({ x, label, bucket }) => {
-    slide.addShape(pres.ShapeType.rect, {
-      x, y: hdrY, w: colW, h: hdrH,
-      fill: { color: GREEN }, line: { width: 0, color: GREEN },
-    });
-    slide.addText(label, {
-      x, y: hdrY, w: colW, h: hdrH,
-      fontSize: 12, bold: true, color: 'FFFFFF',
-      align: 'center', valign: 'middle', fontFace: 'Calibri',
-    });
-
-    slide.addShape(pres.ShapeType.rect, {
-      x, y: cardY, w: colW, h: cardH,
-      fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
-    });
-
-    const entries = (pipeline[bucket] || []).filter(e => {
-      const n = (e.name || '').trim();
-      return n && n.toLowerCase() !== 'na';
-    }).slice(0, 3);
-    if (entries.length === 0) {
-      slide.addText('—', {
-        x: x + 0.15, y: cardY + 1.8, w: 2.6, h: 0.4,
-        fontSize: 11, color: '999999', align: 'center', fontFace: 'Calibri',
-      });
-    } else {
-      entries.forEach((entry, idx) => {
-        const ey = cardY + 0.2 + (idx * 1.1);
-        slide.addText(entry.name || '—', {
-          x: x + 0.2, y: ey, w: 2.5, h: 0.3,
-          fontSize: 12, bold: true, color: GREEN, fontFace: 'Calibri',
-        });
-        slide.addText(entry.desc || '', {
-          x: x + 0.2, y: ey + 0.32, w: 2.5, h: 0.55,
-          fontSize: 10, color: '666666', fontFace: 'Calibri',
-        });
-      });
-    }
-  });
-}
-
-// ── Slide 8 — Questions ───────────────────────────────────────────────────────
-function addSlide8(pres) {
+// ── Slide 7 — Questions ───────────────────────────────────────────────────────
+function addSlide7(pres) {
   const slide = pres.addSlide();
   slide.background = { color: GREEN };
 
@@ -326,7 +268,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image, pipeline = {} } = req.body || {};
+    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image } = req.body || {};
 
     const pres = new PptxGenJS();
     pres.layout = 'LAYOUT_16x9';
@@ -337,8 +279,7 @@ export default async function handler(req, res) {
     addSlide4(pres, metaBullets || '');
     addCreativeSlide(pres, 'Creative Performance — Video',  video  || []);
     addCreativeSlide(pres, 'Creative Performance — Images', image  || []);
-    addSlide7(pres, pipeline);
-    addSlide8(pres);
+    addSlide7(pres);
 
     const base64 = await pres.write({ outputType: 'base64' });
     const safeName = 'SoWell_Weekly_' + (weekRange || '').replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_') + '.pptx';
