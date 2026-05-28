@@ -5194,12 +5194,27 @@ META PERFORMANCE:
 
     const pptxPayload = {
       weekRange,
-      kpis: {
-        sales:    { val: kpis.sales.val,    wow: kpis.sales.wow,    dir: kpis.sales.dir },
-        roas:     { val: kpis.roas.val,     wow: kpis.roas.wow,     dir: kpis.roas.dir },
-        spend:    { val: kpis.spend.val,    wow: kpis.spend.wow,    dir: kpis.spend.dir },
-        metaroas: { val: kpis.metaroas.val, wow: kpis.metaroas.wow, dir: kpis.metaroas.dir },
-      },
+      kpis: (() => {
+        const tileSlots  = ['sales', 'roas', 'spend', 'metaroas'];
+        const cfgMetrics = dbClientConfig?.kpi?.metrics;
+        if (cfgMetrics && cfgMetrics.length > 0) {
+          // Map each configured metric key → its tile-slot value so
+          // generate-pptx.js can look up kpis[metric.key] correctly.
+          const out = {};
+          cfgMetrics.forEach((m, i) => {
+            const slot = tileSlots[i];
+            if (slot) out[m.key] = kpis[slot];
+          });
+          return out;
+        }
+        // Fall back to SoWell default slot names
+        return {
+          sales:    kpis.sales,
+          roas:     kpis.roas,
+          spend:    kpis.spend,
+          metaroas: kpis.metaroas,
+        };
+      })(),
       contextBlurb: blurb,
       metaBullets:  bullets,
       video: (() => {

@@ -61,7 +61,8 @@ function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
     { label: 'Meta Spend',    key: 'spend'    },
     { label: 'Meta ROAS',     key: 'metaroas' },
   ];
-  const metrics = (kpiMetrics && kpiMetrics.length >= 4) ? kpiMetrics : defaultMetrics;
+  // Accept any client's metrics (≥3 tiles required); fall back to SoWell defaults
+  const metrics = (kpiMetrics && kpiMetrics.length >= 3) ? kpiMetrics : defaultMetrics;
 
   const slide = pres.addSlide();
   slide.background = { color: BG };
@@ -70,6 +71,7 @@ function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
   const tileY = 0.95;
   const tileW = 2.9;
   const tileH = 1.5;
+  // Tiles are positioned by array order; kpis object keys match metric.key values
   const tiles = [
     { x: 0.35, fill: GREEN,  label: metrics[0].label, kpi: kpis[metrics[0].key] || {} },
     { x: 3.55, fill: ORANGE, label: metrics[1].label, kpi: kpis[metrics[1].key] || {} },
@@ -96,25 +98,27 @@ function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
     });
   });
 
-  // 4th metric smaller tile
-  const mr = kpis[metrics[3].key] || {};
-  slide.addShape(pres.ShapeType.roundRect, {
-    x: 0.35, y: 2.6, w: 2.0, h: 0.65,
-    rectRadius: 0.08,
-    fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
-  });
-  slide.addText(metrics[3].label, {
-    x: 0.5, y: 2.65, w: 1.2, h: 0.25,
-    fontSize: 9, bold: true, color: GREEN, fontFace: 'Calibri',
-  });
-  slide.addText(mr.val || '—', {
-    x: 1.7, y: 2.63, w: 0.5, h: 0.3,
-    fontSize: 14, bold: true, color: GREEN, fontFace: 'Calibri',
-  });
-  slide.addText(wowText(mr), {
-    x: 0.5, y: 2.9, w: 1.7, h: 0.25,
-    fontSize: 10, color: '666666', fontFace: 'Calibri',
-  });
+  // 4th metric smaller tile — only rendered if metrics[3] exists
+  if (metrics[3]) {
+    const mr = kpis[metrics[3].key] || {};
+    slide.addShape(pres.ShapeType.roundRect, {
+      x: 0.35, y: 2.6, w: 2.0, h: 0.65,
+      rectRadius: 0.08,
+      fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
+    });
+    slide.addText(metrics[3].label, {
+      x: 0.5, y: 2.65, w: 1.2, h: 0.25,
+      fontSize: 9, bold: true, color: GREEN, fontFace: 'Calibri',
+    });
+    slide.addText(mr.val || '—', {
+      x: 1.7, y: 2.63, w: 0.5, h: 0.3,
+      fontSize: 14, bold: true, color: GREEN, fontFace: 'Calibri',
+    });
+    slide.addText(wowText(mr), {
+      x: 0.5, y: 2.9, w: 1.7, h: 0.25,
+      fontSize: 10, color: '666666', fontFace: 'Calibri',
+    });
+  }
 
   slide.addText(contextBlurb || '', {
     x: 0.35, y: 3.45, w: 9.3, h: 1.9,
@@ -402,8 +406,10 @@ export default async function handler(req, res) {
     addSlide2(pres, kpis, contextBlurb || '', kpiMetrics);
     addSlide3(pres, charts);
     addSlide4(pres, metaBullets || '');
-    addCreativeSlide(pres, 'Creative Performance — Video',  video  || []);
-    addCreativeSlide(pres, 'Creative Performance — Images', image  || []);
+    const hasVideo = (video || []).some(c => c.name && c.name.trim() !== '');
+    const hasImage = (image || []).some(c => c.name && c.name.trim() !== '');
+    if (hasVideo) addCreativeSlide(pres, 'Creative Performance — Video',  video);
+    if (hasImage) addCreativeSlide(pres, 'Creative Performance — Images', image);
     addSlide7(pres, partnerships || []);
     addSlide8(pres);
 
