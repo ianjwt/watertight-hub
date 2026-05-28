@@ -14,9 +14,18 @@ export default async function handler(req, res) {
         headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
       });
       const fileData = await fileRes.json();
-      if (!fileRes.ok) throw new Error(fileData.message || 'GitHub API error');
-      const decoded  = Buffer.from(fileData.content.replace(/\n/g, ''), 'base64').toString('utf8');
-      const parsed   = JSON.parse(decoded);
+
+      if (fileRes.status === 401) {
+        console.error('[client-config] GET 401 — GitHub token not configured or invalid. token present:', !!token);
+        return res.status(401).json({ error: 'GitHub token not configured or invalid' });
+      }
+      if (!fileRes.ok) {
+        console.error('[client-config] GET failed:', fileRes.status, JSON.stringify(fileData));
+        throw new Error(fileData.message || `GitHub API error ${fileRes.status}`);
+      }
+
+      const decoded = Buffer.from(fileData.content.replace(/\n/g, ''), 'base64').toString('utf8');
+      const parsed  = JSON.parse(decoded);
       return res.status(200).json(parsed);
     }
 
@@ -29,9 +38,17 @@ export default async function handler(req, res) {
         headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
       });
       const getData = await getRes.json();
-      if (!getRes.ok) throw new Error(getData.message || 'GitHub GET failed');
-      const sha = getData.sha;
 
+      if (getRes.status === 401) {
+        console.error('[client-config] POST get-SHA 401 — GitHub token not configured or invalid. token present:', !!token);
+        return res.status(401).json({ error: 'GitHub token not configured or invalid' });
+      }
+      if (!getRes.ok) {
+        console.error('[client-config] POST get-SHA failed:', getRes.status, JSON.stringify(getData));
+        throw new Error(getData.message || `GitHub GET failed ${getRes.status}`);
+      }
+
+      const sha     = getData.sha;
       const content = Buffer.from(JSON.stringify({ clients }, null, 2)).toString('base64');
 
       const putRes  = await fetch(API, {
@@ -40,11 +57,16 @@ export default async function handler(req, res) {
         body: JSON.stringify({ message: 'Update client config', content, sha })
       });
       const putData = await putRes.json();
-      if (!putRes.ok) throw new Error(putData.message || 'GitHub PUT failed');
+
+      if (!putRes.ok) {
+        console.error('[client-config] PUT failed:', putRes.status, JSON.stringify(putData));
+        throw new Error(putData.message || `GitHub PUT failed ${putRes.status}`);
+      }
 
       return res.status(200).json({ success: true });
     }
   } catch (err) {
+    console.error('[client-config] Unhandled error:', err);
     return res.status(500).json({ error: err.message });
   }
 }

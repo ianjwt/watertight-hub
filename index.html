@@ -4796,7 +4796,7 @@ Write the weekly recap email body.`;
     }
 
     window.addEventListener('hashchange', handleRoute);
-    handleRoute();
+    // Initial call deferred to end of page scripts so db* and cc* functions are defined first
 
     // ─── SANITIZER ───
     function sanitize(val) {
@@ -5799,6 +5799,9 @@ ${fPart('in talks')}`;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
+
+  // Initial route — runs here so all db* and cc* functions above are already defined
+  handleRoute();
   </script>
 </body>
 </html>
