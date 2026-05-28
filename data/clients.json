@@ -36,7 +36,9 @@
       },
       "creative": {
         "sheetId": "1YUCO-1Np1XutpsfRWC6pvQdZokqmjwi_lGJ-69XhR-0",
-        "tabName": ""
+        "tabName": "Creative Data",
+        "adPrefix": "UF_LinkClicks_",
+        "campaignType": "traffic"
       },
       "partnerships": {
         "sheetId": "1hvEMvfmziNZsmytvx7O2DS6woJpmDxkXQRk0tRe1EEk",

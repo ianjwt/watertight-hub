@@ -218,32 +218,75 @@ function addCreativeSlide(pres, title, creators) {
       fontSize: 13, bold: true, color: GREEN, fontFace: 'Calibri',
     });
 
-    slide.addText('PURCHASES', {
-      x: cx + 0.15, y: cy + 2.52, w: 1.2, h: 0.22,
-      fontSize: 8, color: '999999', fontFace: 'Calibri',
-    });
-    slide.addText(String(c.metricVal || '—'), {
-      x: cx + 0.15, y: cy + 2.72, w: 2.55, h: 0.42,
-      fontSize: 20, bold: true, color: GREEN, fontFace: 'Calibri',
-    });
+    const isTraffic = c.type === 'traffic' || c.clicks != null;
 
-    slide.addText('ROAS', {
-      x: cx + 0.15, y: cy + 3.22, w: 0.6, h: 0.2,
-      fontSize: 8, color: '999999', fontFace: 'Calibri',
-    });
-    slide.addText(String(c.roas || '—'), {
-      x: cx + 0.75, y: cy + 3.2, w: 1.8, h: 0.25,
-      fontSize: 12, color: '444444', fontFace: 'Calibri',
-    });
+    if (isTraffic) {
+      // ── Traffic layout: CLICKS / CTR / CPM / SPEND ────────────────────────
+      slide.addText('CLICKS', {
+        x: cx + 0.15, y: cy + 2.52, w: 1.2, h: 0.22,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.clicks || c.metricVal || '—'), {
+        x: cx + 0.15, y: cy + 2.72, w: 2.55, h: 0.42,
+        fontSize: 20, bold: true, color: GREEN, fontFace: 'Calibri',
+      });
 
-    slide.addText('SPEND', {
-      x: cx + 0.15, y: cy + 3.78, w: 0.6, h: 0.2,
-      fontSize: 8, color: '999999', fontFace: 'Calibri',
-    });
-    slide.addText(String(c.spend || '—'), {
-      x: cx + 0.75, y: cy + 3.76, w: 1.8, h: 0.25,
-      fontSize: 12, color: '444444', fontFace: 'Calibri',
-    });
+      slide.addText('CTR', {
+        x: cx + 0.15, y: cy + 3.05, w: 0.6, h: 0.2,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.ctr || c.roas || '—'), {
+        x: cx + 0.75, y: cy + 3.18, w: 1.8, h: 0.25,
+        fontSize: 12, color: '444444', fontFace: 'Calibri',
+      });
+
+      slide.addText('CPM', {
+        x: cx + 0.15, y: cy + 3.38, w: 0.6, h: 0.2,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.cpm || '—'), {
+        x: cx + 0.75, y: cy + 3.51, w: 1.8, h: 0.25,
+        fontSize: 12, color: '444444', fontFace: 'Calibri',
+      });
+
+      slide.addText('SPEND', {
+        x: cx + 0.15, y: cy + 3.68, w: 0.6, h: 0.2,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.spend || '—'), {
+        x: cx + 0.75, y: cy + 3.81, w: 1.8, h: 0.25,
+        fontSize: 12, color: '444444', fontFace: 'Calibri',
+      });
+
+    } else {
+      // ── Purchase layout: PURCHASES / ROAS / SPEND ──────────────────────────
+      slide.addText('PURCHASES', {
+        x: cx + 0.15, y: cy + 2.52, w: 1.2, h: 0.22,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.metricVal || '—'), {
+        x: cx + 0.15, y: cy + 2.72, w: 2.55, h: 0.42,
+        fontSize: 20, bold: true, color: GREEN, fontFace: 'Calibri',
+      });
+
+      slide.addText('ROAS', {
+        x: cx + 0.15, y: cy + 3.22, w: 0.6, h: 0.2,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.roas || '—'), {
+        x: cx + 0.75, y: cy + 3.2, w: 1.8, h: 0.25,
+        fontSize: 12, color: '444444', fontFace: 'Calibri',
+      });
+
+      slide.addText('SPEND', {
+        x: cx + 0.15, y: cy + 3.78, w: 0.6, h: 0.2,
+        fontSize: 8, color: '999999', fontFace: 'Calibri',
+      });
+      slide.addText(String(c.spend || '—'), {
+        x: cx + 0.75, y: cy + 3.76, w: 1.8, h: 0.25,
+        fontSize: 12, color: '444444', fontFace: 'Calibri',
+      });
+    }
   });
 }
 

@@ -5203,11 +5203,31 @@ META PERFORMANCE:
       contextBlurb: blurb,
       metaBullets:  bullets,
       video: (() => {
-        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, roas: c.roas || c.roasVal, spend: c.spend }));
+        const mapC = arr => arr.map(c => ({
+          name:      c.influencer || c.name,
+          adName:    c.adName,
+          metricVal: c.purchases !== undefined ? c.purchases : c.metricVal,
+          roas:      c.roas || c.roasVal,
+          spend:     c.spend,
+          type:      c.type,
+          clicks:    c.clicks,
+          ctr:       c.ctr,
+          cpm:       c.cpm,
+        }));
         return dbCreativeData.video.length ? mapC(dbCreativeData.video) : videoCreators;
       })(),
       image: (() => {
-        const mapC = arr => arr.map(c => ({ name: c.influencer || c.name, adName: c.adName, metricVal: c.purchases !== undefined ? c.purchases : c.metricVal, roas: c.roas || c.roasVal, spend: c.spend }));
+        const mapC = arr => arr.map(c => ({
+          name:      c.influencer || c.name,
+          adName:    c.adName,
+          metricVal: c.purchases !== undefined ? c.purchases : c.metricVal,
+          roas:      c.roas || c.roasVal,
+          spend:     c.spend,
+          type:      c.type,
+          clicks:    c.clicks,
+          ctr:       c.ctr,
+          cpm:       c.cpm,
+        }));
         return dbCreativeData.image.length ? mapC(dbCreativeData.image) : imageCreators;
       })(),
       partnerships: dbPartnershipData,
@@ -5453,13 +5473,28 @@ ${fPart('in talks')}`;
       if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
 
       const fill = (type, items) => {
+        const isTraffic = items[0]?.type === 'traffic';
         items.forEach((item, idx) => {
           const i = idx + 1;
           const p = `db-${type}-${i}`;
 
-          document.getElementById(`${p}-name`).value       = item.influencer;
-          document.getElementById(`${p}-metric-val`).value = item.purchases;
-          document.getElementById(`${p}-roas-val`).value   = item.roas;
+          document.getElementById(`${p}-name`).value = item.influencer;
+
+          const metricInput = document.getElementById(`${p}-metric-val`);
+          const roasInput   = document.getElementById(`${p}-roas-val`);
+
+          if (isTraffic) {
+            metricInput.value = item.clicks;
+            roasInput.value   = item.ctr;
+            // Update card field labels to match traffic metrics
+            if (metricInput.previousElementSibling) metricInput.previousElementSibling.textContent = 'CLICKS';
+            if (roasInput.previousElementSibling)   roasInput.previousElementSibling.textContent   = 'CTR';
+          } else {
+            metricInput.value = item.purchases;
+            roasInput.value   = item.roas;
+            if (metricInput.previousElementSibling) metricInput.previousElementSibling.textContent = 'PURCHASES';
+            if (roasInput.previousElementSibling)   roasInput.previousElementSibling.textContent   = 'ROAS';
+          }
 
           const nameInput = document.getElementById(`${p}-name`);
           let meta = nameInput.parentElement.querySelector('.db-creative-meta');
@@ -5468,7 +5503,11 @@ ${fPart('in talks')}`;
             meta.className = 'db-creative-meta';
             nameInput.after(meta);
           }
-          meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">${item.spend} spend</span>`;
+          if (isTraffic) {
+            meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">${item.cpm} CPM</span><span class="db-creative-chip">${item.spend} spend</span>`;
+          } else {
+            meta.innerHTML = `<span class="db-ad-name">${item.adName}</span><span class="db-creative-chip">${item.spend} spend</span>`;
+          }
         });
       };
 
