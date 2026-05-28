@@ -4577,7 +4577,7 @@ function showGDocToast(msg) {
               <div class="form-section-label">KPI Sheet</div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Sheet ID</label>
-                <input type="text" id="cc-kpi-sheet-id" placeholder="1FXsgrX…" autocomplete="off" />
+                <input type="text" id="cc-kpi-sheet-id" placeholder="Paste Sheet ID or full Google Sheets URL" autocomplete="off" oninput="this.value=ccExtractSheetId(this.value)" />
               </div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Tab Name</label>
@@ -4592,7 +4592,7 @@ function showGDocToast(msg) {
               <div class="form-section-label">Creative Sheet</div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Sheet ID</label>
-                <input type="text" id="cc-creative-sheet-id" placeholder="1FXsgrX…" autocomplete="off" />
+                <input type="text" id="cc-creative-sheet-id" placeholder="Paste Sheet ID or full Google Sheets URL" autocomplete="off" oninput="this.value=ccExtractSheetId(this.value)" />
               </div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Tab Name</label>
@@ -4604,7 +4604,7 @@ function showGDocToast(msg) {
               <div class="form-section-label">Partnerships Sheet</div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Sheet ID</label>
-                <input type="text" id="cc-partners-sheet-id" placeholder="1CCj-67…" autocomplete="off" />
+                <input type="text" id="cc-partners-sheet-id" placeholder="Paste Sheet ID or full Google Sheets URL" autocomplete="off" oninput="this.value=ccExtractSheetId(this.value)" />
               </div>
               <div class="field" style="margin-bottom:10px;">
                 <label>Tab Name</label>
@@ -5574,6 +5574,11 @@ ${fPart('in talks')}`;
 
   <script>
   // ── CLIENT CONFIG MODULE ──────────────────────────────────────────────
+
+  function ccExtractSheetId(val) {
+    const match = val.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : val;
+  }
 
   let ccClients     = [];
   let ccActiveIndex = -1;
