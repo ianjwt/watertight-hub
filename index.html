@@ -5665,10 +5665,13 @@ ${fPart('in talks')}`;
     const row  = document.createElement('div');
     row.className = 'cc-metric-row';
     row.innerHTML = `
-      <input type="text"   class="cc-m-label"  placeholder="Label"   value="${m.label  || ''}" style="flex:2;" />
-      <input type="text"   class="cc-m-key"    placeholder="key"     value="${m.key    || ''}" style="flex:1;" />
-      <input type="text"   class="cc-m-col"    placeholder="Col"     value="${m.col    || ''}" style="flex:0.6;" />
-      <input type="text"   class="cc-m-format" placeholder="fmt"     value="${m.format || ''}" style="flex:0.6;" />
+      <input type="text" class="cc-m-label" placeholder="Label" value="${m.label || ''}" style="flex:2;"
+        onblur="this.closest('.cc-metric-row').querySelector('.cc-metric-key').value = this.value.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,12)" />
+      <input type="text" class="cc-m-key cc-metric-key" placeholder="key" value="${m.key || ''}" style="flex:1; background:#f5f5f5; cursor:pointer;" readonly
+        onfocus="this.removeAttribute('readonly'); this.style.background='white'; this.style.cursor='text';"
+        onblur="this.setAttribute('readonly',''); this.style.background='#f5f5f5'; this.style.cursor='pointer';" />
+      <input type="text" class="cc-m-col"    placeholder="Col" value="${m.col    || ''}" style="flex:0.6;" />
+      <input type="text" class="cc-m-format" placeholder="fmt" value="${m.format || ''}" style="flex:0.6;" />
       <button class="cc-row-remove" onclick="this.parentElement.remove()">×</button>`;
     list.appendChild(row);
   }
