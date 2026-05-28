@@ -52,6 +52,63 @@
           "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpcBvGQ1l9vAl7TVtKsoeEa2oqkbRNdvT37d6fmUq0pQH0LdXNMYaiHv1TXvc999_JTKcDWGQZrM8D/pubchart?oid=1673044301&format=image"
         }
       ]
+    },
+    {
+      "id": "sowell",
+      "name": "SoWell",
+      "coverColor": "",
+      "kpi": {
+        "sheetId": "1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM",
+        "tabName": "Performance Tracker",
+        "metrics": [
+          {
+            "label": "Shopify Sales",
+            "key": "sales",
+            "col": "K",
+            "format": ""
+          },
+          {
+            "label": "Blended ROAS",
+            "key": "roas",
+            "col": "J",
+            "format": ""
+          },
+          {
+            "label": "Meta Spend",
+            "key": "spend",
+            "col": "C",
+            "format": ""
+          },
+          {
+            "label": "Meta ROAS",
+            "key": "metaroas",
+            "col": "E",
+            "format": ""
+          }
+        ]
+      },
+      "creative": {
+        "sheetId": "1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM",
+        "tabName": "Creative Data"
+      },
+      "partnerships": {
+        "sheetId": "1CCj-67IAGOlnMunLXrhZbr8cgUFptknOa7JbN6QAtpI",
+        "tabName": "Pitch Tracker"
+      },
+      "charts": [
+        {
+          "label": "Spend & Blended ROAS",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1654932759&format=image"
+        },
+        {
+          "label": "Platform ROAS",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1601459520&format=image"
+        },
+        {
+          "label": "Spend & Shopify Revenue",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1946349077&format=image"
+        }
+      ]
     }
   ]
 }
