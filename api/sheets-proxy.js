@@ -72,11 +72,12 @@ function parseAdName(rawName) {
 
 // ── Creative handler ──────────────────────────────────────────────────────────
 
-async function handleCreative(sheets, res) {
-  const SOWELL_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
+async function handleCreative(sheets, res, clientConfig) {
+  const sheetId = clientConfig?.creative?.sheetId || '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
+  const tabName = clientConfig?.creative?.tabName || 'Creative Data';
   const { data } = await sheets.spreadsheets.values.get({
-    spreadsheetId: SOWELL_ID,
-    range: 'Creative Data!A:AM',
+    spreadsheetId: sheetId,
+    range: `${tabName}!A:AM`,
   });
 
   const rows = data.values || [];
@@ -204,11 +205,12 @@ async function handleCreative(sheets, res) {
 
 // ── Partnerships handler ──────────────────────────────────────────────────────
 
-async function handlePartnerships(sheets, res) {
-  const PARTNERSHIPS_ID = '1CCj-67IAGOlnMunLXrhZbr8cgUFptknOa7JbN6QAtpI';
+async function handlePartnerships(sheets, res, clientConfig) {
+  const sheetId = clientConfig?.partnerships?.sheetId || '1CCj-67IAGOlnMunLXrhZbr8cgUFptknOa7JbN6QAtpI';
+  const tabName = clientConfig?.partnerships?.tabName || 'Pitch Tracker';
   const { data } = await sheets.spreadsheets.values.get({
-    spreadsheetId: PARTNERSHIPS_ID,
-    range: 'Pitch Tracker!A1:G50',
+    spreadsheetId: sheetId,
+    range: `${tabName}!A1:G50`,
   });
 
   const rows = data.values || [];
@@ -268,58 +270,108 @@ export default async function handler(req, res) {
     const sheets = google.sheets({ version: 'v4', auth });
 
     if (body.type === 'creative') {
-      return await handleCreative(sheets, res);
+      return await handleCreative(sheets, res, body.clientConfig);
     }
 
     if (body.type === 'partnerships') {
-      return await handlePartnerships(sheets, res);
+      return await handlePartnerships(sheets, res, body.clientConfig);
     }
 
     // ── KPI path ──────────────────────────────────────────────────────────────
-    const { weekStart } = body;
+    const { weekStart, clientConfig } = body;
     if (!weekStart) return res.status(400).json({ error: 'weekStart is required' });
 
-    const SOWELL_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
-    const { data } = await sheets.spreadsheets.values.get({
-      spreadsheetId: SOWELL_ID,
-      range: 'A1:Z200',
-    });
+    if (clientConfig?.kpi) {
+      // ── Dynamic client config path ──────────────────────────────────────────
+      const kpiCfg  = clientConfig.kpi;
+      const sheetId = kpiCfg.sheetId;
+      const tabName = kpiCfg.tabName;
+      const metrics = kpiCfg.metrics || [];
+      const range   = tabName ? `${tabName}!A1:Z200` : 'A1:Z200';
 
-    const rows = data.values || [];
-    if (rows.length < 2) return res.status(404).json({ error: 'Week not found' });
+      const { data } = await sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range });
+      const rows     = data.values || [];
+      if (rows.length < 2) return res.status(404).json({ error: 'Week not found' });
 
-    const target   = normDate(weekStart);
-    const dataRows = rows.slice(1);
-    const rowIdx   = dataRows.findIndex(r => {
-      const cellNorm = normDate(r[COL_WEEK_START] || '');
-      return cellNorm === target || cellNorm.startsWith(target + '/');
-    });
+      // Column A (index 0) is always week start
+      const target   = normDate(weekStart);
+      const dataRows = rows.slice(1);
+      const rowIdx   = dataRows.findIndex(r => {
+        const cn = normDate(r[0] || '');
+        return cn === target || cn.startsWith(target + '/');
+      });
+      if (rowIdx === -1) return res.status(404).json({ error: 'Week not found' });
 
-    if (rowIdx === -1) return res.status(404).json({ error: 'Week not found' });
+      const curr = dataRows[rowIdx];
+      const prev = rowIdx > 0 ? dataRows[rowIdx - 1] : null;
 
-    const curr = dataRows[rowIdx];
-    const prev = rowIdx > 0 ? dataRows[rowIdx - 1] : null;
+      // Build column index map: metric.col letter (e.g. 'K') → 0-based index
+      const colMap = {};
+      metrics.forEach(m => { colMap[m.key] = m.col.toUpperCase().charCodeAt(0) - 65; });
 
-    const metaSpendCurr   = parseNum(curr[COL_META_SPEND]);
-    const metaROASCurr    = parseNum(curr[COL_META_ROAS]);
-    const shopifyCurr     = parseNum(curr[COL_SHOPIFY]);
-    const blendedROASCurr = parseNum(curr[COL_BLENDED_ROAS]);
+      const formatVal = (raw, format) => {
+        const n = parseNum(raw);
+        if (n == null) return null;
+        if (format === '$')    return fmtCurrency(n);
+        if (format === 'x')   return fmtDecimal(n);
+        return String(Math.round(n * 100) / 100);
+      };
 
-    const metaSpendPrev   = prev ? parseNum(prev[COL_META_SPEND])   : null;
-    const metaROASPrev    = prev ? parseNum(prev[COL_META_ROAS])    : null;
-    const shopifyPrev     = prev ? parseNum(prev[COL_SHOPIFY])      : null;
-    const blendedROASPrev = prev ? parseNum(prev[COL_BLENDED_ROAS]) : null;
+      const result = {};
+      metrics.forEach(m => {
+        const col     = colMap[m.key];
+        const currNum = parseNum(curr[col]);
+        const prevNum = prev ? parseNum(prev[col]) : null;
+        result[m.key]         = formatVal(curr[col], m.format);
+        result[m.key + 'WoW'] = pct(currNum, prevNum);
+      });
 
-    return res.status(200).json({
-      metaSpend:                  fmtCurrency(metaSpendCurr),
-      metaSpendWoW:               pct(metaSpendCurr, metaSpendPrev),
-      metaROAS:                   fmtDecimal(metaROASCurr),
-      metaROASWoW:                pct(metaROASCurr, metaROASPrev),
-      shopifyNewCustomerSales:    fmtCurrency(shopifyCurr),
-      shopifyNewCustomerSalesWoW: pct(shopifyCurr, shopifyPrev),
-      blendedROAS:                fmtDecimal(blendedROASCurr),
-      blendedROASWoW:             pct(blendedROASCurr, blendedROASPrev),
-    });
+      return res.status(200).json(result);
+
+    } else {
+      // ── Legacy SoWell hardcoded path ────────────────────────────────────────
+      const SOWELL_ID = '1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM';
+      const { data } = await sheets.spreadsheets.values.get({
+        spreadsheetId: SOWELL_ID,
+        range: 'A1:Z200',
+      });
+
+      const rows = data.values || [];
+      if (rows.length < 2) return res.status(404).json({ error: 'Week not found' });
+
+      const target   = normDate(weekStart);
+      const dataRows = rows.slice(1);
+      const rowIdx   = dataRows.findIndex(r => {
+        const cellNorm = normDate(r[COL_WEEK_START] || '');
+        return cellNorm === target || cellNorm.startsWith(target + '/');
+      });
+
+      if (rowIdx === -1) return res.status(404).json({ error: 'Week not found' });
+
+      const curr = dataRows[rowIdx];
+      const prev = rowIdx > 0 ? dataRows[rowIdx - 1] : null;
+
+      const metaSpendCurr   = parseNum(curr[COL_META_SPEND]);
+      const metaROASCurr    = parseNum(curr[COL_META_ROAS]);
+      const shopifyCurr     = parseNum(curr[COL_SHOPIFY]);
+      const blendedROASCurr = parseNum(curr[COL_BLENDED_ROAS]);
+
+      const metaSpendPrev   = prev ? parseNum(prev[COL_META_SPEND])   : null;
+      const metaROASPrev    = prev ? parseNum(prev[COL_META_ROAS])    : null;
+      const shopifyPrev     = prev ? parseNum(prev[COL_SHOPIFY])      : null;
+      const blendedROASPrev = prev ? parseNum(prev[COL_BLENDED_ROAS]) : null;
+
+      return res.status(200).json({
+        metaSpend:                  fmtCurrency(metaSpendCurr),
+        metaSpendWoW:               pct(metaSpendCurr, metaSpendPrev),
+        metaROAS:                   fmtDecimal(metaROASCurr),
+        metaROASWoW:                pct(metaROASCurr, metaROASPrev),
+        shopifyNewCustomerSales:    fmtCurrency(shopifyCurr),
+        shopifyNewCustomerSalesWoW: pct(shopifyCurr, shopifyPrev),
+        blendedROAS:                fmtDecimal(blendedROASCurr),
+        blendedROASWoW:             pct(blendedROASCurr, blendedROASPrev),
+      });
+    }
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

@@ -1,0 +1,41 @@
+{
+  "clients": [
+    {
+      "id": "sowell",
+      "name": "SoWell",
+      "coverColor": "116E53",
+      "kpi": {
+        "sheetId": "1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM",
+        "tabName": "Performance Tracker",
+        "metrics": [
+          { "label": "Shopify Sales", "col": "K", "format": "$", "key": "sales" },
+          { "label": "Blended ROAS",  "col": "J", "format": "x", "key": "roas" },
+          { "label": "Meta Spend",    "col": "C", "format": "$", "key": "spend" },
+          { "label": "Meta ROAS",     "col": "E", "format": "x", "key": "metaroas" }
+        ]
+      },
+      "creative": {
+        "sheetId": "1FXsgrXgtxZZdWGDN7UsQTXaQBH852buAc8PEA2OCLCM",
+        "tabName": "Creative Data"
+      },
+      "partnerships": {
+        "sheetId": "1CCj-67IAGOlnMunLXrhZbr8cgUFptknOa7JbN6QAtpI",
+        "tabName": "Pitch Tracker"
+      },
+      "charts": [
+        {
+          "label": "Spend & Blended ROAS",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1654932759&format=image"
+        },
+        {
+          "label": "Platform ROAS",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1601459520&format=image"
+        },
+        {
+          "label": "Spend & Shopify Revenue",
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1946349077&format=image"
+        }
+      ]
+    }
+  ]
+}

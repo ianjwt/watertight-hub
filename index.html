@@ -88,6 +88,197 @@
       letter-spacing: 0.04em;
     }
 
+    .header-gear-btn {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+    .header-gear-btn:hover { color: var(--wt-green); background: var(--wt-green-4); }
+
+    /* ─── CLIENT CONFIG VIEW ─── */
+    .cc-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .cc-sidebar {
+      width: 200px;
+      flex-shrink: 0;
+    }
+    .cc-main { flex: 1; min-width: 0; }
+    .cc-sidebar-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .cc-client-pill {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 6px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .cc-client-pill:hover { border-color: var(--wt-green); background: var(--wt-green-4); }
+    .cc-client-pill.active { border-color: var(--wt-green); background: var(--wt-green-4); font-weight: 600; }
+    .cc-new-btn {
+      display: block;
+      width: 100%;
+      padding: 7px 12px;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      background: none;
+      color: var(--text-light);
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      text-align: left;
+      margin-top: 4px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .cc-new-btn:hover { color: var(--wt-green); border-color: var(--wt-green); }
+    .cc-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      text-transform: uppercase;
+      margin: 18px 0 8px;
+    }
+    .cc-metric-row, .cc-chart-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .cc-metric-row input, .cc-chart-row input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      color: var(--text);
+      background: white;
+      outline: none;
+    }
+    .cc-metric-row input:focus, .cc-chart-row input:focus {
+      border-color: var(--wt-green);
+      box-shadow: 0 0 0 3px rgba(17,110,83,0.08);
+    }
+    .cc-row-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 16px;
+      padding: 2px 4px;
+      line-height: 1;
+    }
+    .cc-row-remove:hover { color: #c0392b; }
+    .cc-add-row-btn {
+      font-size: 12px;
+      color: var(--wt-green);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 0;
+    }
+    .cc-add-row-btn:hover { text-decoration: underline; }
+    .cc-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .cc-save-btn {
+      padding: 9px 20px;
+      background: var(--wt-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .cc-save-btn:hover { opacity: 0.88; }
+    .cc-delete-btn {
+      padding: 9px 16px;
+      background: none;
+      color: #c0392b;
+      border: 1.5px solid #c0392b;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cc-delete-btn:hover { background: #fff0ee; }
+    .cc-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a1a;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 9999;
+    }
+    .cc-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── DECK BUILDER — CLIENT SELECTOR ─── */
+    .db-client-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .db-client-row select {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: white;
+      outline: none;
+    }
+    .db-client-row select:focus { border-color: var(--wt-green); }
+    .db-client-row a {
+      font-size: 12px;
+      color: var(--text-light);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .db-client-row a:hover { color: var(--wt-green); text-decoration: underline; }
+
     /* ─── PAGE ─── */
     .page {
       max-width: 760px;
@@ -2061,6 +2252,11 @@
         <span class="hub-label">Vortex</span>
       </span>
     </div>
+    <button class="header-gear-btn" onclick="navigateTo('config')" title="Client Config">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+    </button>
   </header>
 
   <!-- PAGE -->
@@ -4092,12 +4288,20 @@ function showGDocToast(msg) {
           </div>
           <div>
             <div class="card-title">Deck Builder</div>
-            <div class="card-subtitle">SoWell Weekly Report</div>
+            <div class="card-subtitle">Weekly Report</div>
           </div>
         </div>
       </div>
 
       <div class="form-body">
+
+        <!-- CLIENT SELECTOR -->
+        <div class="db-client-row">
+          <select id="db-client-select" onchange="dbOnClientChange()">
+            <option value="">Loading clients…</option>
+          </select>
+          <a href="#config">⚙ Manage</a>
+        </div>
 
         <!-- PROGRESS BAR -->
         <div class="db-progress">
@@ -4138,7 +4342,7 @@ function showGDocToast(msg) {
             <div class="db-kpi-grid">
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">Shopify Sales</div>
+                <div class="db-kpi-tile-label" id="db-kpi-label-sales">Shopify Sales</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-sales-val" placeholder="$5,309" autocomplete="off" />
@@ -4153,7 +4357,7 @@ function showGDocToast(msg) {
               </div>
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">Blended ROAS</div>
+                <div class="db-kpi-tile-label" id="db-kpi-label-roas">Blended ROAS</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-roas-val" placeholder="1.42" autocomplete="off" />
@@ -4168,7 +4372,7 @@ function showGDocToast(msg) {
               </div>
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">Meta Weekly Spend</div>
+                <div class="db-kpi-tile-label" id="db-kpi-label-spend">Meta Weekly Spend</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-spend-val" placeholder="$8,450" autocomplete="off" />
@@ -4183,7 +4387,7 @@ function showGDocToast(msg) {
               </div>
 
               <div class="db-kpi-tile">
-                <div class="db-kpi-tile-label">Meta ROAS</div>
+                <div class="db-kpi-tile-label" id="db-kpi-label-metaroas">Meta ROAS</div>
                 <div class="field" style="margin-bottom:8px;">
                   <label>Value</label>
                   <input type="text" id="db-kpi-metaroas-val" placeholder="1.18" autocomplete="off" />
@@ -4313,6 +4517,121 @@ function showGDocToast(msg) {
     </div>
 
   </div><!-- /view-deck -->
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CLIENT CONFIG VIEW                         -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="view-config" style="display:none;">
+
+    <button class="back-link" onclick="navigateTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Vortex
+    </button>
+
+    <div class="section-title">Client Config</div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title-group">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Client Config</div>
+            <div class="card-subtitle">Manage Deck Builder clients</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <div id="cc-loading" class="db-sheet-status" style="margin-bottom:12px;"></div>
+        <div class="cc-layout">
+
+          <!-- SIDEBAR -->
+          <div class="cc-sidebar">
+            <div class="cc-sidebar-label">Clients</div>
+            <div id="cc-client-list"></div>
+            <button class="cc-new-btn" onclick="ccNewClient()">+ New client</button>
+          </div>
+
+          <!-- MAIN FORM -->
+          <div class="cc-main" id="cc-main-form" style="display:none;">
+
+            <div class="form-section">
+              <div class="form-section-label">Basic Info</div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Client Name</label>
+                <input type="text" id="cc-name" placeholder="SoWell" autocomplete="off" />
+              </div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Cover Color <span class="tag">hex, no #</span></label>
+                <input type="text" id="cc-cover-color" placeholder="116E53" maxlength="6" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">KPI Sheet</div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Sheet ID</label>
+                <input type="text" id="cc-kpi-sheet-id" placeholder="1FXsgrX…" autocomplete="off" />
+              </div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Tab Name</label>
+                <input type="text" id="cc-kpi-tab-name" placeholder="Performance Tracker" autocomplete="off" />
+              </div>
+              <div class="cc-section-label">KPI Metrics</div>
+              <div id="cc-metrics-list"></div>
+              <button class="cc-add-row-btn" onclick="ccAddMetricRow()">+ Add metric</button>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Creative Sheet</div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Sheet ID</label>
+                <input type="text" id="cc-creative-sheet-id" placeholder="1FXsgrX…" autocomplete="off" />
+              </div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Tab Name</label>
+                <input type="text" id="cc-creative-tab-name" placeholder="Creative Data" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Partnerships Sheet</div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Sheet ID</label>
+                <input type="text" id="cc-partners-sheet-id" placeholder="1CCj-67…" autocomplete="off" />
+              </div>
+              <div class="field" style="margin-bottom:10px;">
+                <label>Tab Name</label>
+                <input type="text" id="cc-partners-tab-name" placeholder="Pitch Tracker" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="form-section" style="border-bottom:none; padding-bottom:0;">
+              <div class="form-section-label">Performance Charts</div>
+              <div id="cc-charts-list"></div>
+              <button class="cc-add-row-btn" onclick="ccAddChartRow()">+ Add chart</button>
+            </div>
+
+            <div class="cc-actions">
+              <button class="cc-save-btn" onclick="ccSaveClient()">Save Client</button>
+              <button class="cc-delete-btn" id="cc-delete-btn" onclick="ccDeleteClient()" style="display:none;">Delete</button>
+            </div>
+            <div id="cc-status" class="db-sheet-status" style="margin-top:10px;"></div>
+
+          </div><!-- /cc-main-form -->
+        </div><!-- /cc-layout -->
+      </div><!-- /form-body -->
+    </div><!-- /card -->
+
+  </div><!-- /view-config -->
+
+  <div class="cc-toast" id="cc-toast"></div>
 
   </main>
 
@@ -4471,6 +4790,9 @@ Write the weekly recap email body.`;
       document.getElementById('view-contract').style.display = (hash === 'contract') ? 'block' : 'none';
       document.getElementById('view-recap').style.display    = (hash === 'recap') ? 'block' : 'none';
       document.getElementById('view-deck').style.display     = (hash === 'deck') ? 'block' : 'none';
+      document.getElementById('view-config').style.display   = (hash === 'config') ? 'block' : 'none';
+      if (hash === 'deck')   dbLoadClientConfig();
+      if (hash === 'config') ccLoadConfig();
     }
 
     window.addEventListener('hashchange', handleRoute);
@@ -4610,6 +4932,52 @@ Write the weekly recap email body.`;
   let dbLastPptxB64 = null;
   let dbLastPptxFilename = null;
   let dbCreativeData = { video: [], image: [] };
+  let dbClientConfig  = null;
+  let dbClientsList   = [];
+  let dbClientsLoaded = false;
+
+  async function dbLoadClientConfig() {
+    if (dbClientsLoaded) return;
+    try {
+      const resp = await fetch('/api/client-config');
+      const data = await resp.json();
+      dbClientsList   = data.clients || [];
+      dbClientsLoaded = true;
+      const sel = document.getElementById('db-client-select');
+      sel.innerHTML = dbClientsList.map((c, i) =>
+        `<option value="${i}">${c.name}</option>`
+      ).join('');
+      if (dbClientsList.length > 0) {
+        dbClientConfig = dbClientsList[0];
+        dbUpdateKpiLabels();
+      }
+    } catch (e) {
+      console.warn('[dbLoadClientConfig] failed', e);
+      const sel = document.getElementById('db-client-select');
+      sel.innerHTML = '<option value="">SoWell (default)</option>';
+    }
+  }
+
+  function dbOnClientChange() {
+    const sel = document.getElementById('db-client-select');
+    const idx = parseInt(sel.value);
+    if (!isNaN(idx) && dbClientsList[idx]) {
+      dbClientConfig = dbClientsList[idx];
+    } else {
+      dbClientConfig = null;
+    }
+    dbUpdateKpiLabels();
+  }
+
+  function dbUpdateKpiLabels() {
+    const metrics = dbClientConfig?.kpi?.metrics;
+    if (!metrics || metrics.length < 4) return;
+    const keys = ['sales', 'roas', 'spend', 'metaroas'];
+    keys.forEach((k, i) => {
+      const el = document.getElementById(`db-kpi-label-${k}`);
+      if (el && metrics[i]) el.textContent = metrics[i].label;
+    });
+  }
 
   function dbGetWeekRange() {
     const s = document.getElementById('db-sheet-week').value;
@@ -4761,7 +5129,7 @@ Write the weekly recap email body.`;
 
     const systemPrompt = `You are an expert paid media strategist at a top influencer marketing agency. You write sharp, data-driven weekly performance narratives for client decks. Be concise, confident, and specific. Use numbers. No fluff.`;
 
-    const userPrompt = `Generate two pieces of copy for the SoWell weekly deck for the week of ${weekRange}:
+    const userPrompt = `Generate two pieces of copy for the ${dbClientConfig?.name || 'SoWell'} weekly deck for the week of ${weekRange}:
 
 1. CONTEXT BLURB (2-3 sentences max): A brief executive summary that explains the week's performance in plain English. Reference the KPIs directly.${contextNotes ? ` Additional context from the team: ${contextNotes}` : ''}
 
@@ -4843,6 +5211,7 @@ META PERFORMANCE:
         return dbCreativeData.image.length ? mapC(dbCreativeData.image) : imageCreators;
       })(),
       partnerships: dbPartnershipData,
+      clientConfig: dbClientConfig,
     };
 
     fetch('/api/generate-pptx', {
@@ -4991,30 +5360,51 @@ ${fPart('in talks')}`;
       const resp = await fetch('/api/sheets-proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ weekStart }),
+        body: JSON.stringify({ weekStart, clientConfig: dbClientConfig }),
       });
       const data = await resp.json();
 
-      const hasData = data.shopifyNewCustomerSales != null && data.metaSpend != null &&
-                      data.metaROAS != null && data.blendedROAS != null;
-      if (!hasData) throw new Error(data.error || 'Incomplete data returned');
-
-      document.getElementById('db-kpi-sales-val').value    = data.shopifyNewCustomerSales;
-      document.getElementById('db-kpi-spend-val').value    = data.metaSpend;
-      document.getElementById('db-kpi-metaroas-val').value = data.metaROAS;
-      document.getElementById('db-kpi-roas-val').value     = data.blendedROAS;
-
-      const wowMap = {
-        sales:    data.shopifyNewCustomerSalesWoW,
-        roas:     data.blendedROASWoW,
-        spend:    data.metaSpendWoW,
-        metaroas: data.metaROASWoW,
-      };
-      Object.entries(wowMap).forEach(([k, wow]) => {
-        const { sign, mag } = dbParseWoW(wow);
-        document.getElementById(`db-kpi-${k}-wow`).value = mag;
-        dbSetKpiDir(document.getElementById(`db-kpi-${k}-dir`), sign);
-      });
+      if (dbClientConfig?.kpi?.metrics) {
+        // Dynamic path: response keys match metric keys from config
+        const metrics = dbClientConfig.kpi.metrics;
+        const keys = ['sales', 'roas', 'spend', 'metaroas'];
+        let anyMissing = false;
+        keys.forEach((k, i) => {
+          const mKey = metrics[i]?.key || k;
+          if (data[mKey] == null) anyMissing = true;
+        });
+        if (anyMissing) throw new Error(data.error || 'Incomplete data returned');
+        keys.forEach((k, i) => {
+          const mKey = metrics[i]?.key || k;
+          document.getElementById(`db-kpi-${k}-val`).value = data[mKey] ?? '';
+          const wowVal = data[mKey + 'WoW'];
+          if (wowVal) {
+            const { sign, mag } = dbParseWoW(wowVal);
+            document.getElementById(`db-kpi-${k}-wow`).value = mag;
+            dbSetKpiDir(document.getElementById(`db-kpi-${k}-dir`), sign);
+          }
+        });
+      } else {
+        // Legacy SoWell path
+        const hasData = data.shopifyNewCustomerSales != null && data.metaSpend != null &&
+                        data.metaROAS != null && data.blendedROAS != null;
+        if (!hasData) throw new Error(data.error || 'Incomplete data returned');
+        document.getElementById('db-kpi-sales-val').value    = data.shopifyNewCustomerSales;
+        document.getElementById('db-kpi-spend-val').value    = data.metaSpend;
+        document.getElementById('db-kpi-metaroas-val').value = data.metaROAS;
+        document.getElementById('db-kpi-roas-val').value     = data.blendedROAS;
+        const wowMap = {
+          sales:    data.shopifyNewCustomerSalesWoW,
+          roas:     data.blendedROASWoW,
+          spend:    data.metaSpendWoW,
+          metaroas: data.metaROASWoW,
+        };
+        Object.entries(wowMap).forEach(([k, wow]) => {
+          const { sign, mag } = dbParseWoW(wow);
+          document.getElementById(`db-kpi-${k}-wow`).value = mag;
+          dbSetKpiDir(document.getElementById(`db-kpi-${k}-dir`), sign);
+        });
+      }
 
       const endDate = new Date(d);
       endDate.setDate(endDate.getDate() + 6);
@@ -5056,7 +5446,7 @@ ${fPart('in talks')}`;
       const resp = await fetch('/api/sheets-proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'creative' }),
+        body: JSON.stringify({ type: 'creative', clientConfig: dbClientConfig }),
       });
       const data = await resp.json();
 
@@ -5116,7 +5506,7 @@ ${fPart('in talks')}`;
       const resp = await fetch('/api/sheets-proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'partnerships' }),
+        body: JSON.stringify({ type: 'partnerships', clientConfig: dbClientConfig }),
       });
       const data = await resp.json();
       if (!resp.ok || data.error) throw new Error(data.error || 'Unknown error');
@@ -5180,6 +5570,227 @@ ${fPart('in talks')}`;
     dbRenderCreatorCards('db-image-cards', 'image');
     document.getElementById('db-sheet-week').value = dbLastMonday();
   })();
+  </script>
+
+  <script>
+  // ── CLIENT CONFIG MODULE ──────────────────────────────────────────────
+
+  let ccClients     = [];
+  let ccActiveIndex = -1;
+
+  async function ccLoadConfig() {
+    const loadingEl = document.getElementById('cc-loading');
+    loadingEl.className = 'db-sheet-status';
+    loadingEl.textContent = 'Loading…';
+    try {
+      const resp = await fetch('/api/client-config');
+      const data = await resp.json();
+      ccClients = data.clients || [];
+      ccRenderClientList();
+      loadingEl.textContent = '';
+      if (ccClients.length > 0) {
+        ccLoadClient(0);
+      } else {
+        document.getElementById('cc-main-form').style.display = 'none';
+      }
+    } catch (e) {
+      loadingEl.className = 'db-sheet-status error';
+      loadingEl.textContent = 'Failed to load config: ' + e.message;
+    }
+  }
+
+  function ccRenderClientList() {
+    const list = document.getElementById('cc-client-list');
+    list.innerHTML = ccClients.map((c, i) =>
+      `<button class="cc-client-pill${i === ccActiveIndex ? ' active' : ''}" onclick="ccLoadClient(${i})">${c.name}</button>`
+    ).join('');
+  }
+
+  function ccLoadClient(idx) {
+    ccActiveIndex = idx;
+    const c = ccClients[idx];
+    if (!c) return;
+    ccRenderClientList();
+
+    document.getElementById('cc-name').value             = c.name || '';
+    document.getElementById('cc-cover-color').value      = c.coverColor || '';
+    document.getElementById('cc-kpi-sheet-id').value     = c.kpi?.sheetId || '';
+    document.getElementById('cc-kpi-tab-name').value     = c.kpi?.tabName || '';
+    document.getElementById('cc-creative-sheet-id').value  = c.creative?.sheetId || '';
+    document.getElementById('cc-creative-tab-name').value  = c.creative?.tabName || '';
+    document.getElementById('cc-partners-sheet-id').value  = c.partnerships?.sheetId || '';
+    document.getElementById('cc-partners-tab-name').value  = c.partnerships?.tabName || '';
+
+    // Metrics
+    const metricsList = document.getElementById('cc-metrics-list');
+    metricsList.innerHTML = '';
+    (c.kpi?.metrics || []).forEach(m => ccAddMetricRow(m));
+
+    // Charts
+    const chartsList = document.getElementById('cc-charts-list');
+    chartsList.innerHTML = '';
+    (c.charts || []).forEach(ch => ccAddChartRow(ch));
+
+    document.getElementById('cc-delete-btn').style.display = 'inline-block';
+    document.getElementById('cc-main-form').style.display  = 'block';
+    document.getElementById('cc-status').textContent = '';
+  }
+
+  function ccNewClient() {
+    ccActiveIndex = -1;
+    ccRenderClientList();
+
+    document.getElementById('cc-name').value             = '';
+    document.getElementById('cc-cover-color').value      = '';
+    document.getElementById('cc-kpi-sheet-id').value     = '';
+    document.getElementById('cc-kpi-tab-name').value     = '';
+    document.getElementById('cc-creative-sheet-id').value  = '';
+    document.getElementById('cc-creative-tab-name').value  = '';
+    document.getElementById('cc-partners-sheet-id').value  = '';
+    document.getElementById('cc-partners-tab-name').value  = '';
+    document.getElementById('cc-metrics-list').innerHTML = '';
+    document.getElementById('cc-charts-list').innerHTML  = '';
+    document.getElementById('cc-delete-btn').style.display = 'none';
+    document.getElementById('cc-main-form').style.display  = 'block';
+    document.getElementById('cc-status').textContent = '';
+  }
+
+  function ccAddMetricRow(m = {}) {
+    const list = document.getElementById('cc-metrics-list');
+    const row  = document.createElement('div');
+    row.className = 'cc-metric-row';
+    row.innerHTML = `
+      <input type="text"   class="cc-m-label"  placeholder="Label"   value="${m.label  || ''}" style="flex:2;" />
+      <input type="text"   class="cc-m-key"    placeholder="key"     value="${m.key    || ''}" style="flex:1;" />
+      <input type="text"   class="cc-m-col"    placeholder="Col"     value="${m.col    || ''}" style="flex:0.6;" />
+      <input type="text"   class="cc-m-format" placeholder="fmt"     value="${m.format || ''}" style="flex:0.6;" />
+      <button class="cc-row-remove" onclick="this.parentElement.remove()">×</button>`;
+    list.appendChild(row);
+  }
+
+  function ccAddChartRow(ch = {}) {
+    const list = document.getElementById('cc-charts-list');
+    const row  = document.createElement('div');
+    row.className = 'cc-chart-row';
+    row.innerHTML = `
+      <input type="text" class="cc-ch-label" placeholder="Label" value="${ch.label || ''}" style="flex:1.2;" />
+      <input type="text" class="cc-ch-url"   placeholder="Chart URL" value="${ch.url || ''}" style="flex:3;" />
+      <button class="cc-row-remove" onclick="this.parentElement.remove()">×</button>`;
+    list.appendChild(row);
+  }
+
+  function ccGetFormData() {
+    const metrics = Array.from(document.querySelectorAll('#cc-metrics-list .cc-metric-row')).map(row => ({
+      label:  row.querySelector('.cc-m-label').value.trim(),
+      key:    row.querySelector('.cc-m-key').value.trim(),
+      col:    row.querySelector('.cc-m-col').value.trim(),
+      format: row.querySelector('.cc-m-format').value.trim(),
+    })).filter(m => m.label && m.key);
+
+    const charts = Array.from(document.querySelectorAll('#cc-charts-list .cc-chart-row')).map(row => ({
+      label: row.querySelector('.cc-ch-label').value.trim(),
+      url:   row.querySelector('.cc-ch-url').value.trim(),
+    })).filter(ch => ch.url);
+
+    return {
+      id:           document.getElementById('cc-name').value.trim().toLowerCase().replace(/\s+/g, '-'),
+      name:         document.getElementById('cc-name').value.trim(),
+      coverColor:   document.getElementById('cc-cover-color').value.trim().replace('#', ''),
+      kpi: {
+        sheetId:  document.getElementById('cc-kpi-sheet-id').value.trim(),
+        tabName:  document.getElementById('cc-kpi-tab-name').value.trim(),
+        metrics,
+      },
+      creative: {
+        sheetId: document.getElementById('cc-creative-sheet-id').value.trim(),
+        tabName: document.getElementById('cc-creative-tab-name').value.trim(),
+      },
+      partnerships: {
+        sheetId: document.getElementById('cc-partners-sheet-id').value.trim(),
+        tabName: document.getElementById('cc-partners-tab-name').value.trim(),
+      },
+      charts,
+    };
+  }
+
+  async function ccSaveClient() {
+    const statusEl = document.getElementById('cc-status');
+    const clientData = ccGetFormData();
+    if (!clientData.name) { statusEl.className = 'db-sheet-status error'; statusEl.textContent = 'Client name is required.'; return; }
+
+    statusEl.className = 'db-sheet-status';
+    statusEl.textContent = 'Saving…';
+
+    const updated = [...ccClients];
+    if (ccActiveIndex >= 0) {
+      updated[ccActiveIndex] = clientData;
+    } else {
+      updated.push(clientData);
+      ccActiveIndex = updated.length - 1;
+    }
+
+    try {
+      const resp = await fetch('/api/client-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save', clients: updated }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error || 'Save failed');
+
+      ccClients = updated;
+      dbClientsList   = ccClients;
+      dbClientsLoaded = false; // force reload next time deck opens
+      ccRenderClientList();
+      document.getElementById('cc-delete-btn').style.display = 'inline-block';
+      statusEl.className = 'db-sheet-status success';
+      statusEl.textContent = '✓ Saved';
+      ccShowToast('Client saved ✓');
+    } catch (e) {
+      statusEl.className = 'db-sheet-status error';
+      statusEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  async function ccDeleteClient() {
+    if (ccActiveIndex < 0) return;
+    const c = ccClients[ccActiveIndex];
+    if (!confirm(`Delete "${c.name}"? This cannot be undone.`)) return;
+
+    const statusEl = document.getElementById('cc-status');
+    statusEl.className = 'db-sheet-status';
+    statusEl.textContent = 'Deleting…';
+
+    const updated = ccClients.filter((_, i) => i !== ccActiveIndex);
+    try {
+      const resp = await fetch('/api/client-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save', clients: updated }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error || 'Delete failed');
+
+      ccClients = updated;
+      dbClientsList   = ccClients;
+      dbClientsLoaded = false;
+      ccActiveIndex   = -1;
+      ccRenderClientList();
+      document.getElementById('cc-main-form').style.display = 'none';
+      statusEl.textContent = '';
+      ccShowToast('Client deleted');
+    } catch (e) {
+      statusEl.className = 'db-sheet-status error';
+      statusEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  function ccShowToast(msg) {
+    const t = document.getElementById('cc-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
   </script>
 </body>
 </html>

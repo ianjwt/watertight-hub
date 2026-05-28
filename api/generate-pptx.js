@@ -23,16 +23,16 @@ function slideTitle(slide, title, y = 0.25) {
 }
 
 // ── Slide 1 — Cover ───────────────────────────────────────────────────────────
-function addSlide1(pres, weekRange) {
+function addSlide1(pres, weekRange, clientName, coverColor) {
   const slide = pres.addSlide();
-  slide.background = { color: GREEN };
+  slide.background = { color: coverColor };
 
   slide.addShape(pres.ShapeType.rect, {
     x: 0, y: 0, w: 0.08, h: 5.625,
     fill: { color: DARK_GREEN }, line: { width: 0, color: DARK_GREEN },
   });
 
-  slide.addText('SoWell', {
+  slide.addText(clientName, {
     x: 0.5, y: 1.6, w: 9, h: 0.9,
     fontSize: 52, bold: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
   });
@@ -54,7 +54,15 @@ function addSlide1(pres, weekRange) {
 }
 
 // ── Slide 2 — Weekly Summary ──────────────────────────────────────────────────
-function addSlide2(pres, kpis, contextBlurb) {
+function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
+  const defaultMetrics = [
+    { label: 'Shopify Sales', key: 'sales'    },
+    { label: 'Blended ROAS',  key: 'roas'     },
+    { label: 'Meta Spend',    key: 'spend'    },
+    { label: 'Meta ROAS',     key: 'metaroas' },
+  ];
+  const metrics = (kpiMetrics && kpiMetrics.length >= 4) ? kpiMetrics : defaultMetrics;
+
   const slide = pres.addSlide();
   slide.background = { color: BG };
   slideTitle(slide, 'Weekly Summary');
@@ -63,9 +71,9 @@ function addSlide2(pres, kpis, contextBlurb) {
   const tileW = 2.9;
   const tileH = 1.5;
   const tiles = [
-    { x: 0.35, fill: GREEN,  label: 'Shopify Sales', kpi: kpis.sales    || {} },
-    { x: 3.55, fill: ORANGE, label: 'Blended ROAS',  kpi: kpis.roas     || {} },
-    { x: 6.75, fill: SAGE,   label: 'Meta Spend',    kpi: kpis.spend    || {} },
+    { x: 0.35, fill: GREEN,  label: metrics[0].label, kpi: kpis[metrics[0].key] || {} },
+    { x: 3.55, fill: ORANGE, label: metrics[1].label, kpi: kpis[metrics[1].key] || {} },
+    { x: 6.75, fill: SAGE,   label: metrics[2].label, kpi: kpis[metrics[2].key] || {} },
   ];
 
   tiles.forEach(({ x, fill, label, kpi }) => {
@@ -88,14 +96,14 @@ function addSlide2(pres, kpis, contextBlurb) {
     });
   });
 
-  // Meta ROAS smaller tile
-  const mr = kpis.metaroas || {};
+  // 4th metric smaller tile
+  const mr = kpis[metrics[3].key] || {};
   slide.addShape(pres.ShapeType.roundRect, {
     x: 0.35, y: 2.6, w: 2.0, h: 0.65,
     rectRadius: 0.08,
     fill: makeCardFill(), shadow: makeShadow(), line: { width: 0, color: 'FFFFFF' },
   });
-  slide.addText('Meta ROAS', {
+  slide.addText(metrics[3].label, {
     x: 0.5, y: 2.65, w: 1.2, h: 0.25,
     fontSize: 9, bold: true, color: GREEN, fontFace: 'Calibri',
   });
@@ -115,14 +123,22 @@ function addSlide2(pres, kpis, contextBlurb) {
 }
 
 // ── Slide 3 — Performance Charts ─────────────────────────────────────────────
-function addSlide3(pres) {
+function addSlide3(pres, charts) {
+  if (!charts || charts.length === 0) return;
   const slide = pres.addSlide();
   slide.background = { color: BG };
   slideTitle(slide, 'Performance Trends');
 
-  slide.addImage({ x: 0.3, y: 1.0, w: 4.5, h: 2.7, path: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1654932759&format=image' });
-  slide.addImage({ x: 5.2, y: 1.0, w: 4.5, h: 2.7, path: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1601459520&format=image' });
-  slide.addImage({ x: 2.5, y: 3.9, w: 5.0, h: 1.5, path: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1946349077&format=image' });
+  if (charts.length === 1) {
+    slide.addImage({ x: 2.25, y: 1.0, w: 5.5, h: 3.5, path: charts[0].url });
+  } else if (charts.length === 2) {
+    slide.addImage({ x: 0.3, y: 1.0, w: 4.5, h: 2.7, path: charts[0].url });
+    slide.addImage({ x: 5.2, y: 1.0, w: 4.5, h: 2.7, path: charts[1].url });
+  } else {
+    slide.addImage({ x: 0.3, y: 1.0, w: 4.5, h: 2.7, path: charts[0].url });
+    slide.addImage({ x: 5.2, y: 1.0, w: 4.5, h: 2.7, path: charts[1].url });
+    slide.addImage({ x: 2.5, y: 3.9, w: 5.0, h: 1.5, path: charts[2].url });
+  }
 }
 
 // ── Slide 4 — Meta Performance ────────────────────────────────────────────────
@@ -325,14 +341,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image, partnerships } = req.body || {};
+    const { weekRange, kpis = {}, contextBlurb, metaBullets, video, image, partnerships, clientConfig } = req.body || {};
+
+    const clientName = clientConfig?.name       || 'SoWell';
+    const coverColor = clientConfig?.coverColor || GREEN;
+    const charts     = clientConfig?.charts     || [
+      { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1654932759&format=image' },
+      { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1601459520&format=image' },
+      { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ovkdAY2Ik5UMvvSHoRZ5thD3lvRxOo1sHuJ-KKcv32f4Ul0XyZ-oAJav_pZbSLdtS8l8GrjMcO9b/pubchart?oid=1946349077&format=image' },
+    ];
+    const kpiMetrics = clientConfig?.kpi?.metrics || null;
 
     const pres = new PptxGenJS();
     pres.layout = 'LAYOUT_16x9';
 
-    addSlide1(pres, weekRange || '');
-    addSlide2(pres, kpis, contextBlurb || '');
-    addSlide3(pres);
+    addSlide1(pres, weekRange || '', clientName, coverColor);
+    addSlide2(pres, kpis, contextBlurb || '', kpiMetrics);
+    addSlide3(pres, charts);
     addSlide4(pres, metaBullets || '');
     addCreativeSlide(pres, 'Creative Performance — Video',  video  || []);
     addCreativeSlide(pres, 'Creative Performance — Images', image  || []);
@@ -340,7 +365,9 @@ export default async function handler(req, res) {
     addSlide8(pres);
 
     const base64 = await pres.write({ outputType: 'base64' });
-    const safeName = 'SoWell_Weekly_' + (weekRange || '').replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_') + '.pptx';
+    const safeClient = clientName.replace(/\s+/g, '_');
+    const safeDate   = (weekRange || '').replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+    const safeName   = `${safeClient}_Weekly_${safeDate}.pptx`;
 
     return res.status(200).json({ pptx: base64, filename: safeName });
   } catch (err) {
