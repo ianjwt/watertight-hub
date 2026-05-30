@@ -22,6 +22,15 @@ function slideTitle(slide, title, y = 0.25) {
   slide.addText(title, { x: 0.5, y, w: 9, h: 0.5, fontSize: 28, bold: true, color: GREEN, fontFace: 'Calibri' });
 }
 
+function fmtTileVal(val, fmt) {
+  if (!val && val !== 0) return '—';
+  const n = parseFloat(String(val).replace(/[$,x]/g, ''));
+  if (isNaN(n)) return String(val);
+  if (fmt === '$') return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (fmt === 'x') return n.toFixed(2);
+  return String(val);
+}
+
 // ── Slide 1 — Cover ───────────────────────────────────────────────────────────
 function addSlide1(pres, weekRange, clientName, coverColor) {
   const slide = pres.addSlide();
@@ -37,10 +46,13 @@ function addSlide1(pres, weekRange, clientName, coverColor) {
     fill: { color: GREEN }, line: { width: 0, color: GREEN },
   });
 
-  slide.addImage({
-    path: 'https://drive.google.com/uc?export=download&id=1o_2ce41bXO2VDok2bH_uZKnfQBxgnd89',
-    x: 0.2, y: 4.55, w: 1.4, h: 0.35,
-    sizing: { type: 'contain', w: 1.4, h: 0.35 },
+  slide.addShape(pres.ShapeType.ellipse, {
+    x: 0.2, y: 4.62, w: 0.28, h: 0.28,
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+  slide.addText('watertight', {
+    x: 0.54, y: 4.63, w: 1.4, h: 0.26,
+    fontSize: 13, bold: true, color: GREEN, fontFace: 'Calibri', valign: 'middle',
   });
 
   slide.addText(clientName, {
@@ -79,18 +91,18 @@ function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
   const tileH = 1.5;
   // Tiles are positioned by array order; kpis object keys match metric.key values
   const tiles = [
-    { x: 0.35, fill: GREEN,  label: metrics[0].label, kpi: kpis[metrics[0].key] || {} },
-    { x: 3.55, fill: ORANGE, label: metrics[1].label, kpi: kpis[metrics[1].key] || {} },
-    { x: 6.75, fill: SAGE,   label: metrics[2].label, kpi: kpis[metrics[2].key] || {} },
+    { x: 0.35, fill: GREEN,  label: metrics[0].label, kpi: kpis[metrics[0].key] || {}, format: metrics[0].format },
+    { x: 3.55, fill: ORANGE, label: metrics[1].label, kpi: kpis[metrics[1].key] || {}, format: metrics[1].format },
+    { x: 6.75, fill: SAGE,   label: metrics[2].label, kpi: kpis[metrics[2].key] || {}, format: metrics[2].format },
   ];
 
-  tiles.forEach(({ x, fill, label, kpi }) => {
+  tiles.forEach(({ x, fill, label, kpi, format }) => {
     slide.addShape(pres.ShapeType.roundRect, {
       x, y: tileY, w: tileW, h: tileH,
       rectRadius: 0.12,
       fill: { color: fill }, line: { width: 0, color: fill },
     });
-    slide.addText(kpi.val || '—', {
+    slide.addText(fmtTileVal(kpi.val, format), {
       x, y: tileY + 0.1, w: tileW, h: 0.7,
       fontSize: 30, bold: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
     });
@@ -116,9 +128,9 @@ function addSlide2(pres, kpis, contextBlurb, kpiMetrics) {
       x: 0.5, y: 2.65, w: 1.2, h: 0.25,
       fontSize: 9, bold: true, color: GREEN, fontFace: 'Calibri',
     });
-    slide.addText(mr.val || '—', {
-      x: 1.7, y: 2.63, w: 0.5, h: 0.3,
-      fontSize: 14, bold: true, color: GREEN, fontFace: 'Calibri',
+    slide.addText(fmtTileVal(mr.val, metrics[3].format), {
+      x: 1.7, y: 2.63, w: 1.0, h: 0.3,
+      fontSize: 12, bold: true, color: GREEN, fontFace: 'Calibri', shrinkText: true,
     });
     slide.addText(wowText(mr), {
       x: 0.5, y: 2.9, w: 1.7, h: 0.25,
@@ -141,14 +153,18 @@ function addSlide3(pres, charts) {
 
   if (charts.length === 1) {
     slide.addImage({ x: 2.25, y: 1.0, w: 5.5, h: 3.5, path: charts[0].url });
-  } else if (charts.length === 2) {
-    slide.addImage({ x: 0.3, y: 1.0, w: 4.5, h: 2.7, path: charts[0].url });
-    slide.addImage({ x: 5.2, y: 1.0, w: 4.5, h: 2.7, path: charts[1].url });
   } else {
-    slide.addImage({ x: 0.3, y: 1.0, w: 4.5, h: 2.7, path: charts[0].url });
-    slide.addImage({ x: 5.2, y: 1.0, w: 4.5, h: 2.7, path: charts[1].url });
-    slide.addImage({ x: 2.5, y: 3.9, w: 5.0, h: 1.5, path: charts[2].url });
+    slide.addImage({ x: 0.3, y: 1.0, w: 4.6, h: 3.5, path: charts[0].url });
+    slide.addImage({ x: 5.1, y: 1.0, w: 4.6, h: 3.5, path: charts[1].url });
   }
+}
+
+function addSlide3b(pres, charts) {
+  if (!charts || !charts[2]) return;
+  const slide = pres.addSlide();
+  slide.background = { color: BG };
+  slideTitle(slide, 'Performance Trends');
+  slide.addImage({ x: 1.0, y: 1.0, w: 8.0, h: 4.2, path: charts[2].url });
 }
 
 // ── Slide 4 — Meta Performance ────────────────────────────────────────────────
@@ -159,31 +175,30 @@ function addSlide4(pres, metaBullets) {
 
   const lines = (metaBullets || '')
     .split('\n')
-    .map(l => l.replace(/^[•\-]\s*/, '').replace(/\*\*/g, '').trim())
+    .map(l => l.replace(/\*\*/g, '').replace(/^[•\-]\s*/, '').trim())
     .filter(Boolean);
 
-  const runs = [];
-  lines.forEach(line => {
-    const sep = line.indexOf(' — '); // em-dash with spaces
-    if (sep !== -1) {
-      runs.push({ text: line.slice(0, sep),        options: { bold: true,  breakLine: false } });
-      runs.push({ text: ' — ' + line.slice(sep + 3), options: { bold: false, breakLine: true  } });
-    } else {
-      runs.push({ text: line, options: { bold: true, breakLine: true } });
-    }
-  });
+  const lineHeight = 0.72;
+  const startY = 1.1;
 
-  if (runs.length > 0) {
-    slide.addText(runs, {
-      x: 0.5, y: 1.1, w: 9.0, h: 3.8,
-      fontSize: 13, color: '333333', fontFace: 'Calibri',
-      bullet: true, paraSpaceAfter: 10,
-    });
-  }
+  lines.forEach((line, i) => {
+    const dashIdx = line.indexOf(' — ');
+    const boldPart = dashIdx >= 0 ? line.substring(0, dashIdx) : line;
+    const restPart = dashIdx >= 0 ? line.substring(dashIdx) : '';
+    const y = startY + (i * lineHeight);
+
+    const runs = [
+      { text: '• ' + boldPart, options: { bold: true, color: '333333', fontSize: 13, fontFace: 'Calibri' } },
+    ];
+    if (restPart) {
+      runs.push({ text: restPart, options: { bold: false, color: '333333', fontSize: 13, fontFace: 'Calibri' } });
+    }
+    slide.addText(runs, { x: 0.5, y, w: 9.0, h: lineHeight, fontFace: 'Calibri', wrap: true });
+  });
 
   slide.addShape(pres.ShapeType.rect, {
     x: 0, y: 5.2, w: 10, h: 0.425,
-    fill: { color: DARK_GREEN }, line: { width: 0, color: DARK_GREEN },
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
   });
 }
 
@@ -381,10 +396,13 @@ function addSlide8(pres) {
     fill: { color: GREEN }, line: { width: 0, color: GREEN },
   });
 
-  slide.addImage({
-    path: 'https://drive.google.com/uc?export=download&id=1o_2ce41bXO2VDok2bH_uZKnfQBxgnd89',
-    x: 4.1, y: 4.55, w: 1.8, h: 0.35,
-    sizing: { type: 'contain', w: 1.8, h: 0.35 },
+  slide.addShape(pres.ShapeType.ellipse, {
+    x: 4.55, y: 4.62, w: 0.28, h: 0.28,
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+  slide.addText('watertight', {
+    x: 4.89, y: 4.63, w: 1.4, h: 0.26,
+    fontSize: 13, bold: true, color: GREEN, fontFace: 'Calibri', valign: 'middle',
   });
 
   slide.addText('Questions?', {
@@ -422,6 +440,7 @@ export default async function handler(req, res) {
     addSlide1(pres, weekRange || '', clientName, coverColor);
     addSlide2(pres, kpis, contextBlurb || '', kpiMetrics);
     addSlide3(pres, charts);
+    addSlide3b(pres, charts);
     addSlide4(pres, metaBullets || '');
     const hasVideo = (video || []).some(c => c.name && c.name.trim() !== '');
     const hasImage = (image || []).some(c => c.name && c.name.trim() !== '');
