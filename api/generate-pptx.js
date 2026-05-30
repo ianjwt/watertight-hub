@@ -25,31 +25,37 @@ function slideTitle(slide, title, y = 0.25) {
 // ── Slide 1 — Cover ───────────────────────────────────────────────────────────
 function addSlide1(pres, weekRange, clientName, coverColor) {
   const slide = pres.addSlide();
-  slide.background = { color: coverColor };
+  slide.background = { color: 'FFFFFF' };
 
   slide.addShape(pres.ShapeType.rect, {
     x: 0, y: 0, w: 0.08, h: 5.625,
-    fill: { color: DARK_GREEN }, line: { width: 0, color: DARK_GREEN },
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+
+  slide.addShape(pres.ShapeType.rect, {
+    x: 0, y: 4.95, w: 10, h: 0.675,
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+
+  slide.addImage({
+    path: 'https://drive.google.com/uc?export=download&id=1o_2ce41bXO2VDok2bH_uZKnfQBxgnd89',
+    x: 0.2, y: 4.55, w: 1.4, h: 0.35,
+    sizing: { type: 'contain', w: 1.4, h: 0.35 },
   });
 
   slide.addText(clientName, {
-    x: 0.5, y: 1.6, w: 9, h: 0.9,
-    fontSize: 52, bold: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
+    x: 0.5, y: 1.5, w: 9, h: 1.0,
+    fontSize: 52, bold: true, color: GREEN, align: 'center', fontFace: 'Calibri',
   });
 
   slide.addText('Weekly Paid Media Performance', {
     x: 0.5, y: 2.65, w: 9, h: 0.5,
-    fontSize: 18, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
+    fontSize: 18, color: '444444', align: 'center', fontFace: 'Calibri',
   });
 
   slide.addText(weekRange || '', {
     x: 0.5, y: 3.2, w: 9, h: 0.4,
-    fontSize: 14, italic: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
-  });
-
-  slide.addText('Watertight', {
-    x: 7.5, y: 5.1, w: 2, h: 0.3,
-    fontSize: 11, color: 'FFFFFF', fontFace: 'Calibri',
+    fontSize: 14, italic: true, color: '888888', align: 'center', fontFace: 'Calibri',
   });
 }
 
@@ -363,21 +369,32 @@ function addSlide7(pres, partnerships) {
 // ── Slide 8 — Questions ───────────────────────────────────────────────────────
 function addSlide8(pres) {
   const slide = pres.addSlide();
-  slide.background = { color: GREEN };
+  slide.background = { color: 'FFFFFF' };
 
   slide.addShape(pres.ShapeType.rect, {
     x: 0, y: 0, w: 0.08, h: 5.625,
-    fill: { color: DARK_GREEN }, line: { width: 0, color: DARK_GREEN },
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+
+  slide.addShape(pres.ShapeType.rect, {
+    x: 0, y: 4.95, w: 10, h: 0.675,
+    fill: { color: GREEN }, line: { width: 0, color: GREEN },
+  });
+
+  slide.addImage({
+    path: 'https://drive.google.com/uc?export=download&id=1o_2ce41bXO2VDok2bH_uZKnfQBxgnd89',
+    x: 4.1, y: 4.55, w: 1.8, h: 0.35,
+    sizing: { type: 'contain', w: 1.8, h: 0.35 },
   });
 
   slide.addText('Questions?', {
     x: 0.5, y: 1.8, w: 9, h: 1.0,
-    fontSize: 48, bold: true, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
+    fontSize: 48, bold: true, color: GREEN, align: 'center', fontFace: 'Calibri',
   });
 
-  slide.addText('Watertight', {
+  slide.addText('Prepared by Watertight', {
     x: 0.5, y: 3.1, w: 9, h: 0.4,
-    fontSize: 14, color: 'FFFFFF', align: 'center', fontFace: 'Calibri',
+    fontSize: 14, color: '888888', align: 'center', fontFace: 'Calibri',
   });
 }
 
