@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --wt-green:    #116E53;
@@ -822,6 +823,239 @@
       .row-2, .row-3 { grid-template-columns: 1fr; }
       .result-actions { flex-direction: column; }
       .tool-cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <style id="ca-styles">
+    /* ─── CREATIVE ANALYST ─── */
+    .ca-page { max-width: 960px; }
+
+    /* Upload grid */
+    .ca-upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .ca-file-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .ca-file-zone:hover { border-color: var(--wt-green-2); background: var(--wt-green-4); }
+    .ca-file-zone.dragover { border-color: var(--wt-green); background: var(--wt-green-4); }
+    .ca-file-zone.loaded { border-color: var(--wt-green); border-style: solid; background: #f0faf4; }
+    .ca-file-zone input[type="file"] {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer;
+    }
+    .ca-zone-icon { font-size: 26px; margin-bottom: 8px; line-height: 1; }
+    .ca-zone-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 4px;
+    }
+    .ca-zone-status { font-size: 11px; color: var(--text-light); min-height: 14px; }
+    .ca-zone-status.ok { color: var(--wt-green); font-weight: 600; }
+
+    .ca-run-btn {
+      width: 100%; height: 48px;
+      background: var(--wt-green); color: white;
+      border: none; border-radius: var(--radius-md);
+      font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity 0.15s, transform 0.1s; margin-bottom: 12px;
+    }
+    .ca-run-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .ca-run-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+    .ca-run-btn svg { width: 16px; height: 16px; stroke: white; }
+
+    .ca-reset-link {
+      font-size: 12px; color: var(--text-light); text-align: center;
+      display: block; cursor: pointer; margin-bottom: 32px;
+    }
+    .ca-reset-link:hover { color: var(--wt-green); }
+
+    /* Loading */
+    .ca-loading {
+      display: none; text-align: center; padding: 40px 0; color: var(--wt-green);
+    }
+    .ca-loading.visible { display: block; }
+    .ca-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--wt-green-3); border-top-color: var(--wt-green);
+      border-radius: 50%; animation: ca-spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes ca-spin { to { transform: rotate(360deg); } }
+
+    /* Report */
+    .ca-report { display: none; animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .ca-report.visible { display: block; }
+
+    /* Account header */
+    .ca-account-header {
+      background: var(--wt-green); color: white;
+      border-radius: var(--radius-md); padding: 18px 24px; margin-bottom: 28px;
+    }
+    .ca-account-header-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px;
+    }
+    .ca-stat-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ca-stat-pill {
+      background: rgba(255,255,255,0.12); border-radius: var(--radius-sm);
+      padding: 8px 14px;
+    }
+    .ca-stat-pill-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px;
+    }
+    .ca-stat-pill-val { font-size: 15px; font-weight: 700; color: white; }
+
+    /* Ad set sections */
+    .ca-adset-section { margin-bottom: 32px; }
+    .ca-adset-name {
+      font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--wt-green);
+      border-left: 3px solid var(--wt-green); padding-left: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* Ad cards */
+    .ca-ad-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-md); margin-bottom: 12px;
+      box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .ca-card-header {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--wt-green-4) 0%, white 70%);
+    }
+    .ca-ad-name {
+      font-family: 'Courier New', monospace; font-size: 12px; font-weight: 700;
+      color: var(--text); flex: 1; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ca-tag {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 2px 7px; border-radius: 20px;
+      background: var(--wt-green-3); color: var(--wt-green); flex-shrink: 0;
+    }
+
+    /* Delivery badges */
+    .del-active  { background: #dcfce7; color: #166534; }
+    .del-inactive { background: #fee2e2; color: #991b1b; }
+    .del-badge {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 2px 7px; border-radius: 20px; flex-shrink: 0;
+    }
+
+    /* Flag badges */
+    .flag-badge {
+      font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+      flex-shrink: 0; white-space: nowrap;
+    }
+    .flag-scale    { background: #dcfce7; color: #166534; }
+    .flag-pause    { background: #fee2e2; color: #991b1b; }
+    .flag-lp       { background: #fef9c3; color: #854d0e; }
+    .flag-creative { background: #dbeafe; color: #1e40af; }
+    .flag-atc      { background: #ffedd5; color: #9a3412; }
+    .flag-data     { background: #f1f5f9; color: #475569; }
+
+    /* Metrics table */
+    .ca-metrics-wrap { padding: 12px 16px; }
+    .ca-metrics-table {
+      width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace;
+      font-size: 10.5px; color: var(--text);
+    }
+    .ca-metrics-table th {
+      font-size: 8.5px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-light);
+      padding: 0 6px 6px; text-align: right; border-bottom: 1px solid var(--border);
+    }
+    .ca-metrics-table th:first-child { text-align: left; }
+    .ca-metrics-table td {
+      padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--wt-green-4);
+    }
+    .ca-metrics-table td:first-child { text-align: left; font-weight: 700; color: var(--text-mid); }
+    .ca-metrics-table tr:last-child td { border-bottom: none; }
+
+    /* Metric colour classes */
+    .good { color: #166534; font-weight: 700; }
+    .bad  { color: #991b1b; font-weight: 700; }
+    .warn { color: #854d0e; font-weight: 700; }
+    .dim  { color: var(--text-light); }
+    .na   { color: #cbd5e1; }
+
+    /* Trend classes */
+    .trend-improving { color: #166534; font-weight: 700; }
+    .trend-declining { color: #991b1b; font-weight: 700; }
+    .trend-holding   { color: #854d0e; font-weight: 600; }
+    .trend-na        { color: #cbd5e1; }
+
+    /* Card footer */
+    .ca-ad-footer {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 12px;
+      padding: 12px 16px; background: var(--bg); border-top: 1px solid var(--border);
+    }
+    .ca-footer-label {
+      font-size: 8.5px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 4px;
+    }
+    .ca-trend-val { font-size: 14px; }
+    .ca-reco { font-size: 11.5px; color: var(--text-mid); line-height: 1.6; }
+
+    /* Cross-adset banner */
+    .ca-cross-note {
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      border-radius: var(--radius-sm); padding: 10px 14px;
+      font-size: 11px; color: #1e40af; margin-bottom: 10px; line-height: 1.5;
+    }
+    .ca-cross-note strong { font-weight: 700; }
+
+    /* Summary */
+    .ca-summary-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-light);
+      margin: 32px 0 16px; padding-left: 2px;
+    }
+    .ca-summary-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px;
+    }
+    .ca-summary-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .ca-summary-card-header {
+      padding: 12px 16px; background: linear-gradient(135deg, var(--wt-green-4) 0%, white 70%);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; color: var(--wt-green);
+    }
+    .ca-summary-card-body { padding: 12px 16px; }
+    .ca-summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 0; border-bottom: 1px solid var(--wt-green-4);
+      font-size: 11.5px;
+    }
+    .ca-summary-row:last-child { border-bottom: none; }
+    .ca-summary-ad-name {
+      font-family: 'Courier New', monospace; font-size: 10.5px;
+      color: var(--text); flex: 1; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 8px;
+    }
+    .ca-summary-meta { font-size: 10.5px; color: var(--text-light); flex-shrink: 0; }
+    .ca-summary-empty { font-size: 12px; color: var(--text-light); font-style: italic; padding: 4px 0; }
+
+    @media (max-width: 600px) {
+      .ca-upload-grid { grid-template-columns: 1fr; }
+      .ca-ad-footer { grid-template-columns: 1fr; }
+      .ca-summary-grid { grid-template-columns: 1fr; }
     }
   </style>
 
@@ -2340,6 +2574,21 @@
           </div>
           <div class="tool-card-name">Deck Builder</div>
           <div class="tool-card-desc">Auto-populate your weekly client decks</div>
+        </div>
+
+        <!-- Card 7: Creative Analyst -->
+        <div class="tool-card" onclick="navigateTo('analyst')">
+          <svg class="tool-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <div class="tool-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+              <line x1="2" y1="20" x2="22" y2="20"/>
+            </svg>
+          </div>
+          <div class="tool-card-name">Creative Analyst</div>
+          <div class="tool-card-desc">Upload Meta Ads XLSX exports to get a full creative audit with scale, pause, and refresh recommendations.</div>
         </div>
 
       </div>
@@ -4633,6 +4882,81 @@ function showGDocToast(msg) {
 
   <div class="cc-toast" id="cc-toast"></div>
 
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CREATIVE ANALYST VIEW                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="view-analyst" style="display:none;" class="ca-page">
+
+    <button class="back-link" onclick="navigateTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Vortex
+    </button>
+
+    <div class="section-title">Creative Analyst</div>
+
+    <!-- Upload UI -->
+    <div id="ca-upload-ui">
+      <div class="ca-upload-grid">
+
+        <div class="ca-file-zone" id="ca-zone-7d"
+             ondragover="caOnDragOver(event,'ca-zone-7d')"
+             ondragleave="caOnDragLeave('ca-zone-7d')"
+             ondrop="caOnDrop(event,'7d')">
+          <input type="file" accept=".xlsx,.xls" onchange="caOnFileInput(event,'7d')" id="ca-input-7d">
+          <div class="ca-zone-icon">📊</div>
+          <div class="ca-zone-label">7-Day Window</div>
+          <div class="ca-zone-status" id="ca-status-7d">Drop XLSX or click to upload</div>
+        </div>
+
+        <div class="ca-file-zone" id="ca-zone-14d"
+             ondragover="caOnDragOver(event,'ca-zone-14d')"
+             ondragleave="caOnDragLeave('ca-zone-14d')"
+             ondrop="caOnDrop(event,'14d')">
+          <input type="file" accept=".xlsx,.xls" onchange="caOnFileInput(event,'14d')" id="ca-input-14d">
+          <div class="ca-zone-icon">📊</div>
+          <div class="ca-zone-label">14-Day Window</div>
+          <div class="ca-zone-status" id="ca-status-14d">Drop XLSX or click to upload</div>
+        </div>
+
+        <div class="ca-file-zone" id="ca-zone-30d"
+             ondragover="caOnDragOver(event,'ca-zone-30d')"
+             ondragleave="caOnDragLeave('ca-zone-30d')"
+             ondrop="caOnDrop(event,'30d')">
+          <input type="file" accept=".xlsx,.xls" onchange="caOnFileInput(event,'30d')" id="ca-input-30d">
+          <div class="ca-zone-icon">📊</div>
+          <div class="ca-zone-label">30-Day Window</div>
+          <div class="ca-zone-status" id="ca-status-30d">Drop XLSX or click to upload</div>
+        </div>
+
+      </div>
+
+      <button class="ca-run-btn" id="ca-run-btn" disabled onclick="caRunAnalysis()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Run Analysis
+      </button>
+    </div><!-- /ca-upload-ui -->
+
+    <!-- Loading -->
+    <div class="ca-loading" id="ca-loading">
+      <div class="ca-spinner"></div>
+      <div style="font-size:13px;font-weight:500;color:var(--wt-green);">Analysing creative data…</div>
+    </div>
+
+    <!-- Report -->
+    <div class="ca-report" id="ca-report">
+      <span class="ca-reset-link" onclick="caReset()">↺ Re-upload files</span>
+      <div id="ca-account-header"></div>
+      <div id="ca-adset-sections"></div>
+      <div class="ca-summary-title">Summary</div>
+      <div class="ca-summary-grid" id="ca-summary-grid"></div>
+    </div>
+
+  </div><!-- /view-analyst -->
+
   </main>
 
   <script>
@@ -4791,6 +5115,7 @@ Write the weekly recap email body.`;
       document.getElementById('view-recap').style.display    = (hash === 'recap') ? 'block' : 'none';
       document.getElementById('view-deck').style.display     = (hash === 'deck') ? 'block' : 'none';
       document.getElementById('view-config').style.display   = (hash === 'config') ? 'block' : 'none';
+      document.getElementById('view-analyst').style.display  = (hash === 'analyst') ? 'block' : 'none';
       if (hash === 'deck')   dbLoadClientConfig();
       if (hash === 'config') ccLoadConfig();
     }
@@ -5856,6 +6181,453 @@ ${fPart('in talks')}`;
 
   // Initial route — runs here so all db* and cc* functions above are already defined
   handleRoute();
+  </script>
+
+  <script>
+  // ── CREATIVE ANALYST ──────────────────────────────────────────────────
+
+  const caFiles = { '7d': null, '14d': null, '30d': null };
+
+  // ─ Drag/drop helpers ─
+  function caOnDragOver(e, zoneId) {
+    e.preventDefault();
+    document.getElementById(zoneId).classList.add('dragover');
+  }
+  function caOnDragLeave(zoneId) {
+    document.getElementById(zoneId).classList.remove('dragover');
+  }
+  function caOnDrop(e, window) {
+    e.preventDefault();
+    const zoneId = 'ca-zone-' + window;
+    document.getElementById(zoneId).classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) caLoadFile(file, window);
+  }
+  function caOnFileInput(e, window) {
+    const file = e.target.files[0];
+    if (file) caLoadFile(file, window);
+  }
+
+  function caLoadFile(file, window) {
+    caFiles[window] = file;
+    const statusEl = document.getElementById('ca-status-' + window);
+    const zoneEl   = document.getElementById('ca-zone-'   + window);
+    statusEl.textContent = '✓ ' + file.name;
+    statusEl.className   = 'ca-zone-status ok';
+    zoneEl.classList.add('loaded');
+    caCheckAllLoaded();
+  }
+
+  function caCheckAllLoaded() {
+    const ready = caFiles['7d'] && caFiles['14d'] && caFiles['30d'];
+    document.getElementById('ca-run-btn').disabled = !ready;
+  }
+
+  function caReset() {
+    ['7d','14d','30d'].forEach(w => {
+      caFiles[w] = null;
+      document.getElementById('ca-status-' + w).textContent = 'Drop XLSX or click to upload';
+      document.getElementById('ca-status-' + w).className   = 'ca-zone-status';
+      document.getElementById('ca-zone-'   + w).classList.remove('loaded','dragover');
+      document.getElementById('ca-input-'  + w).value = '';
+    });
+    document.getElementById('ca-run-btn').disabled = true;
+    document.getElementById('ca-upload-ui').style.display = 'block';
+    document.getElementById('ca-report').classList.remove('visible');
+    document.getElementById('ca-report').style.display = 'none';
+  }
+
+  // ─ Parse one XLSX file ─
+  function caReadFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+          resolve(rows);
+        } catch(err) { reject(err); }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  // ─ Coerce to float ─
+  function caF(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  }
+
+  // ─ Normalise column names (trim + lowercase) to handle whitespace variants ─
+  function caNorm(rows) {
+    return rows.map(row => {
+      const out = {};
+      for (const k in row) out[k.trim()] = row[k];
+      return out;
+    });
+  }
+
+  // ─ Map a raw row to a structured ad record ─
+  function caMapRow(r) {
+    return {
+      adId:            String(r['Ad ID'] || r['Ad id'] || '').trim(),
+      adName:          String(r['Ad name'] || r['Ad Name'] || '').trim(),
+      adSetName:       String(r['Ad set name'] || r['Ad Set Name'] || '').trim(),
+      delivery:        String(r['Ad delivery'] || r['Delivery'] || '').trim().toLowerCase(),
+      spend:           caF(r['Amount spent (USD)']),
+      roas:            caF(r['Results ROAS'] || r['Purchase ROAS (return on ad spend)']),
+      cpp:             caF(r['Cost per purchase (USD)']),
+      purchases:       caF(r['Purchases']),
+      atcAbs:          caF(r['Adds to cart'] || r['Add to cart']),
+      checkouts:       caF(r['Checkouts initiated']),
+      clicks:          caF(r['Link clicks']),
+      lpv:             caF(r['Landing page views']),
+      ctr:             caF(r['CTR (link click-through rate)'] || r['CTR (Link click-through rate)']),
+      impressions:     caF(r['Impressions']),
+      cpm:             caF(r['CPM (cost per 1,000 impressions) (USD)'] || r['CPM (cost per 1,000 impressions)']),
+      reach:           caF(r['Reach']),
+      convValue:       caF(r['Purchases conversion value'] || r['Purchase conversion value'] || r['Website purchases conversion value']),
+    };
+  }
+
+  // ─ Add derived metrics ─
+  function caDerived(ad) {
+    ad.lpvRate      = ad.clicks > 0        ? ad.lpv / ad.clicks          : 0;
+    ad.lpvCvr       = ad.lpv > 0           ? ad.purchases / ad.lpv       : 0;
+    ad.atcRate      = ad.lpv > 0           ? ad.atcAbs / ad.lpv          : 0;
+    ad.checkoutRate = ad.atcAbs > 0        ? ad.checkouts / ad.atcAbs    : 0;
+    return ad;
+  }
+
+  // ─ Filter qualified ads ─
+  function caFilter(ads, minSpend) {
+    return ads.filter(a =>
+      a.delivery !== 'not_delivering' && a.delivery !== 'archived' && a.spend >= minSpend
+    );
+  }
+
+  // ─ Flag logic ─
+  function caFlag(ad, acctAvgCpp, acctAvgRoas) {
+    const { spend, purchases, atcAbs, roas, cpp, ctr, lpvCvr, atcRate, checkoutRate } = ad;
+
+    if (roas >= 1.5 && cpp > 0 && cpp < acctAvgCpp)
+      return { key: 'scale',    badge: '🟢 Scale',           cls: 'flag-scale'    };
+    if (ctr >= 2.0 && lpvCvr < 0.02 && atcRate < 0.05)
+      return { key: 'lp',       badge: '🟡 LP Test',         cls: 'flag-lp'       };
+    if ((spend >= 50 && purchases === 0 && atcAbs === 0) ||
+        (spend >= 50 && roas > 0 && roas < 0.5 && purchases <= 5))
+      return { key: 'pause',    badge: '🔴 Pause',           cls: 'flag-pause'    };
+    if (ctr < 1.5 && spend >= 50)
+      return { key: 'creative', badge: '🔵 Creative Refresh', cls: 'flag-creative' };
+    if (atcRate > 0.03 && checkoutRate < 0.30)
+      return { key: 'atc',      badge: '🟠 ATC Drop-off',    cls: 'flag-atc'      };
+
+    return { key: 'data',     badge: '⚪ Needs Data',       cls: 'flag-data'     };
+  }
+
+  // ─ Trend (compare 7d vs 14d ROAS) ─
+  function caTrend(roas7, roas14) {
+    if (roas7 === 0 && roas14 === 0) return { label: 'N/A', cls: 'trend-na' };
+    if (roas7 >= roas14 * 1.05)     return { label: 'Improving ↑', cls: 'trend-improving' };
+    if (roas7 <= roas14 * 0.95)     return { label: 'Declining ↓', cls: 'trend-declining' };
+    return { label: 'Holding →', cls: 'trend-holding' };
+  }
+
+  // ─ Strip copy suffixes from ad name to get base creative name ─
+  function caBaseName(name) {
+    return name.replace(/[\s_-]+(copy\d*|Copy\d*)$/i, '').trim();
+  }
+
+  // ─ Format helpers ─
+  function caFmt(n, decimals=2) { return n === 0 ? '—' : n.toFixed(decimals); }
+  function caFmtDollar(n) { return n === 0 ? '—' : '$' + n.toFixed(2); }
+  function caFmtPct(n) { return n === 0 ? '—' : (n * 100).toFixed(1) + '%'; }
+  function caFmtPctRaw(n) { return n === 0 ? '—' : n.toFixed(2) + '%'; }
+
+  // ─ ROAS / CPP cell with colour ─
+  function caRoasCell(roas, avg) {
+    if (roas === 0) return `<span class="dim">—</span>`;
+    const cls = roas >= avg * 1.0 ? 'good' : roas >= avg * 0.75 ? 'warn' : 'bad';
+    return `<span class="${cls}">${roas.toFixed(2)}x</span>`;
+  }
+  function caCppCell(cpp, avg) {
+    if (cpp === 0) return `<span class="dim">—</span>`;
+    const cls = cpp <= avg * 1.0 ? 'good' : cpp <= avg * 1.25 ? 'warn' : 'bad';
+    return `<span class="${cls}">${caFmtDollar(cpp)}</span>`;
+  }
+
+  // ─ Generate recommendation text ─
+  function caReco(flag, ad, acctAvgCpp) {
+    const { spend, purchases, roas, cpp, ctr, lpvCvr, atcRate, checkoutRate, atcAbs } = ad;
+    const cppBelowPct = acctAvgCpp > 0 ? Math.round((1 - cpp / acctAvgCpp) * 100) : 0;
+    const cppAbovePct = acctAvgCpp > 0 ? Math.round((cpp / acctAvgCpp - 1) * 100) : 0;
+
+    if (flag.key === 'scale') {
+      return `${roas.toFixed(2)}x ROAS at ${caFmtDollar(cpp)} CPP — ${cppBelowPct}% below account average. This is a strong performer in the set. Increase budget or duplicate into a fresh ad set.`;
+    }
+    if (flag.key === 'pause') {
+      const zeroAtc = atcAbs === 0 ? ' Zero cart activity suggests a targeting or relevance mismatch.' : '';
+      return `${caFmtDollar(spend)} spent with ${purchases} purchases (${roas.toFixed(2)}x ROAS)${acctAvgCpp > 0 ? ' — ' + cppAbovePct + '% above account average CPP' : ''}.${zeroAtc} Pause and reallocate budget.`;
+    }
+    if (flag.key === 'lp') {
+      return `${ctr.toFixed(2)}% CTR indicates a strong hook, but LPV CVR is ${(lpvCvr * 100).toFixed(1)}% — the landing page isn't converting this audience. The drop is post-click, not at the ad level. Test a new LP variant.`;
+    }
+    if (flag.key === 'creative') {
+      return `CTR of ${ctr.toFixed(2)}% on ${caFmtDollar(spend)} spend signals ad fatigue or a weak hook. Post-click metrics may be fine but the feed isn't stopping the scroll. Refresh the creative concept.`;
+    }
+    if (flag.key === 'atc') {
+      return `${(atcRate * 100).toFixed(1)}% ATC rate shows genuine purchase intent, but only ${(checkoutRate * 100).toFixed(1)}% of cart adds reach checkout. The friction is post-cart — test urgency, free shipping threshold, or a simplified checkout flow.`;
+    }
+    // data
+    return `Early stage — ${caFmtDollar(spend)} with insufficient conversion data to flag. Monitor CTR (${ctr.toFixed(2)}%) and ATC rate (${(atcRate * 100).toFixed(1)}%) as leading indicators.`;
+  }
+
+  // ─ Format tag (Video / Image) from ad name ─
+  function caFormatTag(name) {
+    if (/[_\s-]video/i.test(name)) return '<span class="ca-tag">Video</span>';
+    if (/[_\s-]image/i.test(name)) return '<span class="ca-tag">Image</span>';
+    return '';
+  }
+
+  // ─ Delivery badge ─
+  function caDeliveryBadge(delivery) {
+    if (delivery === 'active')
+      return '<span class="del-badge del-active">Active</span>';
+    if (!delivery || delivery === 'not_delivering')
+      return '<span class="del-badge del-inactive">Not Delivering</span>';
+    return `<span class="del-badge del-inactive">${delivery}</span>`;
+  }
+
+  // ─ Metrics table row ─
+  function caMetricsRow(label, ad, acctAvgCpp, acctAvgRoas) {
+    if (!ad) return `<tr><td>${label}</td>${Array(9).fill('<td><span class="na">—</span></td>').join('')}</tr>`;
+    const roas = ad.roas, cpp = ad.cpp;
+    return `<tr>
+      <td>${label}</td>
+      <td>${ad.spend === 0 ? '<span class="dim">—</span>' : '$' + ad.spend.toFixed(0)}</td>
+      <td>${ad.purchases === 0 ? '<span class="dim">—</span>' : ad.purchases.toFixed(0)}</td>
+      <td>${caRoasCell(roas, acctAvgRoas)}</td>
+      <td>${caCppCell(cpp, acctAvgCpp)}</td>
+      <td>${ad.ctr === 0 ? '<span class="dim">—</span>' : ad.ctr.toFixed(2) + '%'}</td>
+      <td>${ad.lpvRate === 0 ? '<span class="dim">—</span>' : (ad.lpvRate * 100).toFixed(1) + '%'}</td>
+      <td>${ad.lpvCvr === 0 ? '<span class="dim">—</span>' : (ad.lpvCvr * 100).toFixed(1) + '%'}</td>
+      <td>${ad.atcRate === 0 ? '<span class="dim">—</span>' : (ad.atcRate * 100).toFixed(1) + '%'}</td>
+      <td>${ad.checkoutRate === 0 ? '<span class="dim">—</span>' : (ad.checkoutRate * 100).toFixed(1) + '%'}</td>
+    </tr>`;
+  }
+
+  // ─ Main analysis runner ─
+  async function caRunAnalysis() {
+    document.getElementById('ca-upload-ui').style.display = 'none';
+    document.getElementById('ca-loading').classList.add('visible');
+    document.getElementById('ca-report').classList.remove('visible');
+
+    try {
+      // Parse all three files
+      const [raw7, raw14, raw30] = await Promise.all([
+        caReadFile(caFiles['7d']),
+        caReadFile(caFiles['14d']),
+        caReadFile(caFiles['30d']),
+      ]);
+
+      const ads7  = caNorm(raw7).map(caMapRow).map(caDerived);
+      const ads14 = caNorm(raw14).map(caMapRow).map(caDerived);
+      const ads30 = caNorm(raw30).map(caMapRow).map(caDerived);
+
+      // Filter qualified sets
+      const q7  = caFilter(ads7,  10);
+      const q14 = caFilter(ads14, 20);
+      const q30 = caFilter(ads30, 20);
+
+      // Account averages from 30d qualified
+      const cpp30vals  = q30.filter(a => a.cpp  > 0).map(a => a.cpp);
+      const roas30vals = q30.filter(a => a.roas > 0).map(a => a.roas);
+      const acctAvgCpp  = cpp30vals.length  ? cpp30vals.reduce((s,v) => s+v,0)  / cpp30vals.length  : 0;
+      const acctAvgRoas = roas30vals.length ? roas30vals.reduce((s,v) => s+v,0) / roas30vals.length : 0;
+
+      const totalSpend     = ads30.reduce((s,a) => s + a.spend, 0);
+      const totalPurchases = ads30.reduce((s,a) => s + a.purchases, 0);
+
+      // Build lookup maps by adId for 7d and 14d
+      const map7  = Object.fromEntries(ads7.map(a  => [a.adId, a]));
+      const map14 = Object.fromEntries(ads14.map(a => [a.adId, a]));
+
+      // Cross-adset detection on 30d qualified
+      // baseToAdSets[base] = { adSets: [{adSet, roas, spend}], totalConvValue, totalSpend }
+      const baseToAdSets = {};
+      q30.forEach(ad => {
+        const base = caBaseName(ad.adName);
+        if (!baseToAdSets[base]) baseToAdSets[base] = { adSets: [], totalConvValue: 0, totalSpend: 0 };
+        const entry = baseToAdSets[base];
+        entry.totalConvValue += ad.convValue;
+        entry.totalSpend     += ad.spend;
+        const existing = entry.adSets.find(x => x.adSet === ad.adSetName);
+        if (existing) {
+          existing.spend     += ad.spend;
+          existing.convValue += ad.convValue;
+        } else {
+          entry.adSets.push({ adSet: ad.adSetName, roas: ad.roas, spend: ad.spend, convValue: ad.convValue });
+        }
+      });
+      const crossCreatives = new Set(
+        Object.entries(baseToAdSets)
+          .filter(([, entry]) => entry.adSets.length > 1)
+          .map(([base]) => base)
+      );
+
+      // Flag all 30d qualified ads
+      const flagged = q30.map(ad => {
+        const flag  = caFlag(ad, acctAvgCpp, acctAvgRoas);
+        const ad7   = map7[ad.adId]  || null;
+        const ad14  = map14[ad.adId] || null;
+        const roas7 = ad7  ? ad7.roas  : 0;
+        const roas14= ad14 ? ad14.roas : 0;
+        const trend = (ad7 && ad14) ? caTrend(roas7, roas14) : { label: 'N/A', cls: 'trend-na' };
+        return { ...ad, flag, trend, ad7, ad14 };
+      });
+
+      // Group by ad set
+      const adSets = {};
+      flagged.forEach(ad => {
+        if (!adSets[ad.adSetName]) adSets[ad.adSetName] = [];
+        adSets[ad.adSetName].push(ad);
+      });
+
+      // ─ Render account header ─
+      document.getElementById('ca-account-header').innerHTML = `
+        <div class="ca-account-header">
+          <div class="ca-account-header-label">Account Overview — 30-Day Window</div>
+          <div class="ca-stat-pills">
+            <div class="ca-stat-pill">
+              <div class="ca-stat-pill-label">Acct Avg CPP</div>
+              <div class="ca-stat-pill-val">${acctAvgCpp > 0 ? '$' + acctAvgCpp.toFixed(2) : '—'}</div>
+            </div>
+            <div class="ca-stat-pill">
+              <div class="ca-stat-pill-label">Acct Avg ROAS</div>
+              <div class="ca-stat-pill-val">${acctAvgRoas > 0 ? acctAvgRoas.toFixed(2) + 'x' : '—'}</div>
+            </div>
+            <div class="ca-stat-pill">
+              <div class="ca-stat-pill-label">Total 30d Spend</div>
+              <div class="ca-stat-pill-val">$${totalSpend.toFixed(0)}</div>
+            </div>
+            <div class="ca-stat-pill">
+              <div class="ca-stat-pill-label">Total Purchases</div>
+              <div class="ca-stat-pill-val">${totalPurchases.toFixed(0)}</div>
+            </div>
+            <div class="ca-stat-pill">
+              <div class="ca-stat-pill-label">Qualified Ads</div>
+              <div class="ca-stat-pill-val">${q30.length}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // ─ Render ad set sections ─
+      const sectionsEl = document.getElementById('ca-adset-sections');
+      sectionsEl.innerHTML = '';
+
+      Object.entries(adSets).forEach(([adSetName, ads]) => {
+        const sectionEl = document.createElement('div');
+        sectionEl.className = 'ca-adset-section';
+
+        let sectionHTML = `<div class="ca-adset-name">${adSetName}</div>`;
+
+        // Track which cross-creative banners we've already shown in this section
+        const shownBanners = new Set();
+
+        ads.forEach(ad => {
+          const base = caBaseName(ad.adName);
+          let crossBanner = '';
+          if (crossCreatives.has(base) && !shownBanners.has(base)) {
+            shownBanners.add(base);
+            const entry = baseToAdSets[base];
+            const blendedRoas = entry.totalSpend > 0 ? entry.totalConvValue / entry.totalSpend : 0;
+            const blendedStr  = blendedRoas > 0 ? blendedRoas.toFixed(2) + 'x blended ROAS' : 'blended ROAS unavailable';
+            const setList = entry.adSets.map(s => `<strong>${s.adSet}</strong>: ${s.roas.toFixed(2)}x ROAS, $${s.spend.toFixed(0)} spend`).join(' · ');
+            crossBanner = `<div class="ca-cross-note">ℹ️ <strong>${base}</strong> is running in multiple ad sets (${blendedStr}): ${setList}</div>`;
+          }
+
+          sectionHTML += crossBanner + `
+            <div class="ca-ad-card">
+              <div class="ca-card-header">
+                <span class="ca-ad-name" title="${ad.adName}">${ad.adName}</span>
+                ${caFormatTag(ad.adName)}
+                ${caDeliveryBadge(ad.delivery)}
+                <span class="flag-badge ${ad.flag.cls}">${ad.flag.badge}</span>
+              </div>
+              <div class="ca-metrics-wrap">
+                <table class="ca-metrics-table">
+                  <thead><tr>
+                    <th>Window</th><th>Spend</th><th>Purchases</th><th>ROAS</th><th>CPP</th>
+                    <th>CTR</th><th>LPV Rate</th><th>LPV CVR</th><th>ATC Rate</th><th>Checkout Rate</th>
+                  </tr></thead>
+                  <tbody>
+                    ${caMetricsRow('7d',  ad.ad7,  acctAvgCpp, acctAvgRoas)}
+                    ${caMetricsRow('14d', ad.ad14, acctAvgCpp, acctAvgRoas)}
+                    ${caMetricsRow('30d', ad,      acctAvgCpp, acctAvgRoas)}
+                  </tbody>
+                </table>
+              </div>
+              <div class="ca-ad-footer">
+                <div>
+                  <div class="ca-footer-label">Trend (7d vs 14d)</div>
+                  <span class="ca-trend-val ${ad.trend.cls}">${ad.trend.label}</span>
+                </div>
+                <div>
+                  <div class="ca-footer-label">Recommendation</div>
+                  <div class="ca-reco">${caReco(ad.flag, ad, acctAvgCpp)}</div>
+                </div>
+              </div>
+            </div>`;
+        });
+
+        sectionEl.innerHTML = sectionHTML;
+        sectionsEl.appendChild(sectionEl);
+      });
+
+      // ─ Render summary grid ─
+      const scale    = flagged.filter(a => a.flag.key === 'scale').sort((a,b) => b.roas - a.roas);
+      const pauses   = flagged.filter(a => a.flag.key === 'pause').sort((a,b) => b.spend - a.spend);
+      const lpTests  = flagged.filter(a => a.flag.key === 'lp');
+      const atcDrop  = flagged.filter(a => a.flag.key === 'atc');
+      const creative = flagged.filter(a => a.flag.key === 'creative');
+
+      function caSummaryCard(emoji, title, ads, metaFn) {
+        const rows = ads.length
+          ? ads.map(a => `<div class="ca-summary-row">
+              <span class="ca-summary-ad-name" title="${a.adName}">${a.adName}</span>
+              <span class="ca-summary-meta">${metaFn(a)}</span>
+            </div>`).join('')
+          : `<div class="ca-summary-empty">None flagged</div>`;
+        return `<div class="ca-summary-card">
+          <div class="ca-summary-card-header">${emoji} ${title}</div>
+          <div class="ca-summary-card-body">${rows}</div>
+        </div>`;
+      }
+
+      document.getElementById('ca-summary-grid').innerHTML =
+        caSummaryCard('🏆', 'Top Performers',       scale,    a => a.roas.toFixed(2) + 'x') +
+        caSummaryCard('❌', 'Recommended Pauses',   pauses,   a => '$' + a.spend.toFixed(0)) +
+        caSummaryCard('🟡', 'LP Test Candidates',   lpTests,  a => a.ctr.toFixed(2) + '% CTR') +
+        caSummaryCard('🟠', 'Checkout Friction',    atcDrop,  a => (a.checkoutRate * 100).toFixed(1) + '% checkout') +
+        caSummaryCard('📋', 'Creative Refresh',     creative, a => a.ctr.toFixed(2) + '% CTR');
+
+      // Show report
+      document.getElementById('ca-loading').classList.remove('visible');
+      const reportEl = document.getElementById('ca-report');
+      reportEl.style.display = 'block';
+      reportEl.classList.add('visible');
+      reportEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch(err) {
+      console.error('[Creative Analyst]', err);
+      document.getElementById('ca-loading').classList.remove('visible');
+      document.getElementById('ca-upload-ui').style.display = 'block';
+      alert('Error parsing files: ' + err.message + '\n\nMake sure you uploaded valid Meta Ads Manager XLSX exports.');
+    }
+  }
   </script>
 </body>
 </html>
