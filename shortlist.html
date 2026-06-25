@@ -191,6 +191,32 @@
   .tag-toggle:hover { border-color: #94a3b8; color: #475569; }
   .tag-toggle.active { background: #475569; border-color: #475569; color: white; }
   .pill-tag { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+
+  /* Inline tag picker */
+  .tag-add-btn {
+    width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #cbd5e1;
+    background: white; color: #94a3b8; font-size: 14px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all 0.15s; font-family: 'Poppins', sans-serif; font-weight: 400;
+    padding: 0; margin-left: 2px; vertical-align: middle;
+  }
+  .tag-add-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+  .tag-add-btn.open { border-color: var(--green); color: var(--green); background: var(--green-light); }
+  .inline-tag-picker { padding: 0 !important; }
+  .picker-inner {
+    padding: 10px 14px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 6px;
+  }
+  .picker-tag-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .picker-row-label { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; min-width: 60px; flex-shrink: 0; }
+  .picker-tag-toggle {
+    padding: 3px 9px; border-radius: 20px; font-family: 'Poppins', sans-serif;
+    font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #cbd5e1;
+    background: white; color: #64748b; transition: all 0.13s; line-height: 1.4;
+  }
+  .picker-tag-toggle:hover { border-color: #475569; color: #475569; }
+  .picker-tag-toggle.active { background: #475569; border-color: #475569; color: white; }
+
   .tags-checks-section { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
   .tags-checks-group { display: flex; flex-direction: column; gap: 5px; }
   .tags-checks-group-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -356,7 +382,7 @@
           <th onclick="sortBy('followers')">Followers <span class="sort-icon" id="si-followers">↕</span></th>
           <th onclick="sortBy('eng_score')">Scores <span class="sort-icon" id="si-eng_score">↕</span><span class="tooltip-icon" onclick="event.stopPropagation()" onmouseenter="showScoreTooltip(event)" onmouseleave="hideScoreTooltip()">?</span></th>
           <th>Clients</th>
-          <th id="tagsHeader" style="display:none">Tags</th>
+          <th id="tagsHeader">Tags</th>
           <th>Select</th>
         </tr>
       </thead>
@@ -557,11 +583,10 @@ function scoreBar(score, type) {
 }
 
 function render() {
+  closeTagPicker(true);
   const rows = sorted(getFiltered());
   const tbody = document.getElementById('tbody');
   const empty = document.getElementById('empty');
-  const anyTags = rows.some(inf => (inf.tags||[]).length > 0);
-  document.getElementById('tagsHeader').style.display = anyTags ? '' : 'none';
 
   if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; }
   else {
@@ -588,7 +613,7 @@ function render() {
         <td>${fmt(inf.followers)}</td>
         <td class="score-cell">${scoreHtml}</td>
         <td><div class="pills">${inf.clients.map(pill).join('')}</div></td>
-        <td style="display:${anyTags?'table-cell':'none'}"><div class="pills">${infTags.map(t=>`<span class="pill pill-tag">${esc(t)}</span>`).join('')}</div></td>
+        <td class="tags-cell"><div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap"><div class="pills">${infTags.map(t=>`<span class="pill pill-tag">${esc(t)}</span>`).join('')}</div><button class="tag-add-btn" onclick="openTagPicker(event,'${eA(key)}')" title="Edit tags">+</button></div></td>
         <td class="check-cell">
           <div class="circle-check ${sel?'checked':''}" onclick="toggle('${eA(key)}')"></div>
         </td>
@@ -600,6 +625,97 @@ function render() {
   document.getElementById('selectedCount').textContent = selected.size;
   document.getElementById('exportCount').textContent = selected.size;
   document.getElementById('exportBtn').disabled = selected.size === 0;
+}
+
+const PICKER_TAGS = {
+  'Archetype': ['Fitness Guru','Medical Legitimacy','Momfluencer','Optimizer','Podcast'],
+  'Value Prop': ['Connector','High-End UGC','Converter'],
+  'Brand': ['Multi-Brand Partner','Use Case']
+};
+let activePickerKey = null;
+let pickerChanged = false;
+
+function openTagPicker(event, key) {
+  event.stopPropagation();
+  if (activePickerKey === key) { closeTagPicker(true); return; }
+  if (activePickerKey) closeTagPicker(true);
+  activePickerKey = key;
+  pickerChanged = false;
+
+  const inf = DATA.find(x => (x.handle || x.name) === key);
+  if (!inf) return;
+  const row = document.querySelector(`tr[data-key="${CSS.escape(key)}"]`);
+  if (!row) return;
+
+  const currentTags = new Set(inf.tags || []);
+  const addBtn = row.querySelector('.tag-add-btn');
+  if (addBtn) addBtn.classList.add('open');
+
+  const pickerHtml = Object.entries(PICKER_TAGS).map(([group, tags]) =>
+    `<div class="picker-tag-row"><span class="picker-row-label">${group}</span>${
+      tags.map(t => `<button class="picker-tag-toggle${currentTags.has(t)?' active':''}" onclick="pickerToggleTag(event,'${eA(key)}','${eA(t)}')">${esc(t)}</button>`).join('')
+    }</div>`
+  ).join('');
+
+  const pickerRow = document.createElement('tr');
+  pickerRow.id = 'inline-picker-row';
+  pickerRow.innerHTML = `<td colspan="8" class="inline-tag-picker"><div class="picker-inner">${pickerHtml}</div></td>`;
+  row.insertAdjacentElement('afterend', pickerRow);
+}
+
+function pickerToggleTag(event, key, tag) {
+  event.stopPropagation();
+  const inf = DATA.find(x => (x.handle || x.name) === key);
+  if (!inf) return;
+  if (!inf.tags) inf.tags = [];
+  const idx = inf.tags.indexOf(tag);
+  if (idx >= 0) inf.tags.splice(idx, 1);
+  else inf.tags.push(tag);
+  pickerChanged = true;
+  event.currentTarget.classList.toggle('active', idx < 0);
+
+  const row = document.querySelector(`tr[data-key="${CSS.escape(key)}"]`);
+  if (row) {
+    const pillsDiv = row.querySelector('.tags-cell .pills');
+    if (pillsDiv) pillsDiv.innerHTML = inf.tags.map(t => `<span class="pill pill-tag">${esc(t)}</span>`).join('');
+  }
+}
+
+function closeTagPicker(doSave) {
+  if (doSave === undefined) doSave = true;
+  const key = activePickerKey;
+  activePickerKey = null;
+  const pickerRow = document.getElementById('inline-picker-row');
+  if (pickerRow) pickerRow.remove();
+  if (key) {
+    const row = document.querySelector(`tr[data-key="${CSS.escape(key)}"]`);
+    if (row) { const btn = row.querySelector('.tag-add-btn'); if (btn) btn.classList.remove('open'); }
+  }
+  if (doSave && pickerChanged && key) {
+    pickerChanged = false;
+    const inf = DATA.find(x => (x.handle || x.name) === key);
+    if (inf) commitTagsToGitHub(inf);
+  }
+}
+
+async function commitTagsToGitHub(inf) {
+  const token = window.GITHUB_TOKEN || '';
+  if (!token) return;
+  try {
+    const fileRes = await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/shortlist.html', {
+      headers: { 'Authorization': 'Bearer '+token, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    const fileData = await fileRes.json();
+    const toStore = DATA.map(x => { const c={...x}; delete c._new; return c; });
+    const current = atob(fileData.content.replace(/\n/g,''));
+    const updated = current.replace(/const INFLUENCERS_DATA = \[.*?\];/s, `const INFLUENCERS_DATA = ${JSON.stringify(toStore)};`);
+    await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/shortlist.html', {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: `Update tags: ${inf.name}`, content: btoa(unescape(encodeURIComponent(updated))), sha: fileData.sha })
+    });
+    toast(`✓ Tags saved for ${inf.name}`);
+  } catch { /* tags updated locally */ }
 }
 
 function toggle(key) {
@@ -713,6 +829,7 @@ function toast(msg) {
 ['fTier','fPlatform','fScored','fFollowers'].forEach(id => document.getElementById(id).addEventListener('change', render));
 document.getElementById('fSearch').addEventListener('input', render);
 document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
+document.addEventListener('click', e => { if (activePickerKey && !e.target.closest('#inline-picker-row') && !e.target.closest('.tag-add-btn')) closeTagPicker(true); });
 render();
 
 function showScoreTooltip(e) {
