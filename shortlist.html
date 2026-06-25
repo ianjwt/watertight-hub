@@ -182,6 +182,21 @@
   .client-toggle:hover { border-color: var(--green); color: var(--green); }
   .client-toggle.active { background: var(--green); border-color: var(--green); color: white; }
 
+  /* Tag filter */
+  .tag-filter-section { flex-basis: 100%; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border); padding-top: 14px; margin-top: 2px; }
+  .tag-filter-rows { display: flex; flex-direction: column; gap: 6px; }
+  .tag-filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tag-row-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; min-width: 72px; flex-shrink: 0; }
+  .tag-toggle { padding: 4px 10px; border-radius: 20px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--cream); color: var(--muted); transition: all 0.15s; line-height: 1.4; }
+  .tag-toggle:hover { border-color: #94a3b8; color: #475569; }
+  .tag-toggle.active { background: #475569; border-color: #475569; color: white; }
+  .pill-tag { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+  .tags-checks-section { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .tags-checks-group { display: flex; flex-direction: column; gap: 5px; }
+  .tags-checks-group-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .tags-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tags-checks label { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; text-transform: none; letter-spacing: 0; cursor: pointer; color: var(--text); }
+
   /* Tooltip */
   .tooltip-icon {
     width: 15px; height: 15px; border-radius: 50%;
@@ -262,6 +277,18 @@
       </select>
     </div>
     <div class="filter-group">
+      <label>Followers</label>
+      <select id="fFollowers">
+        <option value="">Any Followers</option>
+        <option value="u10k">Under 10K</option>
+        <option value="10k-50k">10K–50K</option>
+        <option value="50k-100k">50K–100K</option>
+        <option value="100k-500k">100K–500K</option>
+        <option value="500k-1m">500K–1M</option>
+        <option value="1m+">1M+</option>
+      </select>
+    </div>
+    <div class="filter-group">
       <label>Scores</label>
       <select id="fScored">
         <option value="">All Influencers</option>
@@ -275,6 +302,30 @@
     <div style="display:flex;gap:8px;align-items:flex-end;flex-shrink:0">
       <button class="btn btn-ghost" onclick="resetFilters()">Reset</button>
       <button class="btn btn-outline" onclick="openModal()">+ Add</button>
+    </div>
+    <div class="tag-filter-section">
+      <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Creator Tags</label>
+      <div class="tag-filter-rows">
+        <div class="tag-filter-row">
+          <span class="tag-row-label">Archetype</span>
+          <button class="tag-toggle" data-tag="Fitness Guru" onclick="toggleTag('Fitness Guru')">Fitness Guru</button>
+          <button class="tag-toggle" data-tag="Medical Legitimacy" onclick="toggleTag('Medical Legitimacy')">Medical Legitimacy</button>
+          <button class="tag-toggle" data-tag="Momfluencer" onclick="toggleTag('Momfluencer')">Momfluencer</button>
+          <button class="tag-toggle" data-tag="Optimizer" onclick="toggleTag('Optimizer')">Optimizer</button>
+          <button class="tag-toggle" data-tag="Podcast" onclick="toggleTag('Podcast')">Podcast</button>
+        </div>
+        <div class="tag-filter-row">
+          <span class="tag-row-label">Value Prop</span>
+          <button class="tag-toggle" data-tag="Connector" onclick="toggleTag('Connector')">Connector</button>
+          <button class="tag-toggle" data-tag="High-End UGC" onclick="toggleTag('High-End UGC')">High-End UGC</button>
+          <button class="tag-toggle" data-tag="Converter" onclick="toggleTag('Converter')">Converter</button>
+        </div>
+        <div class="tag-filter-row">
+          <span class="tag-row-label">Brand</span>
+          <button class="tag-toggle" data-tag="Multi-Brand Partner" onclick="toggleTag('Multi-Brand Partner')">Multi-Brand Partner</button>
+          <button class="tag-toggle" data-tag="Use Case" onclick="toggleTag('Use Case')">Use Case</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -305,6 +356,7 @@
           <th onclick="sortBy('followers')">Followers <span class="sort-icon" id="si-followers">↕</span></th>
           <th onclick="sortBy('eng_score')">Scores <span class="sort-icon" id="si-eng_score">↕</span><span class="tooltip-icon" onclick="event.stopPropagation()" onmouseenter="showScoreTooltip(event)" onmouseleave="hideScoreTooltip()">?</span></th>
           <th>Clients</th>
+          <th id="tagsHeader" style="display:none">Tags</th>
           <th>Select</th>
         </tr>
       </thead>
@@ -341,6 +393,7 @@
       </div>
       <div class="fg"><label>Location</label><input id="nLocation" placeholder="New York"></div>
       <div class="fg"><label>Email</label><input id="nEmail" type="email" placeholder="jane@example.com"></div>
+      <div class="fg"><label>Agent Email</label><input id="nAgentEmail" type="email" placeholder="agent@agency.com"></div>
       <div class="fg full">
         <label>Clients</label>
         <div class="client-checks">
@@ -350,6 +403,36 @@
           <label><input type="checkbox" value="Sollis"> Sollis</label>
           <label><input type="checkbox" value="SoWell"> SoWell</label>
           <label><input type="checkbox" value="ZOE"> ZOE</label>
+        </div>
+      </div>
+      <div class="fg full">
+        <label>Creator Tags</label>
+        <div class="tags-checks-section">
+          <div class="tags-checks-group">
+            <div class="tags-checks-group-label">Archetype</div>
+            <div class="tags-checks">
+              <label><input type="checkbox" class="tag-check" value="Fitness Guru"> Fitness Guru</label>
+              <label><input type="checkbox" class="tag-check" value="Medical Legitimacy"> Medical Legitimacy</label>
+              <label><input type="checkbox" class="tag-check" value="Momfluencer"> Momfluencer</label>
+              <label><input type="checkbox" class="tag-check" value="Optimizer"> Optimizer</label>
+              <label><input type="checkbox" class="tag-check" value="Podcast"> Podcast</label>
+            </div>
+          </div>
+          <div class="tags-checks-group">
+            <div class="tags-checks-group-label">Value Prop</div>
+            <div class="tags-checks">
+              <label><input type="checkbox" class="tag-check" value="Connector"> Connector</label>
+              <label><input type="checkbox" class="tag-check" value="High-End UGC"> High-End UGC</label>
+              <label><input type="checkbox" class="tag-check" value="Converter"> Converter</label>
+            </div>
+          </div>
+          <div class="tags-checks-group">
+            <div class="tags-checks-group-label">Brand</div>
+            <div class="tags-checks">
+              <label><input type="checkbox" class="tag-check" value="Multi-Brand Partner"> Multi-Brand Partner</label>
+              <label><input type="checkbox" class="tag-check" value="Use Case"> Use Case</label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -372,6 +455,7 @@ let selected = new Set();
 let sortCol = 'name', sortDir = 1;
 
 const selectedClients = new Set();
+const selectedTags = new Set();
 
 function toggleClient(client) {
   if (selectedClients.has(client)) selectedClients.delete(client);
@@ -382,16 +466,36 @@ function toggleClient(client) {
   render();
 }
 
+function toggleTag(tag) {
+  if (selectedTags.has(tag)) selectedTags.delete(tag);
+  else selectedTags.add(tag);
+  document.querySelectorAll('.tag-toggle').forEach(btn => {
+    btn.classList.toggle('active', selectedTags.has(btn.dataset.tag));
+  });
+  render();
+}
+
 function getFiltered() {
   const t = document.getElementById('fTier').value;
   const p = document.getElementById('fPlatform').value;
   const s = document.getElementById('fSearch').value.trim().toLowerCase();
   const sc = document.getElementById('fScored').value;
+  const fv = document.getElementById('fFollowers').value;
   return DATA.filter(inf => {
     if (selectedClients.size > 0 && !inf.clients.some(c => selectedClients.has(c))) return false;
+    if (selectedTags.size > 0 && !(inf.tags||[]).some(tg => selectedTags.has(tg))) return false;
     if (t && inf.tier !== t) return false;
     if (p && inf.platform !== p) return false;
     if (sc === 'scored' && !inf.reach_score && !inf.eng_score) return false;
+    if (fv) {
+      const f = inf.followers || 0;
+      if (fv === 'u10k' && f >= 10000) return false;
+      if (fv === '10k-50k' && (f < 10000 || f >= 50000)) return false;
+      if (fv === '50k-100k' && (f < 50000 || f >= 100000)) return false;
+      if (fv === '100k-500k' && (f < 100000 || f >= 500000)) return false;
+      if (fv === '500k-1m' && (f < 500000 || f >= 1000000)) return false;
+      if (fv === '1m+' && f < 1000000) return false;
+    }
     if (s && !inf.name.toLowerCase().includes(s) && !inf.handle.toLowerCase().includes(s)) return false;
     return true;
   });
@@ -400,8 +504,10 @@ function getFiltered() {
 function resetFilters() {
   selected.clear();
   selectedClients.clear();
+  selectedTags.clear();
   document.querySelectorAll('.client-toggle').forEach(btn => btn.classList.remove('active'));
-  ['fTier','fPlatform','fScored'].forEach(id => document.getElementById(id).value = '');
+  document.querySelectorAll('.tag-toggle').forEach(btn => btn.classList.remove('active'));
+  ['fTier','fPlatform','fScored','fFollowers'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fSearch').value = '';
   render();
 }
@@ -454,6 +560,8 @@ function render() {
   const rows = sorted(getFiltered());
   const tbody = document.getElementById('tbody');
   const empty = document.getElementById('empty');
+  const anyTags = rows.some(inf => (inf.tags||[]).length > 0);
+  document.getElementById('tagsHeader').style.display = anyTags ? '' : 'none';
 
   if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; }
   else {
@@ -465,6 +573,7 @@ function render() {
       const scoreHtml = hasScore
         ? `<div class="score-wrap">${scoreBar(inf.reach_score,'reach')}${scoreBar(inf.eng_score,'eng')}<div class="score-campaigns">${inf.score_campaigns} campaign${inf.score_campaigns!==1?'s':''}</div></div>`
         : '<span class="no-score">—</span>';
+      const infTags = inf.tags || [];
 
       return `<tr class="${sel?'selected':''}" data-key="${eA(key)}">
         <td>
@@ -479,6 +588,7 @@ function render() {
         <td>${fmt(inf.followers)}</td>
         <td class="score-cell">${scoreHtml}</td>
         <td><div class="pills">${inf.clients.map(pill).join('')}</div></td>
+        <td style="display:${anyTags?'table-cell':'none'}"><div class="pills">${infTags.map(t=>`<span class="pill pill-tag">${esc(t)}</span>`).join('')}</div></td>
         <td class="check-cell">
           <div class="circle-check ${sel?'checked':''}" onclick="toggle('${eA(key)}')"></div>
         </td>
@@ -509,7 +619,7 @@ function exportToSheets() {
   const picks = DATA.filter(inf => selected.has(inf.handle || inf.name));
   if (!picks.length) return;
 
-  const headers = ['Name','Handle','Platform','Tier','Followers','Reach Score','Engagement Score','Scored Campaigns','Clients','Email','Location'];
+  const headers = ['Name','Handle','Platform','Tier','Followers','Reach Score','Engagement Score','Scored Campaigns','Clients','Email','Location','Tags','Agent Email'];
   const rows = picks.map(inf => {
     const nameCell = inf.url
       ? `=HYPERLINK("${inf.url.replace(/"/g,'\\"')}", "${inf.name.replace(/"/g,'\"')}") `
@@ -519,7 +629,8 @@ function exportToSheets() {
       inf.followers||'', inf.reach_score !== null && inf.reach_score !== undefined ? inf.reach_score : '',
       inf.eng_score !== null && inf.eng_score !== undefined ? inf.eng_score : '',
       inf.score_campaigns || '',
-      inf.clients.join('; '), inf.email||'', inf.location||''
+      inf.clients.join('; '), inf.email||'', inf.location||'',
+      (inf.tags||[]).join('; '), inf.agent_email||''
     ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
   });
 
@@ -538,10 +649,11 @@ function exportToSheets() {
 function openModal() { document.getElementById('overlay').classList.add('open'); document.getElementById('nName').focus(); }
 function closeModal() {
   document.getElementById('overlay').classList.remove('open');
-  ['nName','nHandle','nUrl','nFollowers','nLocation','nEmail'].forEach(id => document.getElementById(id).value='');
+  ['nName','nHandle','nUrl','nFollowers','nLocation','nEmail','nAgentEmail'].forEach(id => document.getElementById(id).value='');
   document.getElementById('nPlatform').value='Instagram';
   document.getElementById('nTier').value='';
   document.querySelectorAll('.client-checks input').forEach(cb => cb.checked=false);
+  document.querySelectorAll('.tag-check').forEach(cb => cb.checked=false);
 }
 
 async function saveInfluencer() {
@@ -557,6 +669,8 @@ async function saveInfluencer() {
     followers: parseInt(document.getElementById('nFollowers').value)||null,
     tier: document.getElementById('nTier').value,
     location: document.getElementById('nLocation').value.trim(),
+    tags: [...document.querySelectorAll('.tag-check:checked')].map(cb=>cb.value),
+    agent_email: document.getElementById('nAgentEmail').value.trim(),
     reach_score: null, eng_score: null, score_campaigns: 0,
     _new: true
   };
@@ -567,14 +681,14 @@ async function saveInfluencer() {
   const token = window.GITHUB_TOKEN || '';
   if (token) {
     try {
-      const fileRes = await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/index.html', {
+      const fileRes = await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/shortlist.html', {
         headers: { 'Authorization': 'Bearer '+token, 'Accept': 'application/vnd.github.v3+json' }
       });
       const fileData = await fileRes.json();
       const toStore = DATA.map(x => { const c={...x}; delete c._new; return c; });
       const current = atob(fileData.content.replace(/\n/g,''));
       const updated = current.replace(/const INFLUENCERS_DATA = \[.*?\];/s, `const INFLUENCERS_DATA = ${JSON.stringify(toStore)};`);
-      await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/index.html', {
+      await fetch('https://api.github.com/repos/ianjwt/watertight-hub/contents/shortlist.html', {
         method: 'PUT',
         headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Add influencer: ${name}`, content: btoa(unescape(encodeURIComponent(updated))), sha: fileData.sha })
@@ -596,7 +710,7 @@ function toast(msg) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-['fTier','fPlatform','fScored'].forEach(id => document.getElementById(id).addEventListener('change', render));
+['fTier','fPlatform','fScored','fFollowers'].forEach(id => document.getElementById(id).addEventListener('change', render));
 document.getElementById('fSearch').addEventListener('input', render);
 document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
 render();
