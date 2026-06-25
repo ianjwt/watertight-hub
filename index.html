@@ -5046,7 +5046,7 @@ Write the weekly recap email body.`;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-sonnet-4-5',
           max_tokens: 1500,
           system: systemPrompt,
           messages: [{ role: 'user', content: userPrompt }]
@@ -5479,7 +5479,7 @@ META PERFORMANCE:
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-sonnet-4-5',
           max_tokens: 800,
           system: systemPrompt,
           messages: [{ role: 'user', content: userPrompt }]
@@ -5899,7 +5899,7 @@ ${fPart('in talks')}`;
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
+            model: 'claude-sonnet-4-5',
             max_tokens: 500,
             system: 'You are a concise copywriter for a marketing agency. Condense influencer deliverable descriptions to 6 words or fewer. Return ONLY a valid JSON array of strings in the same order as the input array. No preamble, no markdown, no code fences.',
             messages: [{ role: 'user', content: JSON.stringify(dbPartnershipData.map(p => p.deliverables)) }],
