@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Tracker — Watertight Vortex</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wt-green:    #116E53;
+    --wt-green-2:  #8BCCA9;
+    --wt-green-3:  #CEE8D8;
+    --wt-green-4:  #EEF5ED;
+    --wt-pink-1:   #FFA596;
+    --wt-pink-2:   #F6C1B6;
+    --wt-pink-3:   #F9E4DC;
+    --bg:          #F8FBF9;
+    --white:       #FFFFFF;
+    --text:        #116E53;
+    --text-mid:    #3a6657;
+    --text-light:  #7aaa96;
+    --border:      rgba(17,110,83,0.12);
+    --shadow-sm:   0 2px 8px rgba(17,110,83,0.06);
+    --shadow-md:   0 4px 20px rgba(17,110,83,0.10);
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   20px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+  header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 0 var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--wt-green); text-decoration: none; }
+  .logo svg { width: 24px; height: 24px; }
+  .header-right { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .page-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--wt-green); letter-spacing: -0.02em; margin-bottom: 4px; }
+  .page-subtitle { font-size: 13px; color: var(--text-light); }
+
+  .btn {
+    padding: 10px 18px; border-radius: var(--radius-sm); font-family: 'Poppins', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+    transition: opacity 0.15s, transform 0.1s; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+  }
+  .btn-primary { background: var(--wt-green); color: white; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-ghost { background: white; color: var(--wt-green); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--wt-green-2); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn svg { width: 14px; height: 14px; }
+
+  /* ─── SUMMARY ─── */
+  .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  .summary-tile {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm); padding: 16px 20px;
+  }
+  .summary-tile-num { font-size: 26px; font-weight: 700; color: var(--wt-green); line-height: 1; margin-bottom: 4px; }
+  .summary-tile.stale .summary-tile-num { color: var(--wt-pink-1); }
+  .summary-tile-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-light); }
+
+  /* ─── CLIENT SECTIONS ─── */
+  .client-section { margin-bottom: 26px; }
+  .client-section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; color: var(--wt-green);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 10px; padding-left: 2px;
+  }
+  .client-section-count { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: none; letter-spacing: 0; }
+  .client-empty { font-size: 12px; color: var(--text-light); font-style: italic; padding: 4px 2px 0; }
+
+  .et-rows { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+
+  .et-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 18px 14px 16px;
+    border-left: 4px solid transparent;
+    border-bottom: 1px solid var(--border);
+  }
+  .et-row:last-child { border-bottom: none; }
+
+  .et-row-main { flex: 1; min-width: 0; }
+  .et-row-top { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; flex-wrap: wrap; }
+  .et-platform-icon { width: 15px; height: 15px; color: var(--text-light); flex-shrink: 0; }
+  .et-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+
+  .et-pill { font-size: 10.5px; font-weight: 700; padding: 2px 9px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
+
+  .et-row-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-light); }
+  .et-owner-line { font-weight: 500; color: var(--text-mid); }
+  .et-time { display: inline-flex; align-items: center; gap: 4px; }
+  .et-time.stale { color: var(--wt-pink-1); font-weight: 600; }
+  .et-time svg { width: 11px; height: 11px; }
+  .et-alert-line { color: var(--wt-pink-1); font-weight: 500; }
+
+  .et-row-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  .et-link-btn, .et-edit-btn {
+    width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+    background: white; color: var(--text-mid); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: border-color 0.15s, color 0.15s; flex-shrink: 0;
+  }
+  .et-link-btn:hover, .et-edit-btn:hover { border-color: var(--wt-green-2); color: var(--wt-green); }
+  .et-link-btn svg, .et-edit-btn svg { width: 14px; height: 14px; }
+  .et-no-link { font-size: 11px; color: var(--text-light); font-style: italic; white-space: nowrap; }
+
+  .et-quick-btn {
+    padding: 7px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--wt-green-2);
+    background: var(--wt-green-4); color: var(--wt-green); font-family: 'Poppins', sans-serif;
+    font-size: 11.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .et-quick-btn:hover { background: var(--wt-green-3); }
+
+  .et-override { display: flex; align-items: center; gap: 4px; }
+  .et-override select {
+    height: 30px; padding: 0 8px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Poppins', sans-serif; font-size: 11px; color: var(--text-mid); background: var(--bg);
+    outline: none; cursor: pointer; max-width: 128px;
+  }
+  .et-override select:focus { border-color: var(--wt-green); }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(17,40,32,0.35);
+    align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal-card {
+    background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+    width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-top { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: var(--wt-green); }
+  .modal-close { cursor: pointer; color: var(--text-light); background: none; border: none; font-size: 18px; line-height: 1; padding: 4px; }
+  .modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .modal-actions { padding: 16px 24px 22px; display: flex; gap: 10px; }
+  .modal-actions .btn { flex: 1; justify-content: center; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 11px; font-weight: 600; color: var(--text-mid); letter-spacing: 0.04em; }
+  .field input, .field select, .field textarea {
+    height: 38px; padding: 0 11px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+  }
+  .field textarea { height: auto; padding: 9px 11px; min-height: 64px; resize: vertical; font-family: inherit; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--wt-green); background: white; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-error { font-size: 12px; color: var(--wt-pink-1); font-weight: 500; display: none; }
+  .modal-error.visible { display: block; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--wt-green); color: white; padding: 11px 20px; border-radius: 30px;
+    font-size: 12.5px; font-weight: 600; box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s; z-index: 2000;
+  }
+  .toast.error { background: var(--wt-pink-1); color: #5a1f14; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .loading-note { font-size: 12px; color: var(--text-light); padding: 4px 2px; }
+
+  @media (max-width: 640px) {
+    .summary-row { grid-template-columns: 1fr; }
+    .et-row { flex-wrap: wrap; }
+    .et-row-actions { width: 100%; justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+<script>
+(function() {
+  if (sessionStorage.getItem('wt_auth') !== 'true') {
+    window.location.replace('/login.html');
+  }
+})();
+</script>
+
+<header>
+  <a href="/" class="logo">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 4C20 4 8 14 8 24C8 30.627 13.373 36 20 36C26.627 36 32 30.627 32 24C32 14 20 4 20 4Z" fill="#116E53"/>
+      <path d="M20 12C20 12 13 19 13 25C13 28.866 16.134 32 20 32C23.866 32 27 28.866 27 25C27 19 20 12 20 12Z" fill="white" fill-opacity="0.3"/>
+    </svg>
+    Watertight Vortex
+  </a>
+  <span class="header-right">Edit Tracker</span>
+</header>
+
+<div class="main">
+
+  <div class="page-top">
+    <div>
+      <div class="page-title">Edit Tracker</div>
+      <div class="page-subtitle">Every creative in flight, grouped by client.</div>
+    </div>
+    <button class="btn btn-primary" onclick="etOpenCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Creative
+    </button>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-tile stale">
+      <div class="summary-tile-num" id="et-sum-stale">–</div>
+      <div class="summary-tile-label">Needing attention</div>
+    </div>
+    <div class="summary-tile">
+      <div class="summary-tile-num" id="et-sum-inedit">–</div>
+      <div class="summary-tile-label">In edit</div>
+    </div>
+    <div class="summary-tile">
+      <div class="summary-tile-num" id="et-sum-readyclient">–</div>
+      <div class="summary-tile-label">Ready for client</div>
+    </div>
+  </div>
+
+  <div id="et-loading" class="loading-note">Loading…</div>
+  <div id="et-sections"></div>
+
+</div>
+
+<!-- ── CREATE / EDIT MODAL ── -->
+<div class="modal-overlay" id="et-modal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <div class="modal-title" id="et-modal-title">New Creative</div>
+      <button class="modal-close" onclick="etCloseModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="et-f-name" placeholder="e.g. SoWell_UGC_Andrea_video">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Client</label>
+          <select id="et-f-client"></select>
+        </div>
+        <div class="field">
+          <label>Platform</label>
+          <select id="et-f-platform">
+            <option value="video">Video</option>
+            <option value="image">Image</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Editor</label>
+          <select id="et-f-editor"></select>
+        </div>
+        <div class="field">
+          <label>Reviewer</label>
+          <select id="et-f-reviewer"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Current link</label>
+        <input type="url" id="et-f-link" placeholder="https://drive.google.com/…">
+      </div>
+      <div class="field">
+        <label>Internal notes</label>
+        <textarea id="et-f-notes" placeholder="Optional"></textarea>
+      </div>
+      <div class="modal-error" id="et-modal-error"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="etCloseModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="etSubmitModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="et-toast"></div>
+
+<script>
+  // ── Static config (hand-edited, fetched as plain files — no live-edit UI in v1) ──
+  let etClients   = [];
+  let etRoster    = [];
+  let etStatuses  = [];
+  let etTransitions = {};
+  let etCreatives = [];
+
+  const REPEAT_ALERT_HOURS = 24; // mirrors api/edit-tracker-alerts.js — display-only, doesn't send alerts
+
+  const ROLE_LABELS = {
+    creative_strategist: 'Creative Strategist',
+    editor:               'Editor',
+    reviewer:             'Reviewer',
+    reviewer_script:       'Reviewer (script)',
+  };
+
+  const STATUS_COLORS = {
+    needs_brief:               { bar: '#94A3A0', text: '#5B6B65', bg: '#F1F4F2', border: '#D3DAD7' },
+    briefed:                   { bar: '#4C86D6', text: '#1a5fb4', bg: '#f0f7ff', border: '#b8d0ee' },
+    in_edit:                   { bar: '#D9A438', text: '#b45309', bg: '#fff8e6', border: '#e8c97a' },
+    ready_for_review:          { bar: '#8B5FC9', text: '#6b3fa0', bg: '#f5f0ff', border: '#c9b8e8' },
+    ready_for_client:          { bar: '#116E53', text: '#116E53', bg: '#EEF5ED', border: '#CEE8D8' },
+    client_requested_changes:  { bar: '#FFA596', text: '#c0432b', bg: '#F9E4DC', border: '#F6C1B6' },
+    live:                      { bar: '#0d5540', text: '#0d5540', bg: '#EEF5ED', border: '#8BCCA9' },
+    on_hold:                   { bar: '#B8B8B8', text: '#767676', bg: '#F3F3F3', border: '#DCDCDC' },
+    cancelled:                 { bar: '#D8D8D8', text: '#9A9A9A', bg: '#F7F7F7', border: '#E6E6E6' },
+  };
+
+  function etStatusCfg(key) { return etStatuses.find(s => s.key === key); }
+
+  function etOwnerPerson(ownerRole, creative) {
+    if (ownerRole === 'editor')   return creative.editor || null;
+    if (ownerRole === 'reviewer') return creative.reviewer || null;
+    if (ownerRole === 'creative_strategist') {
+      return creative.briefedBy || (etRoster.find(p => p.role === 'creative_strategist') || {}).name || null;
+    }
+    return null;
+  }
+
+  function etOwnerLine(creative) {
+    const cfg = etStatusCfg(creative.status);
+    if (!cfg || !cfg.ownerRole) return null;
+    const roleLabel = ROLE_LABELS[cfg.ownerRole] || cfg.ownerRole;
+    const person = etOwnerPerson(cfg.ownerRole, creative);
+    return person ? `${cfg.label} → ${roleLabel} (${person})` : `${cfg.label} → ${roleLabel}`;
+  }
+
+  function etHoursSince(iso) {
+    return (Date.now() - new Date(iso).getTime()) / (1000 * 60 * 60);
+  }
+
+  function etIsStale(creative) {
+    const cfg = etStatusCfg(creative.status);
+    if (!cfg || cfg.thresholdHours == null) return false;
+    return etHoursSince(creative.statusUpdatedAt) >= cfg.thresholdHours;
+  }
+
+  function etWasAlerted(creative) {
+    const st = creative.alertState || {};
+    return st.lastAlertedStatus === creative.status && etIsStale(creative);
+  }
+
+  // ── Data loading ──
+
+  async function etLoadStaticConfig() {
+    const [clientsRes, rosterRes, statusesRes] = await Promise.all([
+      fetch('/data/edit-tracker-clients.json'),
+      fetch('/data/edit-tracker-roster.json'),
+      fetch('/data/edit-tracker-statuses.json'),
+    ]);
+    const clientsData  = await clientsRes.json();
+    const rosterData   = await rosterRes.json();
+    const statusesData = await statusesRes.json();
+
+    etClients      = clientsData.clients || [];
+    etRoster       = rosterData.people || [];
+    etStatuses     = statusesData.statuses || [];
+    etTransitions  = statusesData.transitions || {};
+  }
+
+  async function etLoadCreatives() {
+    const resp = await fetch('/api/edit-tracker');
+    const data = await resp.json();
+    if (!resp.ok || data.error) throw new Error(data.error || 'Failed to load creatives');
+    etCreatives = data.creatives || [];
+  }
+
+  async function etRefreshAll(showLoading) {
+    if (showLoading) document.getElementById('et-loading').style.display = 'block';
+    try {
+      await etLoadCreatives();
+      etRender();
+    } catch (e) {
+      etShowToast('Error loading: ' + e.message, true);
+    } finally {
+      document.getElementById('et-loading').style.display = 'none';
+    }
+  }
+
+  // ── Rendering ──
+
+  function etPlatformIcon(type) {
+    if (type === 'video') {
+      return '<svg class="et-platform-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>';
+    }
+    return '<svg class="et-platform-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  }
+
+  function etRenderSummary() {
+    const stale       = etCreatives.filter(etIsStale).length;
+    const inEdit       = etCreatives.filter(c => c.status === 'in_edit').length;
+    const readyClient = etCreatives.filter(c => c.status === 'ready_for_client').length;
+    document.getElementById('et-sum-stale').textContent       = stale;
+    document.getElementById('et-sum-inedit').textContent       = inEdit;
+    document.getElementById('et-sum-readyclient').textContent = readyClient;
+  }
+
+  function etRenderRow(creative) {
+    const colors = STATUS_COLORS[creative.status] || STATUS_COLORS.needs_brief;
+    const cfg    = etStatusCfg(creative.status) || {};
+    const stale  = etIsStale(creative);
+    const hours  = Math.round(etHoursSince(creative.statusUpdatedAt));
+
+    const ownerLine = etOwnerLine(creative);
+    const timeText  = cfg.thresholdHours != null
+      ? `updated ${hours}h ago · limit ${cfg.thresholdHours}h`
+      : `updated ${hours}h ago`;
+
+    const alertLine = etWasAlerted(creative)
+      ? `<span class="et-alert-line">⚠ Alerted in Slack → tagging ${ROLE_LABELS[cfg.ownerRole] || ''}${etOwnerPerson(cfg.ownerRole, creative) ? ' (' + etOwnerPerson(cfg.ownerRole, creative) + ')' : ''}</span>`
+      : '';
+
+    const linkBtn = creative.currentLink
+      ? `<a class="et-link-btn" href="${etEscapeAttr(creative.currentLink)}" target="_blank" rel="noopener noreferrer" title="Open current link">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+         </a>`
+      : `<span class="et-no-link">No link yet</span>`;
+
+    const quickBtns = (etTransitions[creative.status] || []).map(toStatus => {
+      const toCfg = etStatusCfg(toStatus);
+      return `<button class="et-quick-btn" onclick="etTransition('${creative.id}','${toStatus}')">→ ${toCfg ? toCfg.label : toStatus}</button>`;
+    }).join('');
+
+    const overrideOptions = etStatuses.map(s =>
+      `<option value="${s.key}" ${s.key === creative.status ? 'selected' : ''}>${s.label}</option>`
+    ).join('');
+
+    return `
+      <div class="et-row" style="border-left-color:${colors.bar}">
+        <div class="et-row-main">
+          <div class="et-row-top">
+            ${etPlatformIcon(creative.platformType)}
+            <span class="et-name">${etEscapeHtml(creative.name)}</span>
+            <span class="et-pill" style="color:${colors.text};background:${colors.bg};border-color:${colors.border}">${cfg.label || creative.status}</span>
+          </div>
+          <div class="et-row-meta">
+            ${ownerLine ? `<span class="et-owner-line">${etEscapeHtml(ownerLine)}</span>` : ''}
+            <span class="et-time ${stale ? 'stale' : ''}">
+              ${stale ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' : ''}
+              ${timeText}
+            </span>
+            ${alertLine}
+          </div>
+        </div>
+        <div class="et-row-actions">
+          ${linkBtn}
+          <button class="et-edit-btn" title="Edit" onclick="etOpenEditModal('${creative.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          ${quickBtns}
+          <div class="et-override">
+            <select id="et-override-${creative.id}">${overrideOptions}</select>
+            <button class="btn btn-ghost btn-sm" onclick="etManualOverride('${creative.id}')">Go</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function etRender() {
+    etRenderSummary();
+
+    const container = document.getElementById('et-sections');
+    container.innerHTML = etClients.map(client => {
+      const rows = etCreatives.filter(c => c.client === client);
+      const body = rows.length
+        ? `<div class="et-rows">${rows.map(etRenderRow).join('')}</div>`
+        : `<div class="client-empty">No creatives yet.</div>`;
+      return `
+        <div class="client-section">
+          <div class="client-section-title">${etEscapeHtml(client)} <span class="client-section-count">(${rows.length})</span></div>
+          ${body}
+        </div>`;
+    }).join('');
+  }
+
+  // ── Actions ──
+
+  async function etTransition(id, toStatus) {
+    const body = { action: 'transition', id, toStatus };
+    if (toStatus === 'briefed') {
+      const strategist = etRoster.find(p => p.role === 'creative_strategist');
+      body.briefedBy = strategist ? strategist.name : null;
+    }
+    await etPost(body, 'Status updated');
+  }
+
+  async function etManualOverride(id) {
+    const select = document.getElementById(`et-override-${id}`);
+    const toStatus = select.value;
+    const creative = etCreatives.find(c => c.id === id);
+    if (creative && creative.status === toStatus) return;
+    await etTransition(id, toStatus);
+  }
+
+  async function etPost(body, successMsg) {
+    try {
+      const resp = await fetch('/api/edit-tracker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error || 'Save failed');
+      etShowToast(successMsg + ' ✓');
+      await etRefreshAll(false);
+      return data;
+    } catch (e) {
+      etShowToast('Error: ' + e.message, true);
+      throw e;
+    }
+  }
+
+  // ── Create / Edit modal ──
+
+  let etModalMode = 'create'; // 'create' | 'edit'
+  let etModalEditId = null;
+
+  function etPopulateModalSelects() {
+    const clientSel = document.getElementById('et-f-client');
+    clientSel.innerHTML = etClients.map(c => `<option value="${etEscapeAttr(c)}">${etEscapeHtml(c)}</option>`).join('');
+
+    const editorSel = document.getElementById('et-f-editor');
+    const editors   = etRoster.filter(p => p.role === 'editor');
+    editorSel.innerHTML = '<option value="">— None —</option>' + editors.map(p => `<option value="${etEscapeAttr(p.name)}">${etEscapeHtml(p.name)}</option>`).join('');
+
+    const reviewerSel = document.getElementById('et-f-reviewer');
+    const reviewers    = etRoster.filter(p => p.role === 'reviewer' || p.role === 'reviewer_script');
+    reviewerSel.innerHTML = '<option value="">— None —</option>' + reviewers.map(p =>
+      `<option value="${etEscapeAttr(p.name)}">${etEscapeHtml(p.name)} (${ROLE_LABELS[p.role]})</option>`
+    ).join('');
+    const defaultReviewer = etRoster.find(p => p.isDefault) || reviewers[0];
+    if (defaultReviewer) reviewerSel.value = defaultReviewer.name;
+  }
+
+  function etOpenCreateModal() {
+    etModalMode = 'create';
+    etModalEditId = null;
+    document.getElementById('et-modal-title').textContent = 'New Creative';
+    etPopulateModalSelects();
+    document.getElementById('et-f-name').value    = '';
+    document.getElementById('et-f-platform').value = 'video';
+    document.getElementById('et-f-link').value     = '';
+    document.getElementById('et-f-notes').value    = '';
+    document.getElementById('et-modal-error').classList.remove('visible');
+    document.getElementById('et-modal').classList.add('visible');
+  }
+
+  function etOpenEditModal(id) {
+    const c = etCreatives.find(x => x.id === id);
+    if (!c) return;
+    etModalMode = 'edit';
+    etModalEditId = id;
+    document.getElementById('et-modal-title').textContent = 'Edit Creative';
+    etPopulateModalSelects();
+    document.getElementById('et-f-name').value     = c.name;
+    document.getElementById('et-f-client').value   = c.client;
+    document.getElementById('et-f-platform').value = c.platformType;
+    document.getElementById('et-f-editor').value   = c.editor || '';
+    document.getElementById('et-f-reviewer').value = c.reviewer || '';
+    document.getElementById('et-f-link').value     = c.currentLink || '';
+    document.getElementById('et-f-notes').value    = c.internalNotes || '';
+    document.getElementById('et-modal-error').classList.remove('visible');
+    document.getElementById('et-modal').classList.add('visible');
+  }
+
+  function etCloseModal() {
+    document.getElementById('et-modal').classList.remove('visible');
+  }
+
+  async function etSubmitModal() {
+    const name         = document.getElementById('et-f-name').value.trim();
+    const client       = document.getElementById('et-f-client').value;
+    const platformType = document.getElementById('et-f-platform').value;
+    const editor       = document.getElementById('et-f-editor').value || null;
+    const reviewer     = document.getElementById('et-f-reviewer').value || null;
+    const currentLink  = document.getElementById('et-f-link').value.trim() || null;
+    const internalNotes = document.getElementById('et-f-notes').value.trim();
+
+    const errEl = document.getElementById('et-modal-error');
+    if (!name) { errEl.textContent = 'Name is required.'; errEl.classList.add('visible'); return; }
+
+    try {
+      if (etModalMode === 'create') {
+        await etPost({ action: 'create', name, client, platformType, editor, reviewer, internalNotes }, 'Creative added');
+      } else {
+        await etPost({
+          action: 'updateFields',
+          id: etModalEditId,
+          fields: { name, client, platformType, editor, reviewer, currentLink, internalNotes },
+        }, 'Creative updated');
+      }
+      etCloseModal();
+    } catch (e) {
+      errEl.textContent = e.message;
+      errEl.classList.add('visible');
+    }
+  }
+
+  // ── Utilities ──
+
+  function etEscapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+  function etEscapeAttr(s) { return etEscapeHtml(s); }
+
+  let etToastTimer = null;
+  function etShowToast(msg, isError) {
+    const t = document.getElementById('et-toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    clearTimeout(etToastTimer);
+    etToastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── Init ──
+  (async function init() {
+    try {
+      await etLoadStaticConfig();
+      await etRefreshAll(true);
+    } catch (e) {
+      document.getElementById('et-loading').textContent = 'Error loading: ' + e.message;
+    }
+  })();
+
+  // Light polling so a shared dashboard stays roughly live across open tabs.
+  setInterval(() => etRefreshAll(false), 60000);
+</script>
+</body>
+</html>

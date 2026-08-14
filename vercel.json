@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/edit-tracker-alerts", "schedule": "0 * * * *" }
+  ]
+}

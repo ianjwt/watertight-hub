@@ -1,0 +1,24 @@
+{
+  "statuses": [
+    { "key": "needs_brief",               "label": "Needs brief",               "ownerRole": "creative_strategist", "thresholdHours": 48   },
+    { "key": "briefed",                   "label": "Briefed",                   "ownerRole": "editor",               "thresholdHours": 24   },
+    { "key": "in_edit",                   "label": "In edit",                   "ownerRole": "editor",               "thresholdHours": 72   },
+    { "key": "ready_for_review",          "label": "Ready for review",          "ownerRole": "reviewer",             "thresholdHours": 24   },
+    { "key": "ready_for_client",          "label": "Ready for client",          "ownerRole": "creative_strategist", "thresholdHours": 24   },
+    { "key": "client_requested_changes",  "label": "Client requested changes",  "ownerRole": "editor",               "thresholdHours": 48   },
+    { "key": "live",                      "label": "Live",                      "ownerRole": null,                   "thresholdHours": null },
+    { "key": "on_hold",                   "label": "On hold",                   "ownerRole": null,                   "thresholdHours": null },
+    { "key": "cancelled",                 "label": "Cancelled",                 "ownerRole": null,                   "thresholdHours": null }
+  ],
+  "transitions": {
+    "needs_brief":              ["briefed"],
+    "briefed":                  ["in_edit", "ready_for_review"],
+    "in_edit":                  ["ready_for_review"],
+    "ready_for_review":         ["ready_for_client"],
+    "ready_for_client":         ["live"],
+    "client_requested_changes": ["in_edit"],
+    "live":                     [],
+    "on_hold":                  [],
+    "cancelled":                []
+  }
+}

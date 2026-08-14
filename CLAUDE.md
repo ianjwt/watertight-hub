@@ -29,6 +29,7 @@ The Watertight Vortex is an internal tool hub for Watertight, a boutique wellnes
 - **The Shortlist** — standalone page at `shortlist.html` (see below)
 - **Creative Analyst** — Meta Ads audit tool, client-side XLSX parsing via SheetJS
 - **TalentTight** — external link card to `cm.watertight.co`
+- **Edit Tracker** — standalone page at `edit-tracker.html` (see below)
 
 ## The Shortlist (`shortlist.html`)
 The main influencer directory tool. Key details:
@@ -40,6 +41,23 @@ The main influencer directory tool. Key details:
 - Circle checkbox selection → "Generate Google Sheet" exports CSV with `=HYPERLINK()` formulas
 - "+ Add" modal commits new influencers directly to GitHub via GitHub API (`GITHUB_TOKEN` env var required)
 - When updating `INFLUENCERS_DATA` via GitHub API commit, use regex replace on the existing array in the file
+
+## Edit Tracker (`edit-tracker.html`)
+Replaces the team's Google Sheet creative-status tracker. Standalone page, same GitHub-Contents-API
+commit pattern as Deck Builder's Client Config (see Key technical patterns), not a database.
+- Data lives at `data/edit-tracker-{roster,statuses,clients,creatives}.json`. Roster and statuses are
+  hand-edited config (no in-app editor in v1); clients and creatives are read/written by the app.
+- `api/edit-tracker.js` — GET returns creatives; POST actions `create` / `transition` / `updateFields`.
+  Writes retry once on a GitHub SHA conflict (see `api/_lib/github-json.js`).
+- `api/edit-tracker-alerts.js` — hourly Vercel Cron (`vercel.json`) flags stale creatives to Slack via
+  `SLACK_EDIT_TRACKER_WEBHOOK_URL`; no-ops cleanly if that env var isn't set.
+- `scripts/migrate-edit-tracker.mjs` — one-time local migration from the old Google Sheet
+  (`discover` then `apply` mode); not part of the deployed app.
+- Cuyama Buckhorn is explicitly blocked as a client, enforced server-side in `api/edit-tracker.js`,
+  not just omitted from seed data.
+- Full spec: `docs/specs/watertight-edit-tracker-spec.md` — note its "Tech notes" section (Next.js,
+  Postgres/Supabase) is superseded; the app that got built is plain HTML/JS + the GitHub-commit
+  pattern above, matching the rest of this repo.
 
 ## Clients
 Barriere, Deliciously Ella, EVOLV, Sollis, SoWell, ZOE
@@ -58,9 +76,12 @@ Barriere, Deliciously Ella, EVOLV, Sollis, SoWell, ZOE
 ## Environment variables
 Set in both Vercel and Render dashboards:
 - `ANTHROPIC_API_KEY` — for Recap Generator proxy
-- `GITHUB_TOKEN` — for Shortlist add-influencer GitHub commits (repo scope)
+- `GITHUB_TOKEN` — for Shortlist add-influencer GitHub commits (repo scope); also used by Deck Builder's
+  Client Config and Edit Tracker for their GitHub-Contents-API read/write pattern
 - `SITE_PASSWORD` — shared team password (also hashed in login.html)
 - `SESSION_SECRET` — used by api/auth.js (currently unused but set)
+- `SLACK_EDIT_TRACKER_WEBHOOK_URL` — Edit Tracker's hourly staleness alerts; not yet set, cron no-ops until it is
+- `CRON_SECRET` — optional; if set, `api/edit-tracker-alerts.js` requires a matching `Authorization: Bearer` header
 
 ## Visual style
 - Font: Poppins (Google Fonts)
