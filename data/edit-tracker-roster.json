@@ -1,0 +1,9 @@
+{
+  "people": [
+    { "id": "mikayla",        "name": "Mikayla", "role": "creative_strategist" },
+    { "id": "mikayla-editor", "name": "Mikayla", "role": "editor" },
+    { "id": "andrew",         "name": "Andrew",  "role": "editor" },
+    { "id": "ian",     "name": "Ian",     "role": "reviewer", "isDefault": true },
+    { "id": "ariana",  "name": "Ariana",  "role": "reviewer_script" }
+  ]
+}
