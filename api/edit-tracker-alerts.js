@@ -1,4 +1,5 @@
-// Hourly Vercel Cron job (see vercel.json) — flags stale creatives to Slack.
+// Daily Vercel Cron job (see vercel.json, 9am ET) — flags stale creatives to Slack.
+// Runs once/day, not hourly, because Vercel's Hobby plan rejects more-frequent cron schedules.
 // No-ops cleanly (no GitHub reads, no writes) when SLACK_EDIT_TRACKER_WEBHOOK_URL isn't set yet.
 
 import { githubGetJson, githubUpdateJson } from './_lib/github-json.js';

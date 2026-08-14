@@ -49,7 +49,7 @@ commit pattern as Deck Builder's Client Config (see Key technical patterns), not
   hand-edited config (no in-app editor in v1); clients and creatives are read/written by the app.
 - `api/edit-tracker.js` — GET returns creatives; POST actions `create` / `transition` / `updateFields`.
   Writes retry once on a GitHub SHA conflict (see `api/_lib/github-json.js`).
-- `api/edit-tracker-alerts.js` — hourly Vercel Cron (`vercel.json`) flags stale creatives to Slack via
+- `api/edit-tracker-alerts.js` — daily Vercel Cron (`vercel.json`, 9am ET) flags stale creatives to Slack via
   `SLACK_EDIT_TRACKER_WEBHOOK_URL`; no-ops cleanly if that env var isn't set.
 - `scripts/migrate-edit-tracker.mjs` — one-time local migration from the old Google Sheet
   (`discover` then `apply` mode); not part of the deployed app.
@@ -80,7 +80,7 @@ Set in both Vercel and Render dashboards:
   Client Config and Edit Tracker for their GitHub-Contents-API read/write pattern
 - `SITE_PASSWORD` — shared team password (also hashed in login.html)
 - `SESSION_SECRET` — used by api/auth.js (currently unused but set)
-- `SLACK_EDIT_TRACKER_WEBHOOK_URL` — Edit Tracker's hourly staleness alerts; not yet set, cron no-ops until it is
+- `SLACK_EDIT_TRACKER_WEBHOOK_URL` — Edit Tracker's daily staleness alerts; not yet set, cron no-ops until it is
 - `CRON_SECRET` — optional; if set, `api/edit-tracker-alerts.js` requires a matching `Authorization: Bearer` header
 
 ## Visual style
