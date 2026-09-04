@@ -400,6 +400,18 @@ function emptyStages() {
   return stages;
 }
 
+// Flags `key` as unmatched only if the stage immediately before it in STAGE_ORDER was
+// actually reached — i.e. only where "we expected evidence here and found none" is a
+// meaningful claim. Someone who hasn't even reached stage 1 shouldn't have stages 4-6
+// rendered as "couldn't match" (hatched) instead of plain "not reached" (grey); the
+// pipeline hasn't plausibly gotten that far for the matcher to have failed at.
+function markUnmatchedIfPlausible(stages, key) {
+  const idx = STAGE_ORDER.indexOf(key);
+  const prevKey = STAGE_ORDER[idx - 1];
+  if (prevKey && !stages[prevKey].reached) return;
+  stages[key] = { ...stages[key], unmatched: true };
+}
+
 // Furthest CONTINUOUS stage from the start of the lifecycle — not just the latest
 // stage with reached: true anywhere in the record. Sources are matched/evidenced
 // independently (see the unmatched flags above), so a later stage can show reached
@@ -466,13 +478,13 @@ async function runSync() {
     }
 
     if (!editPart) {
-      stages.edited_for_paid = { ...stages.edited_for_paid, unmatched: true };
-      stages.shared_with_client = { ...stages.shared_with_client, unmatched: true };
       unmatchedEditTracker.push(canonical);
+      markUnmatchedIfPlausible(stages, 'edited_for_paid');
+      markUnmatchedIfPlausible(stages, 'shared_with_client');
     }
     if (!whitelistPart) {
-      stages.launched_in_paid = { ...stages.launched_in_paid, unmatched: true };
       unmatchedWhitelisting.push(canonical);
+      markUnmatchedIfPlausible(stages, 'launched_in_paid');
     }
 
     stages.performing_in_paid = computePerformingStage(stages.launched_in_paid, results.weeks);
