@@ -1,6 +1,482 @@
 {
   "client": "Evolv",
-  "lastSynced": null,
-  "warnings": [],
-  "records": []
+  "lastSynced": "2026-09-04T18:20:04.673Z",
+  "warnings": [
+    "Edit Tracker: couldn't match 10 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Roma Abdesselam, Kate Love, Leah Lawson, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle",
+    "Whitelisting: couldn't match 7 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle"
+  ],
+  "records": [
+    {
+      "influencer": "Audrey Peters",
+      "client": "Evolv",
+      "currentStage": "live_organic",
+      "stages": {
+        "briefed": {
+          "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": true,
+          "date": null
+        },
+        "live_organic": {
+          "reached": true,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1wTVE2nCwMBuFRd8sqz2Avq8qV11gOYwC?usp=drive_link",
+        "pitchTrackerPostedLink": "Story Set"
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Kelly Bensimon",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Erin Devine",
+      "client": "Evolv",
+      "currentStage": "performing_in_paid",
+      "stages": {
+        "briefed": {
+          "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": true,
+          "date": null
+        },
+        "live_organic": {
+          "reached": true,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": true,
+          "date": "2026-08-14T15:18:25.000Z"
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null
+        },
+        "launched_in_paid": {
+          "reached": true,
+          "date": "2026-02-09"
+        },
+        "performing_in_paid": {
+          "reached": true,
+          "date": "2026-02-15"
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1B_OtmdrblG0jYvSoTo4d9-F6KjOD2WST?usp=drive_link",
+        "pitchTrackerPostedLink": "https://www.instagram.com/reel/DavL9qNtn5c/",
+        "editTrackerCreativeId": "evolv-mixed-creator-ad-becca-erin-leland-v1",
+        "whitelistingRow": true
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Roma Abdesselam",
+      "client": "Evolv",
+      "currentStage": "performing_in_paid",
+      "stages": {
+        "briefed": {
+          "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": true,
+          "date": null
+        },
+        "live_organic": {
+          "reached": true,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": true,
+          "date": "2026-02-13"
+        },
+        "performing_in_paid": {
+          "reached": true,
+          "date": "2026-02-15"
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1A1zbpmHn7EA0dY0eXqDOsA9oJqBIeu06?usp=drive_link",
+        "pitchTrackerPostedLink": "paid only",
+        "whitelistingRow": true
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Kate Love",
+      "client": "Evolv",
+      "currentStage": "performing_in_paid",
+      "stages": {
+        "briefed": {
+          "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": true,
+          "date": null
+        },
+        "live_organic": {
+          "reached": true,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": true,
+          "date": "2026-03-19"
+        },
+        "performing_in_paid": {
+          "reached": true,
+          "date": "2026-03-22"
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1WYdu_ALdUc9VHX88-BOyAR4OkLrk8UnY?usp=drive_link",
+        "pitchTrackerPostedLink": "Story Set",
+        "whitelistingRow": true
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Leah Lawson",
+      "client": "Evolv",
+      "currentStage": "performing_in_paid",
+      "stages": {
+        "briefed": {
+          "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": true,
+          "date": "2026-08-17"
+        },
+        "performing_in_paid": {
+          "reached": true,
+          "date": "2026-08-23"
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null,
+        "whitelistingRow": true
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Vicka Trillion",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Ashley Provost",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Victoria Coffer",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Kelly Hughes",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    },
+    {
+      "influencer": "Elena Belle",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "launched_in_paid": {
+          "reached": false,
+          "date": null,
+          "unmatched": true
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null
+      },
+      "lastSynced": "2026-09-04T18:20:04.673Z"
+    }
+  ]
 }
