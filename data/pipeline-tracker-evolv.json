@@ -1,6 +1,6 @@
 {
   "client": "Evolv",
-  "lastSynced": "2026-09-04T18:33:50.969Z",
+  "lastSynced": "2026-09-04T18:34:05.887Z",
   "warnings": [
     "Edit Tracker: couldn't match 10 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Roma Abdesselam, Kate Love, Leah Lawson, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle",
     "Whitelisting: couldn't match 7 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle"
@@ -30,13 +30,11 @@
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -47,7 +45,7 @@
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1wTVE2nCwMBuFRd8sqz2Avq8qV11gOYwC?usp=drive_link",
         "pitchTrackerPostedLink": "Story Set"
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Kelly Bensimon",
@@ -68,18 +66,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -90,7 +85,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Erin Devine",
@@ -132,7 +127,7 @@
         "editTrackerCreativeId": "evolv-mixed-creator-ad-becca-erin-leland-v1",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Roma Abdesselam",
@@ -158,8 +153,7 @@
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": true,
@@ -175,7 +169,7 @@
         "pitchTrackerPostedLink": "paid only",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Kate Love",
@@ -201,8 +195,7 @@
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": true,
@@ -218,7 +211,7 @@
         "pitchTrackerPostedLink": "Story Set",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Leah Lawson",
@@ -239,13 +232,11 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": true,
@@ -261,7 +252,7 @@
         "pitchTrackerPostedLink": null,
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Vicka Trillion",
@@ -282,18 +273,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -304,7 +292,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Ashley Provost",
@@ -325,18 +313,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -347,7 +332,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Victoria Coffer",
@@ -368,18 +353,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -390,7 +372,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Kelly Hughes",
@@ -411,18 +393,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -433,7 +412,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     },
     {
       "influencer": "Elena Belle",
@@ -454,18 +433,15 @@
         },
         "edited_for_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "shared_with_client": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "launched_in_paid": {
           "reached": false,
-          "date": null,
-          "unmatched": true
+          "date": null
         },
         "performing_in_paid": {
           "reached": false,
@@ -476,7 +452,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-04T18:33:50.969Z"
+      "lastSynced": "2026-09-04T18:34:05.887Z"
     }
   ]
 }
