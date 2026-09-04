@@ -400,9 +400,19 @@ function emptyStages() {
   return stages;
 }
 
+// Furthest CONTINUOUS stage from the start of the lifecycle — not just the latest
+// stage with reached: true anywhere in the record. Sources are matched/evidenced
+// independently (see the unmatched flags above), so a later stage can show reached
+// while a middle one doesn't (unmatched, or genuinely not there yet) — without this,
+// an influencer could look like they jumped straight from stage 3 to stage 7 with an
+// unmatched/unreached stage 4-6 in between, which misrepresents where they actually
+// stand in the pipeline.
 function currentStageOf(stages) {
   let current = null;
-  for (const key of STAGE_ORDER) if (stages[key].reached) current = key;
+  for (const key of STAGE_ORDER) {
+    if (!stages[key].reached) break;
+    current = key;
+  }
   return current;
 }
 
