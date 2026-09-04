@@ -30,6 +30,7 @@ The Watertight Vortex is an internal tool hub for Watertight, a boutique wellnes
 - **Creative Analyst** — Meta Ads audit tool, client-side XLSX parsing via SheetJS
 - **TalentTight** — external link card to `cm.watertight.co`
 - **Edit Tracker** — standalone page at `edit-tracker.html` (see below)
+- **Pipeline Tracker** — standalone page at `pipeline-tracker.html` (see below)
 
 ## The Shortlist (`shortlist.html`)
 The main influencer directory tool. Key details:
@@ -59,6 +60,30 @@ commit pattern as Deck Builder's Client Config (see Key technical patterns), not
   Postgres/Supabase) is superseded; the app that got built is plain HTML/JS + the GitHub-commit
   pattern above, matching the rest of this repo.
 
+## Pipeline Tracker (`pipeline-tracker.html`)
+Read-only view of one row per influencer per client, showing current stage across the 7-stage
+content lifecycle (briefed → created → live organic → edited for paid → shared with client →
+launched in paid → performing in paid). v1 is scoped to **Evolv only**. Full spec:
+`pipeline-tracker-v1-spec.md`.
+- Data lives at `data/pipeline-tracker-evolv.json` (one file per client, written by the sync —
+  no in-app editor, no write actions from the UI). `data/pipeline-tracker-config.json` holds the
+  per-client source Sheet IDs/tab names (hand-edited, same pattern as `data/clients.json`) —
+  **the 3 Evolv Sheet IDs must be filled in before the sync produces real data.**
+  `data/pipeline-tracker-aliases.json` is the canonical-name table used to join influencer
+  identities that are spelled differently across sources.
+- `api/pipeline-sync.js` — daily Vercel Cron (`vercel.json`, 12pm UTC): reads the Pitch Tracker,
+  Whitelisting, and Results Tracker Google Sheets via the same `googleapis` JWT pattern as
+  `api/sheets-proxy.js` (`GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`),
+  reads the existing Edit Tracker JSON for stages 4-5 (no new integration there), joins on
+  canonical influencer name, and commits the result via the GitHub Contents API
+  (`api/_lib/github-json.js`). Missing/misconfigured sheet config degrades gracefully — it skips
+  that stage and records a warning in the output rather than failing the whole sync.
+- `api/pipeline-tracker.js` — GET-only read endpoint serving the synced JSON to the frontend.
+- Known v1 limitations (surfaced in the UI, not silent): stage 7 (performing in paid) is
+  account-level paid performance data, not per-influencer attribution; Edit Tracker matching
+  (stages 4-5) is a best-effort substring match against free-text ad names, since Edit Tracker
+  creatives don't carry a clean single-influencer field.
+
 ## Clients
 Barriere, Deliciously Ella, EVOLV, Sollis, SoWell, ZOE
 
@@ -77,11 +102,16 @@ Barriere, Deliciously Ella, EVOLV, Sollis, SoWell, ZOE
 Set in both Vercel and Render dashboards:
 - `ANTHROPIC_API_KEY` — for Recap Generator proxy
 - `GITHUB_TOKEN` — for Shortlist add-influencer GitHub commits (repo scope); also used by Deck Builder's
-  Client Config and Edit Tracker for their GitHub-Contents-API read/write pattern
+  Client Config and Edit Tracker for their GitHub-Contents-API read/write pattern; also used by
+  Pipeline Tracker's sync for the same commit pattern
 - `SITE_PASSWORD` — shared team password (also hashed in login.html)
 - `SESSION_SECRET` — used by api/auth.js (currently unused but set)
 - `SLACK_EDIT_TRACKER_WEBHOOK_URL` — Edit Tracker's daily staleness alerts; not yet set, cron no-ops until it is
-- `CRON_SECRET` — optional; if set, `api/edit-tracker-alerts.js` requires a matching `Authorization: Bearer` header
+- `CRON_SECRET` — optional; if set, `api/edit-tracker-alerts.js` and `api/pipeline-sync.js` require a
+  matching `Authorization: Bearer` header
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` — service account JWT used by
+  `api/sheets-proxy.js` and `api/pipeline-sync.js` to read Google Sheets read-only. Pipeline Tracker's
+  3 new source sheets must be individually shared with this service account's email.
 
 ## Visual style
 - Font: Poppins (Google Fonts)

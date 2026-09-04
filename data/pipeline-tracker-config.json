@@ -1,0 +1,20 @@
+{
+  "clients": ["Evolv"],
+  "evolv": {
+    "pitchTracker": {
+      "sheetId": "14KqoEmcSxnNLllG9yVyOJI_Z-NyMpmM6pdmlPDbIz2w",
+      "tabName": "Q3-26 Pitch Tracker",
+      "note": "Point at the CURRENT QUARTER's Evolv Pitch Tracker sheet (e.g. 'Q3-26 Evolv Pitch Tracker'). New spreadsheet each quarter — update sheetId by hand until there's a reason to automate it."
+    },
+    "whitelisting": {
+      "sheetId": "13tHCJrC4nB6YjxkXpmSe5uG77_jp76ehWo1QKhjCvzQ",
+      "tabName": "Influencer Video Ad Tracker",
+      "note": "'Influencer Video Ad Tracker' tab inside the 'Shared_Evolv Paid Media & Whitelisting' spreadsheet. Header is split into METS/TikTok column-groups, not a flat header row — see api/pipeline-sync.js parseWhitelistingSheet."
+    },
+    "resultsTracker": {
+      "sheetId": "1lX9scDHXkWEBEAZKjvc0qqxi-OQlQgUJ2kOU13mdMEY",
+      "tabName": "Weekly Performance",
+      "note": "Evolv Paid Media Results Tracker — weekly account-level rows (Week Start, Week End, Influencer Orders, Total Orders, Influencer % of Orders, Influencer CPA, Overall CPA)."
+    }
+  }
+}

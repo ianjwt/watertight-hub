@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Tracker — Watertight Vortex</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wt-green:    #116E53;
+    --wt-green-2:  #8BCCA9;
+    --wt-green-3:  #CEE8D8;
+    --wt-green-4:  #EEF5ED;
+    --wt-pink-1:   #FFA596;
+    --wt-pink-2:   #F6C1B6;
+    --wt-pink-3:   #F9E4DC;
+    --bg:          #F8FBF9;
+    --white:       #FFFFFF;
+    --text:        #116E53;
+    --text-mid:    #3a6657;
+    --text-light:  #7aaa96;
+    --border:      rgba(17,110,83,0.12);
+    --shadow-sm:   0 2px 8px rgba(17,110,83,0.06);
+    --shadow-md:   0 4px 20px rgba(17,110,83,0.10);
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   20px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+  header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 0 var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--wt-green); text-decoration: none; }
+  .logo svg { width: 24px; height: 24px; }
+  .header-right { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .page-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; gap: 16px; flex-wrap: wrap; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--wt-green); letter-spacing: -0.02em; margin-bottom: 4px; }
+  .page-subtitle { font-size: 13px; color: var(--text-light); }
+  .page-synced { font-size: 12px; color: var(--text-light); white-space: nowrap; }
+
+  .note-banner {
+    background: var(--wt-green-4); border: 1px solid var(--wt-green-3); border-radius: var(--radius-md);
+    padding: 12px 16px; font-size: 12.5px; color: var(--text-mid); margin-bottom: 20px; line-height: 1.5;
+  }
+  .note-banner strong { color: var(--wt-green); }
+
+  .warn-banner {
+    background: var(--wt-pink-3); border: 1px solid var(--wt-pink-2); border-radius: var(--radius-md);
+    padding: 12px 16px; font-size: 12.5px; color: #8a3a26; margin-bottom: 20px; line-height: 1.5;
+  }
+  .warn-banner ul { margin: 4px 0 0 18px; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-pill {
+    padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: white; color: var(--text-mid); font-family: 'Poppins', sans-serif;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .filter-pill.active { background: var(--wt-green); border-color: var(--wt-green); color: white; }
+  .filter-pill:disabled { cursor: not-allowed; opacity: 0.45; }
+
+  .pt-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+
+  .pt-row { border-bottom: 1px solid var(--border); }
+  .pt-row:last-child { border-bottom: none; }
+
+  .pt-row-main {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 18px; cursor: pointer; transition: background 0.1s;
+  }
+  .pt-row-main:hover { background: var(--wt-green-4); }
+
+  .pt-name-col { flex: 0 0 190px; min-width: 0; }
+  .pt-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+  .pt-client { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+  .pt-progress { flex: 1; display: flex; align-items: center; gap: 4px; min-width: 0; }
+  .pt-seg {
+    flex: 1; height: 8px; border-radius: 4px; background: var(--wt-green-3);
+    position: relative; cursor: help;
+  }
+  .pt-seg.reached { background: var(--wt-green); }
+  .pt-seg.unmatched { background: repeating-linear-gradient(135deg, var(--wt-pink-2), var(--wt-pink-2) 3px, var(--wt-pink-3) 3px, var(--wt-pink-3) 6px); }
+  .pt-seg.current { box-shadow: 0 0 0 2px var(--wt-green-2); }
+
+  .pt-stage-label { flex: 0 0 150px; font-size: 12px; font-weight: 600; color: var(--text-mid); text-align: right; }
+  .pt-stage-label.none { color: var(--text-light); font-weight: 500; font-style: italic; }
+
+  .pt-synced { flex: 0 0 90px; font-size: 11px; color: var(--text-light); text-align: right; }
+
+  .pt-chevron { flex: 0 0 16px; color: var(--text-light); transition: transform 0.15s; }
+  .pt-chevron svg { width: 14px; height: 14px; }
+  .pt-row.expanded .pt-chevron { transform: rotate(90deg); }
+
+  .pt-detail { display: none; padding: 4px 18px 18px 18px; }
+  .pt-row.expanded .pt-detail { display: block; }
+
+  .pt-timeline { display: flex; flex-direction: column; gap: 0; border-top: 1px dashed var(--border); margin-top: 4px; padding-top: 10px; }
+  .pt-tl-item { display: flex; align-items: center; gap: 12px; padding: 6px 4px; font-size: 12.5px; }
+  .pt-tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--wt-green-3); flex-shrink: 0; }
+  .pt-tl-dot.reached { background: var(--wt-green); }
+  .pt-tl-dot.unmatched { background: var(--wt-pink-2); }
+  .pt-tl-date.unmatched { color: #b5573f; font-style: italic; }
+  .pt-tl-label { flex: 0 0 190px; color: var(--text-mid); font-weight: 500; }
+  .pt-tl-label.reached { color: var(--text); font-weight: 600; }
+  .pt-tl-date { color: var(--text-light); }
+  .pt-tl-link { margin-left: auto; color: var(--wt-green); font-weight: 600; text-decoration: none; font-size: 11.5px; }
+  .pt-tl-link:hover { text-decoration: underline; }
+
+  .empty-note, .loading-note { font-size: 12px; color: var(--text-light); padding: 24px 4px; text-align: center; }
+
+  @media (max-width: 760px) {
+    .pt-row-main { flex-wrap: wrap; }
+    .pt-name-col { flex: 1 1 100%; }
+    .pt-stage-label { flex: 1 1 auto; text-align: left; }
+    .pt-synced { flex: 1 1 auto; text-align: left; }
+  }
+</style>
+</head>
+<body>
+<script>
+(function() {
+  if (sessionStorage.getItem('wt_auth') !== 'true') {
+    window.location.replace('/login.html');
+  }
+})();
+</script>
+
+<header>
+  <a href="/" class="logo">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 4C20 4 8 14 8 24C8 30.627 13.373 36 20 36C26.627 36 32 30.627 32 24C32 14 20 4 20 4Z" fill="#116E53"/>
+      <path d="M20 12C20 12 13 19 13 25C13 28.866 16.134 32 20 32C23.866 32 27 28.866 27 25C27 19 20 12 20 12Z" fill="white" fill-opacity="0.3"/>
+    </svg>
+    Watertight Vortex
+  </a>
+  <span class="header-right">Pipeline Tracker</span>
+</header>
+
+<div class="main">
+
+  <div class="page-top">
+    <div>
+      <div class="page-title">Pipeline Tracker</div>
+      <div class="page-subtitle">One row per influencer — current stage across the full content lifecycle, briefed to performing in paid.</div>
+    </div>
+    <div class="page-synced" id="pt-synced">–</div>
+  </div>
+
+  <div class="note-banner">
+    <strong>Read-only.</strong> This reflects state pulled from the Pitch Tracker, Edit Tracker, and paid media
+    sheets — it's not a place to update status by hand. Stage 7 (<em>Performing in paid</em>) is account-level
+    paid performance data only — v1 can show that performance data exists for a period where an influencer's
+    content is live, not attribute results to that influencer individually. Per-influencer attribution is a
+    planned upgrade.
+  </div>
+
+  <div id="pt-warnings"></div>
+
+  <div class="filter-row" id="pt-filters"></div>
+
+  <div id="pt-loading" class="loading-note">Loading…</div>
+  <div id="pt-table-wrap"></div>
+
+</div>
+
+<script>
+  const STAGE_ORDER = [
+    'briefed', 'created', 'live_organic',
+    'edited_for_paid', 'shared_with_client',
+    'launched_in_paid', 'performing_in_paid',
+  ];
+  const STAGE_LABELS = {
+    briefed:             'Organic content briefed',
+    created:             'Organic content created',
+    live_organic:        'Organic content live',
+    edited_for_paid:     'Edited for paid',
+    shared_with_client:  'Shared with client',
+    launched_in_paid:    'Launched in paid',
+    performing_in_paid:  'Performing in paid',
+  };
+
+  const CLIENTS = ['Evolv']; // v1 scope — filter built to extend once SoWell/Aroe are validated
+  let ptActiveClient = 'Evolv';
+  let ptData = null; // { client, lastSynced, warnings, records }
+  let ptExpanded = new Set();
+
+  function ptEscapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  function ptFmtDate(iso) {
+    if (!iso) return null;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function ptFmtDateTime(iso) {
+    if (!iso) return 'never';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  function ptRenderFilters() {
+    const el = document.getElementById('pt-filters');
+    el.innerHTML = CLIENTS.map(c => `
+      <button class="filter-pill ${c === ptActiveClient ? 'active' : ''}" ${c !== 'Evolv' ? 'disabled title="Coming soon — v1 is Evolv only"' : ''}
+        onclick="ptSetClient('${c}')">${ptEscapeHtml(c)}</button>
+    `).join('');
+  }
+
+  function ptSetClient(c) {
+    if (c !== 'Evolv') return;
+    ptActiveClient = c;
+    ptRenderFilters();
+  }
+
+  function ptRenderWarnings() {
+    const el = document.getElementById('pt-warnings');
+    const warnings = (ptData && ptData.warnings) || [];
+    if (!warnings.length) { el.innerHTML = ''; return; }
+    el.innerHTML = `<div class="warn-banner"><strong>Sync notes:</strong><ul>${warnings.map(w => `<li>${ptEscapeHtml(w)}</li>`).join('')}</ul></div>`;
+  }
+
+  function ptProgressSegs(record) {
+    const currentIdx = STAGE_ORDER.indexOf(record.currentStage);
+    return STAGE_ORDER.map((key, i) => {
+      const stage = record.stages[key] || {};
+      const cls = ['pt-seg'];
+      if (stage.reached) cls.push('reached');
+      if (stage.unmatched) cls.push('unmatched');
+      if (i === currentIdx) cls.push('current');
+      const titleSuffix = stage.reached ? ' — reached' : stage.unmatched ? " — couldn't match this influencer" : '';
+      return `<div class="${cls.join(' ')}" title="${ptEscapeHtml(STAGE_LABELS[key])}${titleSuffix}"></div>`;
+    }).join('');
+  }
+
+  function ptTimeline(record) {
+    return STAGE_ORDER.map(key => {
+      const stage = record.stages[key] || { reached: false, date: null };
+      const dateStr = ptFmtDate(stage.date);
+      const statusText = stage.reached
+        ? (dateStr || 'reached — date unknown')
+        : stage.unmatched ? "couldn't match — check name/alias" : 'not yet reached';
+      return `
+        <div class="pt-tl-item">
+          <div class="pt-tl-dot ${stage.reached ? 'reached' : ''} ${stage.unmatched ? 'unmatched' : ''}"></div>
+          <div class="pt-tl-label ${stage.reached ? 'reached' : ''}">${ptEscapeHtml(STAGE_LABELS[key])}</div>
+          <div class="pt-tl-date ${stage.unmatched ? 'unmatched' : ''}">${statusText}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function ptSourceLinks(record) {
+    const links = record.sourceLinks || {};
+    const entries = Object.entries(links).filter(([, v]) => typeof v === 'string' && /^https?:\/\//.test(v));
+    if (!entries.length) return '';
+    return `<div style="margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;">${entries.map(([k, v]) =>
+      `<a class="pt-tl-link" href="${ptEscapeHtml(v)}" target="_blank" rel="noopener noreferrer">${ptEscapeHtml(k)} ↗</a>`
+    ).join('')}</div>`;
+  }
+
+  function ptRenderRow(record, idx) {
+    const id = `pt-row-${idx}`;
+    const expanded = ptExpanded.has(id);
+    const stageLabel = record.currentStage ? STAGE_LABELS[record.currentStage] : 'Not yet briefed';
+
+    return `
+      <div class="pt-row ${expanded ? 'expanded' : ''}" id="${id}">
+        <div class="pt-row-main" onclick="ptToggleRow('${id}')">
+          <div class="pt-name-col">
+            <div class="pt-name">${ptEscapeHtml(record.influencer)}</div>
+            <div class="pt-client">${ptEscapeHtml(record.client)}</div>
+          </div>
+          <div class="pt-progress">${ptProgressSegs(record)}</div>
+          <div class="pt-stage-label ${record.currentStage ? '' : 'none'}">${ptEscapeHtml(stageLabel)}</div>
+          <div class="pt-synced">${ptFmtDateTime(record.lastSynced)}</div>
+          <div class="pt-chevron">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+        <div class="pt-detail">
+          <div class="pt-timeline">${ptTimeline(record)}</div>
+          ${ptSourceLinks(record)}
+        </div>
+      </div>`;
+  }
+
+  function ptToggleRow(id) {
+    if (ptExpanded.has(id)) ptExpanded.delete(id); else ptExpanded.add(id);
+    document.getElementById(id).classList.toggle('expanded');
+  }
+
+  function ptRenderTable() {
+    const wrap = document.getElementById('pt-table-wrap');
+    const records = (ptData && ptData.records || []).filter(r => r.client === ptActiveClient);
+    if (!records.length) {
+      wrap.innerHTML = '<div class="empty-note">No influencers synced yet for this client.</div>';
+      return;
+    }
+    wrap.innerHTML = `<div class="pt-table">${records.map(ptRenderRow).join('')}</div>`;
+  }
+
+  function ptRenderSyncedHeader() {
+    document.getElementById('pt-synced').textContent = ptData && ptData.lastSynced
+      ? `Last synced ${ptFmtDateTime(ptData.lastSynced)}`
+      : 'Not synced yet';
+  }
+
+  async function ptLoad() {
+    const loading = document.getElementById('pt-loading');
+    loading.style.display = 'block';
+    try {
+      const resp = await fetch('/api/pipeline-tracker?client=evolv');
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error || 'Failed to load Pipeline Tracker data');
+      ptData = data;
+      ptRenderSyncedHeader();
+      ptRenderWarnings();
+      ptRenderTable();
+    } catch (e) {
+      loading.textContent = 'Error loading: ' + e.message;
+      return;
+    }
+    loading.style.display = 'none';
+  }
+
+  (function init() {
+    ptRenderFilters();
+    ptLoad();
+  })();
+</script>
+</body>
+</html>
