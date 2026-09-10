@@ -1,6 +1,6 @@
 {
   "client": "Evolv",
-  "lastSynced": "2026-09-09T12:25:24.003Z",
+  "lastSynced": "2026-09-10T12:25:24.469Z",
   "warnings": [
     "Edit Tracker: couldn't match 10 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Roma Abdesselam, Kate Love, Leah Lawson, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle",
     "Whitelisting: couldn't match 7 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle"
@@ -45,7 +45,7 @@
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1wTVE2nCwMBuFRd8sqz2Avq8qV11gOYwC?usp=drive_link",
         "pitchTrackerPostedLink": "Story Set"
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Kelly Bensimon",
@@ -85,7 +85,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Erin Devine",
@@ -127,7 +127,7 @@
         "editTrackerCreativeId": "evolv-mixed-creator-ad-becca-erin-leland-v1",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Roma Abdesselam",
@@ -169,7 +169,7 @@
         "pitchTrackerPostedLink": "paid only",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Kate Love",
@@ -211,7 +211,7 @@
         "pitchTrackerPostedLink": "Story Set",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Leah Lawson",
@@ -252,15 +252,15 @@
         "pitchTrackerPostedLink": null,
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Vicka Trillion",
       "client": "Evolv",
-      "currentStage": null,
+      "currentStage": "briefed",
       "stages": {
         "briefed": {
-          "reached": false,
+          "reached": true,
           "date": null
         },
         "created": {
@@ -292,15 +292,15 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Ashley Provost",
       "client": "Evolv",
-      "currentStage": null,
+      "currentStage": "briefed",
       "stages": {
         "briefed": {
-          "reached": false,
+          "reached": true,
           "date": null
         },
         "created": {
@@ -332,15 +332,15 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Victoria Coffer",
       "client": "Evolv",
-      "currentStage": null,
+      "currentStage": "briefed",
       "stages": {
         "briefed": {
-          "reached": false,
+          "reached": true,
           "date": null
         },
         "created": {
@@ -372,7 +372,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Kelly Hughes",
@@ -413,15 +413,15 @@
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1EWVtPL0XvXbs-WJ8g-tNwtsJZUcCjdP2?usp=drive_link",
         "pitchTrackerPostedLink": "https://www.instagram.com/reels/DdCCmfYRLbR/"
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     },
     {
       "influencer": "Elena Belle",
       "client": "Evolv",
-      "currentStage": null,
+      "currentStage": "briefed",
       "stages": {
         "briefed": {
-          "reached": false,
+          "reached": true,
           "date": null
         },
         "created": {
@@ -453,7 +453,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-09T12:25:24.003Z"
+      "lastSynced": "2026-09-10T12:25:24.469Z"
     }
   ]
 }
