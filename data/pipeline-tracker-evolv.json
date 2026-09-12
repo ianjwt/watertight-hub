@@ -1,9 +1,9 @@
 {
   "client": "Evolv",
-  "lastSynced": "2026-09-11T12:25:24.399Z",
+  "lastSynced": "2026-09-12T12:25:27.936Z",
   "warnings": [
-    "Edit Tracker: couldn't match 10 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Roma Abdesselam, Kate Love, Leah Lawson, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle",
-    "Whitelisting: couldn't match 6 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes"
+    "Edit Tracker: couldn't match 11 confirmed influencer(s) — Audrey Peters, Kelly Bensimon, Roma Abdesselam, Kate Love, Leah Lawson, Vicka Trillion, Ashley Provost, Victoria Coffer, Kelly Hughes, Elena Belle, Cameron Gildea",
+    "Whitelisting: couldn't match 5 confirmed influencer(s) — Audrey Peters, Vicka Trillion, Ashley Provost, Victoria Coffer, Cameron Gildea"
   ],
   "records": [
     {
@@ -45,7 +45,7 @@
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1wTVE2nCwMBuFRd8sqz2Avq8qV11gOYwC?usp=drive_link",
         "pitchTrackerPostedLink": "Story Set"
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Kelly Bensimon",
@@ -73,8 +73,8 @@
           "date": null
         },
         "launched_in_paid": {
-          "reached": false,
-          "date": null
+          "reached": true,
+          "date": "2026-09-14"
         },
         "performing_in_paid": {
           "reached": false,
@@ -83,9 +83,10 @@
       },
       "sourceLinks": {
         "pitchTrackerContentLink": null,
-        "pitchTrackerPostedLink": null
+        "pitchTrackerPostedLink": null,
+        "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Erin Devine",
@@ -127,7 +128,7 @@
         "editTrackerCreativeId": "evolv-mixed-creator-ad-becca-erin-leland-v1",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Roma Abdesselam",
@@ -169,7 +170,7 @@
         "pitchTrackerPostedLink": "paid only",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Kate Love",
@@ -211,7 +212,7 @@
         "pitchTrackerPostedLink": "Story Set",
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Leah Lawson",
@@ -252,7 +253,7 @@
         "pitchTrackerPostedLink": null,
         "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Vicka Trillion",
@@ -292,7 +293,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Ashley Provost",
@@ -332,7 +333,7 @@
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1WtIxXQhnAjrooyr55NbXGNrFR03wdZAJ?usp=drive_link",
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Victoria Coffer",
@@ -372,7 +373,7 @@
         "pitchTrackerContentLink": null,
         "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Kelly Hughes",
@@ -401,8 +402,8 @@
           "date": null
         },
         "launched_in_paid": {
-          "reached": false,
-          "date": null
+          "reached": true,
+          "date": "2026-09-14"
         },
         "performing_in_paid": {
           "reached": false,
@@ -411,9 +412,10 @@
       },
       "sourceLinks": {
         "pitchTrackerContentLink": "https://drive.google.com/drive/folders/1EWVtPL0XvXbs-WJ8g-tNwtsJZUcCjdP2?usp=drive_link",
-        "pitchTrackerPostedLink": "https://www.instagram.com/reels/DdCCmfYRLbR/"
+        "pitchTrackerPostedLink": "https://www.instagram.com/reels/DdCCmfYRLbR/",
+        "whitelistingRow": true
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     },
     {
       "influencer": "Elena Belle",
@@ -422,6 +424,47 @@
       "stages": {
         "briefed": {
           "reached": true,
+          "date": null
+        },
+        "created": {
+          "reached": false,
+          "date": null
+        },
+        "live_organic": {
+          "reached": false,
+          "date": null
+        },
+        "edited_for_paid": {
+          "reached": false,
+          "date": null
+        },
+        "shared_with_client": {
+          "reached": false,
+          "date": null
+        },
+        "launched_in_paid": {
+          "reached": true,
+          "date": "2026-09-14"
+        },
+        "performing_in_paid": {
+          "reached": false,
+          "date": null
+        }
+      },
+      "sourceLinks": {
+        "pitchTrackerContentLink": null,
+        "pitchTrackerPostedLink": null,
+        "whitelistingRow": true
+      },
+      "lastSynced": "2026-09-12T12:25:27.936Z"
+    },
+    {
+      "influencer": "Cameron Gildea",
+      "client": "Evolv",
+      "currentStage": null,
+      "stages": {
+        "briefed": {
+          "reached": false,
           "date": null
         },
         "created": {
@@ -451,10 +494,9 @@
       },
       "sourceLinks": {
         "pitchTrackerContentLink": null,
-        "pitchTrackerPostedLink": null,
-        "whitelistingRow": true
+        "pitchTrackerPostedLink": null
       },
-      "lastSynced": "2026-09-11T12:25:24.399Z"
+      "lastSynced": "2026-09-12T12:25:27.936Z"
     }
   ]
 }
